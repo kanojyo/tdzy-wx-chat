@@ -310,7 +310,7 @@ export default {
   },
   mounted() {
     this.getWechatList(); //获取公众号列表
-    // this.WebSocketTest();
+    this.WebSocketTest();
   },
   computed: mapState({
     // user: state => state.login, //   用户名
@@ -456,7 +456,7 @@ export default {
       // this.formParams.picUrl = this.imageUrl;
       this.send();
     },
-    //搜索
+    //模糊搜索
     searchChange(){
       this.userList=[];
       if (this.keyword === "") {
@@ -465,13 +465,10 @@ export default {
         this.groupList.forEach(items=>{
           items.userList.forEach(item=>{
             if(item.nickname.search(this.keyword) != -1){
-              console.log(item.nickname,22222)
-              this.userList.push(item.nickname);
+              this.userList.push({avatar:item.headimgurl,nickname:item.nickname});
             }
           })
         });
-        console.log(this.userList)
-        console.log(this.userList == '')
         if(this.userList ==''){
           this.searchShow = true;
           this.isSearchShow = true;
@@ -638,9 +635,9 @@ export default {
           }
           .search {
             position: absolute;
-            top: 110px;
-            left: 170px;
-            width: 277px;
+            top: 163px;
+            left: 210px;
+            width: 276px;
             border: 1px solid #e2e2e2;
             background-color: #fff;
             z-index: 9;
@@ -657,13 +654,17 @@ export default {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 10px;
+                padding:0 10px;
                 cursor: pointer;
                 border-bottom: 1px solid #e2e2e2;
                 .photo {
                   width: 35px;
                   height: 35px;
                   margin-right: 10px;
+                }
+                .name{
+                  border-bottom:none;
+                  line-height: 50px;
                 }
               }
             }
