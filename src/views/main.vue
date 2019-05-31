@@ -1,0 +1,891 @@
+<template>
+  <div>
+    <div class="main">
+      <el-container>
+        <el-header class="centered">
+          <div class="head">
+            <div class="pull-left">
+              <img src="../assets/img/logo.png" alt>
+              <span class="text">泰斗医聊客服系统</span>
+            </div>
+            <div class="pull-right">
+              <div class="avatar">
+                <img src="../assets/img/kefu.jpg" alt>
+              </div>
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  {{info.username}}
+                  <i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <!-- <el-dropdown-item split-button>
+                    <span @click="baseInfo">基本信息</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item split-button>
+                    <span @click="changePassword">修改密码</span>
+                  </el-dropdown-item>-->
+                  <!-- <el-dropdown-item split-button>
+                    <span @click="WebSocketTest">websocket</span>
+                  </el-dropdown-item>-->
+                  <el-dropdown-item divided split-button>
+                    <el-tooltip content="退出登录" placement="bottom" effect="light">
+                      <div class="iconCenter" @click="headClick(3)" style="text-align:center;">
+                        <i class="icon iconfont icon-tuichu"></i>
+                      </div>
+                    </el-tooltip>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </div>
+        </el-header>
+        <el-container>
+          <el-aside class="left" width="500px">
+            <div class="ul_left">
+              <ul class="wechat-list">
+                <li
+                  class="item"
+                  v-for="(item, index) in wechatList"
+                  :key="index"
+                  :class="{wechatActive: wechatActive === item.id}"
+                  @click="openList(item)"
+                >
+                  <div class="photo">
+                    <img :src="item.img" alt>
+                  </div>
+                  <el-badge :value="3">
+                    <div class="name" :title="item.name">{{item.name}}</div>
+                  </el-badge>
+                </li>
+              </ul>
+            </div>
+            <div class="ul_right">
+              <div class="name centered">{{title}}</div>
+              <div class="input-search">
+                <el-input v-model="keyword" placeholder="昵称/备注" prefix-icon="el-icon-search" @change="searchChange"></el-input>
+              </div>
+              <div class="search" v-show="searchShow">
+                <ul class="search-list">
+                  <li class="isSearch centered" v-if="isSearchShow">无数据</li>
+                  <li
+                    class="item"
+                    v-else
+                    v-for="(item, index) in userList"
+                    :key="index"
+                    @click="searchClick(item)"
+                  >
+                    <div class="photo">
+                      <img :src="item.avatar" alt>
+                    </div>
+                    <div class="name">{{item.nickname}}</div>
+                  </li>
+                </ul>
+              </div>
+              <ul class="one-list">
+                <li class="one-item cursor" v-for="(item, index) in groupList" :key="index">
+                  <div class="title" @click="OneChange(item)">
+                    <div class="text">{{item.group_name}}（{{item.person_num}}个）</div>
+                    <div class="ioc">
+                      <i class="el-icon-arrow-down" v-show="item.status"></i>
+                      <i class="el-icon-arrow-right" v-show="!item.status"></i>
+                    </div>
+                  </div>
+                  <el-collapse-transition>
+                    <ul class="two-list" v-show="item.status">
+                      <li
+                        class="two-item"
+                        v-for="(i, k) in item.userList"
+                        :key="k"
+                        :class="{bgActive: bgActive === i.id}"
+                        @click="chatChange(i)"
+                      >
+                        <div class="avatar">
+                          <img :src="i.headimgurl">
+                        </div>
+                        <div class="nickname">{{i.nickname}}</div>
+                      </li>
+                    </ul>
+                  </el-collapse-transition>
+                </li>
+              </ul>
+            </div>
+          </el-aside>
+          <el-main>
+            <div class="main-contens" v-if="devShow">
+              <div class="nickname centered">{{userData.nickname}}</div>
+              <div class="dialogue-k">
+                <ul class="list">
+                  <li class="item" v-for="(item, index) in chatList" :key="index">
+                    <div class="tourist" v-if="item.stype === 1">
+                      <div class="avatar">
+                        <img :src="item.sendAvatar" alt>
+                      </div>
+                      <div class="centens">
+                        <div class="time">{{item.create_at}}</div>
+                        <div class="text" v-if="item.msgType === 1">{{item.msgData.content}}</div>
+                        <div v-if="item.msgType === 2" class="pull-left" style="width: 200px;">
+                          <img :src="item.msgData.picUrl" alt>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hospital-guide" v-if="item.stype === 2">
+                      <div class="avatar">
+                        <img :src="item.sendAvatar" alt>
+                      </div>
+                      <div class="centens">
+                        <div class="time">{{item.create_at}}</div>
+                        <div class="text" v-if="item.msgType === 1">{{item.msgData.content}}</div>
+                        <div class="pull-right" v-if="item.msgType === 2" style="width:300px;">
+                          <!-- <img :src="item.msgData.picUrl" alt > -->
+                          <img
+                            :src="item.msgData.picUrl"
+                            alt
+                            v-if="item.msgData.picWidth>300"
+                            style="width:100%;"
+                          >
+                          <img :src="item.msgData.picUrl" alt v-else style="width:auto;">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="footer">
+                <div class="toolbar">
+                  <ul class="list">
+                    <!-- <li class="pull-left cursor" @click="jianqieClick">
+                      <i class="icon iconfont icon-jianqie"></i>
+                    </li>-->
+                    <!-- <li>
+                      <form id="imgForm" action='uploadUrl'>
+                        <input type="file" accept="image/*" id="file">
+                      </form>
+                    </li> -->
+                    <li class="pull-left cursor file">
+                      <!-- <i class="icon iconfont icon-wenjianjia"></i> -->
+                      <!-- <i class="el-icon-picture"></i> -->
+                      <el-upload
+                        list-type="picture-card"
+                        :action="uploadUrl"
+                        :onSuccess="uploadSuccess"
+                        :before-upload='beforeUpload'
+                        :show-file-list="false"
+                      >
+                        <i class="icon iconfont icon-wenjianjia"></i>
+                      </el-upload>
+                    </li>
+                    <li class="pull-left cursor">
+                      <i class="el-icon-picture" style="font-size:24px;"></i>
+                    </li>
+                    <li class="pull-left cursor">
+                      <i class="icon iconfont icon-liaotian"></i>
+                    </li>
+                  </ul>
+                </div>
+                <div class="input-text">
+                  <el-input
+                    v-model="formParams.content"
+                    @keyup.enter.native="submit"
+                    class="textarea"
+                    type="textarea"
+                    :rows="4"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+                <div class="btn">
+                  <el-button size="small" type="primary" @click.enter="submit">发 送</el-button>
+                </div>
+              </div>
+            </div>
+          </el-main>
+          <el-aside class="right" width="400px">
+            <div class="right-aside">
+              <div class="right-aside-top">
+                <ul class="list">
+                  <li
+                    class="item"
+                    :class="{active: rightActive === 1}"
+                    @click="rightActive = 1"
+                  >快捷回复</li>
+                  <li
+                    class="item"
+                    :class="{active: rightActive === 2}"
+                    @click="rightActive = 2"
+                  >客户资料</li>
+                  <!-- <li class="item" :class="{active: rightActive === 3}" @click="rightActive = 3">聊天记录</li> -->
+                  <li
+                    class="item"
+                    :class="{active: rightActive === 4}"
+                    @click="rightActive = 4"
+                  >病症信息</li>
+                </ul>
+              </div>
+              <div class="right-middle-contens">
+                <div class="reply" v-show="rightActive === 1">快捷回复</div>
+                <div class="remark" v-show="rightActive === 2">用户信息</div>
+                <!-- <div class="record" v-show="rightActive === 3">
+                  聊天记录
+                </div>-->
+                <div class="disease" v-show="rightActive === 4">病症信息</div>
+              </div>
+            </div>
+          </el-aside>
+        </el-container>
+      </el-container>
+    </div>
+    <!-- 发送图片 -->
+    <el-dialog title="发送图片" :visible.sync="imageShow">
+      <div class="image" style="text-align:center;">
+        <!-- <img :src="imageUrl" alt v-if="imageWidth>900" style="width:100%;">
+        <img :src="imageUrl" alt v-else style="width:auto;"> -->
+        <img :src="imageUrl" alt>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="imageShow = false">返 回</el-button>
+        <el-button type="primary" @click="imageChange">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+import { wechatList, wechatGroup, friendList,sendMsg } from "@/api/main.js";
+export default {
+  data() {
+    return {
+      info: [],
+      formLabelWidth: "100px",
+      dialogWidth: "30%",
+      socketData: {
+        user_type: "yz",
+        query_type: "head_data",
+        user_id: ""
+      },
+      formParams: {
+        //  发送消息参数
+        weid: "",   //微信公众id
+        fans_openid:"", //粉丝openid
+        msg_type: "", // int 消息类型 1文字，2图片
+        content: "", // string 消息内容
+        source_type:"",//1：图片，2：声音，3：视频，4：缩略图（目前只支持1）
+        file:"",  //msg_type为2时非空，上传的图片
+        // picUrl: "", // string 图片地址
+        // picWidth: "", // int 图片宽度(单位px)
+        // picHeight: "", // int 图片高度（单位px）
+      },
+      unread: 0,
+      userData: "", //  用户
+      devShow: false, //  显示聊天对话框
+      cacheData: {
+        cache_content: "", //临时内容储存
+        id: "",
+        groupid: ""
+      },
+
+      rightActive: 1, //  右边tabs切换
+      keyword: "", //用户搜索keyword
+      userList: [], //  用户搜索数据
+      searchShow: false, //  用户搜索显示
+      isSearchShow: false, //  用户搜索显示数据
+      title: "",
+      wechatList: [], //公众号列表
+      wechatActive: "", //  公众号选中样式
+      bgActive: "", //  好友选中样式
+      groupList: [],
+      friendList: [],
+      weid: "", //公众号的id
+      params: { //好友列表的参数
+        weid: "",
+        groupid: ""
+      },
+      chatList: [], //  聊天记录
+      imageUrl: "", //  复制图片
+      imageWidth: 0, //  图片宽度
+      imageHeight: 0, //  图片高度
+      imageShow: false, //  显示图片
+      baseURL: process.env.VUE_APP_URL,
+      uploadUrl:'',
+    };
+  },
+  mounted() {
+    this.getWechatList(); //获取公众号列表
+    // this.WebSocketTest();
+  },
+  computed: mapState({
+    // user: state => state.login, //   用户名
+    token: state => state.token, // token
+    device: state => state.device, // device
+    unReadNum() {
+      if (this.unread > 99) {
+        return "99+";
+      } else {
+        return this.unread;
+      }
+    }
+  }),
+  methods: {
+    async headClick(val) {
+      if (val === 3) {
+        //退出登录
+        let data = await signOut();
+        if (data.code == 200) {
+          this.$router.push("/");
+          sessionStorage.clear();
+          window.location.reload();
+        }
+      }
+    },
+    //获取公众号列表
+    async getWechatList() {
+      let data = await wechatList();
+      if (data.code === 200) {
+        // console.log(data);
+        this.wechatList = data.data.wechat;
+        this.weid = data.data.wechat[0].id;
+        this.params.weid = this.weid;
+        this.formParams.weid=this.weid;
+        this.title = this.weid = data.data.wechat[0].name;
+        this.getGroup();
+        console.log(this.uploadUrl)
+      }
+    },
+    //获取公众号下面的分组列表
+    async getGroup() {
+      let data = await wechatGroup(this.weid);
+      if (data.code === 200) {
+        // console.log(data);
+        this.groupList = data.data.group_info;
+        this.groupList.forEach(item => {
+          item.status = false;
+          this.params.groupid = item.groupid;
+          friendList(this.params).then(data => {
+            if (data.code === 200) {
+              item.userList = data.data.friend_list;
+              item.userList.forEach(val => {
+                //给每个用户赋值content,用来存为输入完没发送的文字;
+                val.content = "";
+              });
+            }
+          });
+        });
+        console.log(this.groupList)
+      }
+    },
+    //点击打开公众号列表
+    openList(val) {
+      this.wechatActive = val.id;
+      this.weid = val.id;
+      this.params.weid = this.weid;
+      this.formParams.weid=this.weid;
+      this.title = val.name;
+      //获取公众号下面的分组列表
+      this.getGroup();
+    },
+    //点击打开聊天界面
+    chatChange(val) {
+      this.formParams.fans_openid=val.fans_openid;
+      this.uploadUrl = this.baseURL + "/v1/wechat/send_msg?token="+this.token+"&device="+this.device+"&weid="+this.formParams.weid+"&fans_openid="+this.formParams.fans_openid;
+      //将content内容存起来
+      this.cacheData.content = this.formParams.content;
+      if (this.cacheData.groupid) {
+        this.groupList.forEach(item => {
+          if (item.groupid === this.cacheData.groupid) {
+            item.userList.forEach(it => {
+              if (it.id === this.cacheData.id) {
+                it.content = this.cacheData.content;
+              }
+            });
+          }
+        });
+      }
+      this.formParams.content = val.content;
+      this.bgActive = val.id;
+      this.userData = val;
+      this.devShow = true;
+      //将临时储存内容的id和groupid存起来
+      this.cacheData.id = val.id;
+      this.cacheData.groupid = val.groupid;
+    },
+    OneChange(item) {
+      // console.log(item)
+      item.status = !item.status;
+      this.$forceUpdate();
+    },
+    async send(){
+    //  发送提交
+      let data = await sendMsg(this.formParams);
+      if(data.code===200){
+        console.log(data);
+        if(this.formParams.msg_type===1){ //文字发送成功后将文本输入框重置
+          this.formParams.content='';
+        }
+      }
+    },
+    submit() {
+      //  发送消息
+      if (this.formParams.content === "") {
+        this.$message({ message: "请输入内容", type: "warning" });
+        return;
+      }
+      //把按enter发送的回车\n给替换掉
+      this.formParams.content = this.formParams.content.replace(/\n/, "");
+      this.formParams.msg_type = 1;
+      this.send();
+    },
+    beforeUpload(file){
+    },
+    uploadSuccess(res, file, fileList) {
+      //	上传图片
+      console.log(file)
+      console.log(file.raw)
+      this.formParams.file=file.raw;
+      console.log(this.formParams.file)
+      this.formParams.msg_type = 2;
+      this.formParams.source_type	=1;
+      this.send();
+      // this.imageChange();
+      // if (res.code === 200) {
+      //   this.imageUrl = res.data.url;
+      // }
+    },
+    imageChange() {
+      //  发送图片
+      this.formParams.msg_type = 2;
+      this.formParams.source_type	=1;
+      // this.formParams.picUrl = this.imageUrl;
+      this.send();
+    },
+    //搜索
+    searchChange(){
+      this.userList=[];
+      if (this.keyword === "") {
+        this.searchShow = false;
+      } else {
+        this.groupList.forEach(items=>{
+          items.userList.forEach(item=>{
+            if(item.nickname.search(this.keyword) != -1){
+              console.log(item.nickname,22222)
+              this.userList.push(item.nickname);
+            }
+          })
+        });
+        console.log(this.userList)
+        console.log(this.userList == '')
+        if(this.userList ==''){
+          this.searchShow = true;
+          this.isSearchShow = true;
+        }else{
+          this.searchShow = true;
+          this.isSearchShow = false;
+        }
+      }
+    },
+    scrollChange() {
+      //  让聊天窗口处于最底部
+      setTimeout(() => {
+        let ulNode = document.querySelector(".dialogue-k > .list");
+        let dialogueNode = document.querySelector(".dialogue-k");
+        setTimeout(() => {
+          if (dialogueNode.scrollHeight - 110 <= ulNode.scrollHeight) {
+            dialogueNode.scrollTop = ulNode.scrollHeight;
+          }
+        }, 50);
+      }, 200);
+    },
+    //基本信息
+    // baseInfo() {
+    //   // this.Info();
+    //   this.dialogInfoVisible = true;
+    // },
+    
+    //websocket聊天消息提醒
+    WebSocketTest() {
+      let ws = new WebSocket("ws://tdcsgzh.wuhanlst.com:11111?token=" +this.token +"&device=" +this.device);
+      let _this = this;
+      ws.onopen = ()=> {
+      };
+      ws.onmessage = (evt)=> {
+        let received_msg = JSON.parse(evt.data);
+        // console.log(received_msg)
+        // }
+      };
+      ws.onclose = ()=> {
+        // 关闭 websocket
+      };
+    }
+  }
+};
+</script>
+<style type="text/css" scoped lang="less">
+@import "../assets/css/chat.css"; //  公共样式库
+@color_f8494c: #1abc9c;
+@bg_eaedf1: rgba(234, 237, 241, 1);
+.main {
+  width: 100%;
+  height: calc(100vh);
+  .el-container {
+    width: 100%;
+    height: 100%;
+    .el-header {
+      width: 100;
+      min-width: 1400px;
+      background-color: @color_f8494c;
+      .head {
+        width: 100%;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        .pull-left {
+          height: 60px;
+          display: flex;
+          align-items: center;
+          img {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            margin-right: 10px;
+          }
+          .text {
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+          }
+        }
+        .pull-right {
+          height: 60px;
+          display: flex;
+          align-items: center;
+          color: #fff;
+          div {
+            margin-right: 15px;
+          }
+          .avatar {
+            width: 32px;
+            height: 32px;
+            img {
+              border-radius: 50%;
+            }
+          }
+          .icon {
+            .icon {
+              font-size: 24px;
+              color: #fff;
+              cursor: pointer;
+            }
+          }
+          .el-dropdown {
+            span {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+    .el-container {
+      .left {
+        display: flex;
+        background-color: @bg_eaedf1;
+        border-right: 1px solid #e2e2e2;
+        .ul_left {
+          width: 200px;
+          border-right: 1px solid #e2e2e2;
+          .wechat-list {
+            .item {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              padding: 15px 5px;
+              border-bottom: 1px solid #e2e2e2;
+              cursor: pointer;
+              .photo {
+                width: 50px;
+                margin-right: 10px;
+              }
+              .el-badge {
+                padding: 10px;
+                .name {
+                  width: 80px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                }
+              }
+            }
+            .wechatActive {
+              background-color: @color_f8494c;
+              // border-right:2px solid @color_f8494c;
+              .name {
+                color: #fff;
+              }
+            }
+          }
+        }
+        .ul_right {
+          width: 300px;
+          overflow-y: scroll;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          .name {
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #e2e2e2;
+          }
+          .input-search {
+            padding: 10px 10px 0 10px;
+          }
+          .search {
+            position: absolute;
+            top: 110px;
+            left: 170px;
+            width: 277px;
+            border: 1px solid #e2e2e2;
+            background-color: #fff;
+            z-index: 9;
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            .search-list {
+              height: calc(100vh - 115px);
+              .isSearch {
+                padding: 10px;
+              }
+              .item {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 10px;
+                cursor: pointer;
+                border-bottom: 1px solid #e2e2e2;
+                .photo {
+                  width: 35px;
+                  height: 35px;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+          .one-list {
+            .one-item {
+              .title {
+                width: 100%;
+                height: 50px;
+                border-bottom: 1px solid #e2e2e2;
+                padding: 10px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .text {
+                  // flex: 1;
+                }
+                .ioc {
+                  width: 20px;
+                }
+              }
+              .two-list {
+                background-color: rgb(215, 215, 215);
+                .two-item {
+                  position: relative;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  padding: 10px;
+                  border-bottom: 1px solid #e2e2e2;
+                  .avatar {
+                    margin-right: 10px;
+                    img {
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                    }
+                  }
+                  .status {
+                    position: absolute;
+                    top: 20px;
+                    right: 10px;
+                    .icon-zaixian {
+                      font-size: 18px;
+                      color: @color_f8494c;
+                    }
+                  }
+                }
+                .bgActive {
+                  background-color: @color_f8494c;
+                  .nickname {
+                    color: #fff;
+                  }
+                  .status {
+                    .icon {
+                      color: #333;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .el-main {
+        min-width: 900px;
+        padding: 0 !important;
+        .main-contens {
+          width: 100%;
+          height: calc(100vh - 60px);
+          display: flex;
+          flex-direction: column;
+          .nickname {
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #e2e2e2;
+            background-color: @bg_eaedf1;
+          }
+          .dialogue-k {
+            width: 100%;
+            flex: 1;
+            border-bottom: 1px solid #e2e2e2;
+            background-color: @bg_eaedf1;
+            padding: 30px;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            .list {
+              .item {
+                margin-bottom: 15px;
+                .tourist {
+                  display: flex;
+                  .avatar {
+                    margin-right: 10px;
+                    img {
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 50%;
+                    }
+                  }
+                  .centens {
+                    .time {
+                      margin-bottom: 10px;
+                    }
+                    .text {
+                      background-color: #fff;
+                      padding: 5px;
+                      border-radius: 5px;
+                    }
+                  }
+                }
+                .hospital-guide {
+                  display: flex;
+                  flex-direction: row-reverse;
+                  .avatar {
+                    margin-left: 10px;
+                    img {
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 50%;
+                    }
+                  }
+                  .centens {
+                    text-align: right;
+                    .time {
+                      margin-bottom: 10px;
+                    }
+                    .text {
+                      background-color: @color_f8494c;
+                      padding: 5px;
+                      border-radius: 5px;
+                      color: #fff;
+                      max-width: 600px;
+                      word-wrap: break-word;
+                      text-align: left;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          .footer {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            .toolbar {
+              height: 25px;
+              padding: 10px;
+              .list {
+                display: flex;
+                .pull-left {
+                  margin-right: 8px;
+                  .icon {
+                    font-size: 24px;
+                    color: #333;
+                  }
+                }
+              }
+            }
+            .btn {
+              position: absolute;
+              right: 10px;
+              bottom: 20px;
+            }
+          }
+        }
+      }
+      .right {
+        .right-aside {
+          height: calc(100vh - 60px);
+          border-left: 1px solid #e2e2e2;
+          background-color: @bg_eaedf1;
+          overflow-y: scroll;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          .right-aside-top {
+            .list {
+              width: 100%;
+              height: 50px;
+              display: flex;
+              align-items: center;
+              flex-direction: row;
+              .item {
+                width: 33.3%;
+                text-align: center;
+                padding: 16px 0;
+                cursor: pointer;
+                border-bottom: 3px solid @bg_eaedf1;
+              }
+              .active {
+                color: @color_f8494c;
+                border-bottom: 3px solid @color_f8494c;
+              }
+            }
+          }
+          .right-middle-contens {
+            .reply {
+              padding-top: 5px;
+            }
+            .remark {
+              padding-top: 5px;
+            }
+            .record {
+              padding-top: 5px;
+            }
+            .disease {
+              padding-top: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/* 左右垂直居中 */
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

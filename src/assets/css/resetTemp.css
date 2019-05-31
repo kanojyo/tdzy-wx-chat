@@ -1,0 +1,151 @@
+*{margin:0;padding: 0;}
+li{list-style:none;}
+input{
+  padding: 0;
+  border:none;
+  outline:none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+textarea{
+  overflow:hidden;
+  background-attachment:   fixed;
+  background-repeat:   no-repeat;
+  border-style:   solid;
+  border-color:   #FFF;
+  resize:none;
+  border:none;
+  outline:none;
+}
+#app{
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+}
+.main{
+  width: 750px;
+  margin:10px auto;
+}
+.title>p{
+  text-align: center;
+  border-bottom: 1px solid grey;
+  line-height: 24px;
+}
+.main>h3{
+  text-align: center;
+  margin-top: 10px;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.main>ul{
+  display: flex;
+  border:1px solid grey;
+}
+.main>ul+ul{
+  border-top:0;
+  margin-bottom: 10px;
+}
+.main>ul>li{
+  flex:1;
+  /*width: 50%;*/
+  padding: 5px 0;
+  padding-left: 5px;
+  vertical-align: top;
+}
+.main>ul>li>label{
+  vertical-align:middle;
+}
+.main>ul>li>input{
+  width: 60%;
+  height: 20px;
+  font-size: 14px;
+  vertical-align:middle;
+  line-height:20px;
+}
+.main>ul>li+li{
+  border-left: 1px solid grey;"
+}
+.info{
+  height: 30px;
+  vertical-align: middle;
+  font-size: 14px;
+  width: 100%;
+  border-bottom: 1px solid grey;
+}
+.info label{
+  display: inline-block;
+  /*width: 80px;*/
+  height: 30px;
+  line-height: 30px;
+  vertical-align:middle;
+}
+.info>input{
+  width: 80px;
+  height: 26px;
+  line-height: 26px;
+  vertical-align:middle;
+  font-size: 14px;
+  padding-left: 5px;
+}
+select{
+  width: 90%;
+  border: solid 1px #fff;
+  /*将默认的select选择框样式清除*/
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  padding-right: 14px;
+}
+select::-ms-expand { display: none; }
+.diagnose{
+  padding: 5px 5px;
+  /*border:1px solid grey;*/
+  border-top:0;
+}
+.diagnose textarea{
+  width: 100%;
+}
+.diagnose label{
+  font-size: 14px;
+}
+.diagnose p{
+  text-align: right;
+  /*width: 100%;*/
+  margin-right: 20px;
+  font-size: 14px;
+}
+.diagnose p input{
+  width: 50px;
+  text-align: center;
+  height: 21px;
+}
+.diagnose p .sign{
+  width: 80px;
+  margin-right: 10px;
+}
+.diagnose p .year{
+  width: 80px;
+}
+.wenzhen_content{
+  border:1px solid grey;
+  margin-top: 10px;
+}
+.content_title{
+  border-bottom: 1px solid grey;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  font-weight: 500;
+}
+.wenzhen_content ul li{
+  height: 100%;
+  padding: 5px 10px;
+}
+.wenzhen_content ul li textarea{
+  height: 150px;
+}
+.wenzhen_content ul li+li{
+  border-top:1px solid grey;
+}
+.content_title{border-top:1px solid grey;}
