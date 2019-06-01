@@ -50,15 +50,12 @@
                   :class="{wechatActive: wechatActive === item.id}"
                   @click="openList(item)"
                 >
-                  <div class="photo">
+                  <el-badge class="photo" :value="item.not_read_num">
                     <img :src="item.img" alt>
-                  </div>
-                  <!-- <el-badge :value="item.not_read_num">
-                    <div class="name" :title="item.name">{{item.name}}</div>
-                  </el-badge>-->
+                  </el-badge>
                   <div class="text">
                     <div class="name" :title="item.name">{{item.name}}</div>
-                    <span class="number" v-show="item.not_read_num !== 0">{{item.not_read_num}}</span>
+                    <!-- <span class="number" v-show="item.not_read_num !== 0">{{item.not_read_num}}</span> -->
                   </div>
                 </li>
               </ul>
@@ -93,7 +90,7 @@
               <ul class="one-list">
                 <li class="one-item cursor" v-for="(item, index) in groupList" :key="index">
                   <div class="title" @click="OneChange(item)">
-                    <div class="text">{{item.group_name}}（{{item.count}}个）</div>
+                    <el-badge class="text" :value="item.not_read_num">{{item.group_name}}（{{item.count}}个）</el-badge>
                     <div class="ioc">
                       <i class="el-icon-arrow-down" v-show="item.status"></i>
                       <i class="el-icon-arrow-right" v-show="!item.status"></i>
@@ -108,9 +105,9 @@
                         :class="{bgActive: bgActive === i.id}"
                         @click="chatChange(i)"
                       >
-                        <div class="avatar">
+                        <el-badge class="avatar" :value="item.not_read_num">
                           <img :src="i.headimgurl">
-                        </div>
+                        </el-badge>
                         <div class="nickname">{{i.nickname}}</div>
                       </li>
                     </ul>
@@ -240,7 +237,7 @@
       </el-container>
     </div>
     <!-- 发送图片 -->
-    <el-dialog title="发送图片" :visible.sync="imageShow" width="30%"> 
+    <el-dialog title="发送图片" :visible.sync="imageShow" :width="dialogWidth"> 
       <div class="image" style="text-align:center;">
         <!-- <img :src="imageUrl" alt v-if="imageWidth>900" style="width:100%;">
         <img :src="imageUrl" alt v-else style="width:auto;">-->
@@ -250,6 +247,8 @@
         <el-button @click="imageShow = false">返 回</el-button>
         <el-button type="primary" @click="imageChange">确 定</el-button>
       </span>
+    </el-dialog>
+    <el-dialog title="收货地址" :visible.sync="chatListShow" :width="dialogWidth">
     </el-dialog>
   </div>
 </template>
@@ -270,7 +269,6 @@ export default {
   data() {
     return {
       info: [],
-      formLabelWidth: "100px",
       dialogWidth: "30%",
       socketData: {
         user_type: "yz",
@@ -327,6 +325,7 @@ export default {
       imageWidth: 0, //  图片宽度
       imageHeight: 0, //  图片高度
       imageShow: false, //  显示图片
+      chatListShow:false, //显示聊天记录
       baseURL: process.env.VUE_APP_URL,
       uploadUrl: "",
       avatar:"https://cdn-statis.mangguokandian.com/avatar.png",
@@ -335,7 +334,7 @@ export default {
   filters: {
     formatDate(time) {
       let date = new Date(time * 1000);
-      return formatDate(date, "MM-dd hh:mm"); // 年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
+      return formatDate(date, "yyyy-MM-dd hh:mm:ss"); // 年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
     }
   },
   mounted() {
@@ -464,6 +463,7 @@ export default {
         chatData ={content:sendData.content,msg_type:sendData.msg_type,ctime:sendData.ctime,key:0,send_type:2,msg_type:1,kf_avatar:this.avatar}
         this.chatList.push(chatData);
         // console.log(this.chatList)
+        this.scrollChange();
       // }
       }
     },
@@ -497,6 +497,7 @@ export default {
         this.chatList.push(chatData);
         this.imageUrl='';
         this.imageShow=false;
+        this.scrollChange();
       }
       // this.send();
     },
@@ -565,13 +566,7 @@ export default {
 
     //websocket聊天消息提醒
     WebSocketTest() {
-      let ws = new WebSocket(
-        "ws://tdcsgzh.wuhanlst.com:11111?token=" +
-          this.token +
-          "&device=" +
-          this.device
-      );
-      
+      let ws = new WebSocket("ws://tdcsgzh.wuhanlst.com:11111?token=" +this.token +"&device=" +this.device);
       ws.onopen = () => {};
       ws.onmessage = evt => {
         let received_msg
@@ -583,10 +578,9 @@ export default {
         if(received_msg.code ===200){
           let msg =received_msg.data;
           if(this.formParams.fans_openid===msg.fans_openid){ //当聊天界面的粉丝id等于发送信息的粉丝id时;
-            console.log(this.formParams.fans_openid===msg.fans_openid)
             this.chatList.push(msg);
           }else{
-            console.log(222)
+            // console.log(222)
           }
         }
       };
@@ -775,7 +769,7 @@ export default {
                 align-items: center;
                 justify-content: space-between;
                 .text {
-                  // flex: 1;
+                  padding: 0 5px;
                 }
                 .ioc {
                   width: 20px;
@@ -791,7 +785,7 @@ export default {
                   padding: 10px;
                   border-bottom: 1px solid #e2e2e2;
                   .avatar {
-                    margin-right: 10px;
+                    margin-right: 15px;
                     img {
                       width: 30px;
                       height: 30px;

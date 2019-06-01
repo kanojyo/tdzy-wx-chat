@@ -66,6 +66,16 @@ export function sendImage(params) {
         data:params
     })
 }
+/*
+ *   NO:8    已读消息上报
+ */
+export function readMsg(params) {
+    return fetch({
+        url: '/v1/wechat/index/read_msg?fans_openid='+params.fans_openid+'&msg_id='+params.msg_id,
+        method: 'GET',
+        data:params
+    })
+}
 
 
 
