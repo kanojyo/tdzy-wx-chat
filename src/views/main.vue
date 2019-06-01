@@ -53,16 +53,25 @@
                   <div class="photo">
                     <img :src="item.img" alt>
                   </div>
-                  <el-badge :value="3">
+                  <!-- <el-badge :value="item.not_read_num">
                     <div class="name" :title="item.name">{{item.name}}</div>
-                  </el-badge>
+                  </el-badge>-->
+                  <div class="text">
+                    <div class="name" :title="item.name">{{item.name}}</div>
+                    <span class="number" v-show="item.not_read_num !== 0">{{item.not_read_num}}</span>
+                  </div>
                 </li>
               </ul>
             </div>
             <div class="ul_right">
               <div class="name centered">{{title}}</div>
               <div class="input-search">
-                <el-input v-model="keyword" placeholder="昵称/备注" prefix-icon="el-icon-search" @change="searchChange"></el-input>
+                <el-input
+                  v-model="keyword"
+                  placeholder="昵称/备注"
+                  prefix-icon="el-icon-search"
+                  @change="searchChange"
+                ></el-input>
               </div>
               <div class="search" v-show="searchShow">
                 <ul class="search-list">
@@ -84,7 +93,7 @@
               <ul class="one-list">
                 <li class="one-item cursor" v-for="(item, index) in groupList" :key="index">
                   <div class="title" @click="OneChange(item)">
-                    <div class="text">{{item.group_name}}（{{item.person_num}}个）</div>
+                    <div class="text">{{item.group_name}}（{{item.count}}个）</div>
                     <div class="ioc">
                       <i class="el-icon-arrow-down" v-show="item.status"></i>
                       <i class="el-icon-arrow-right" v-show="!item.status"></i>
@@ -116,34 +125,32 @@
               <div class="dialogue-k">
                 <ul class="list">
                   <li class="item" v-for="(item, index) in chatList" :key="index">
-                    <div class="tourist" v-if="item.stype === 1">
-                      <div class="avatar">
-                        <img :src="item.sendAvatar" alt>
-                      </div>
-                      <div class="centens">
-                        <div class="time">{{item.create_at}}</div>
-                        <div class="text" v-if="item.msgType === 1">{{item.msgData.content}}</div>
-                        <div v-if="item.msgType === 2" class="pull-left" style="width: 200px;">
-                          <img :src="item.msgData.picUrl" alt>
+                    <div class="system" v-if="item.key===1">
+                      <div class="text">{{item.content}}</div>
+                    </div>
+                    <div class="info" v-if="item.key===0">
+                      <div class="tourist" v-if="item.send_type === 1">
+                        <div class="avatar">
+                          <img :src="item.fans_avatar" alt>
+                        </div>
+                        <div class="centens">
+                          <div class="time">{{item.ctime|formatDate}}</div>
+                          <div class="text" v-if="item.msg_type === 1">{{item.content}}</div>
+                          <div v-if="item.msg_type === 2" class="pull-left" style="width: 200px;">
+                            <img :src="item.picurl" alt>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="hospital-guide" v-if="item.stype === 2">
-                      <div class="avatar">
-                        <img :src="item.sendAvatar" alt>
-                      </div>
-                      <div class="centens">
-                        <div class="time">{{item.create_at}}</div>
-                        <div class="text" v-if="item.msgType === 1">{{item.msgData.content}}</div>
-                        <div class="pull-right" v-if="item.msgType === 2" style="width:300px;">
-                          <!-- <img :src="item.msgData.picUrl" alt > -->
-                          <img
-                            :src="item.msgData.picUrl"
-                            alt
-                            v-if="item.msgData.picWidth>300"
-                            style="width:100%;"
-                          >
-                          <img :src="item.msgData.picUrl" alt v-else style="width:auto;">
+                      <div class="hospital-guide" v-if="item.send_type === 2">
+                        <div class="avatar">
+                          <img :src="item.kf_avatar" alt>
+                        </div>
+                        <div class="centens">
+                          <div class="time">{{item.ctime|formatDate}}</div>
+                          <div class="text" v-if="item.msg_type === 1">{{item.content}}</div>
+                          <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
+                            <img :src="item.picurl" alt style="width:100%;">
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -160,7 +167,7 @@
                       <form id="imgForm" action='uploadUrl'>
                         <input type="file" accept="image/*" id="file">
                       </form>
-                    </li> -->
+                    </li>-->
                     <li class="pull-left cursor file">
                       <!-- <i class="icon iconfont icon-wenjianjia"></i> -->
                       <!-- <i class="el-icon-picture"></i> -->
@@ -168,7 +175,6 @@
                         list-type="picture-card"
                         :action="uploadUrl"
                         :onSuccess="uploadSuccess"
-                        :before-upload='beforeUpload'
                         :show-file-list="false"
                       >
                         <i class="icon iconfont icon-wenjianjia"></i>
@@ -234,10 +240,10 @@
       </el-container>
     </div>
     <!-- 发送图片 -->
-    <el-dialog title="发送图片" :visible.sync="imageShow">
+    <el-dialog title="发送图片" :visible.sync="imageShow" width="30%"> 
       <div class="image" style="text-align:center;">
         <!-- <img :src="imageUrl" alt v-if="imageWidth>900" style="width:100%;">
-        <img :src="imageUrl" alt v-else style="width:auto;"> -->
+        <img :src="imageUrl" alt v-else style="width:auto;">-->
         <img :src="imageUrl" alt>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -250,7 +256,16 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { wechatList, wechatGroup, friendList,sendMsg } from "@/api/main.js";
+import {
+  wechatList,
+  wechatGroup,
+  friendList,
+  sendMsg,
+  chatListGet,
+  uploads,
+  sendImage
+} from "@/api/main.js";
+import { formatDate } from "@/utils/index.js";
 export default {
   data() {
     return {
@@ -264,17 +279,19 @@ export default {
       },
       formParams: {
         //  发送消息参数
-        weid: "",   //微信公众id
-        fans_openid:"", //粉丝openid
+        weid: "", //微信公众id
+        fans_openid: "", //粉丝openid
         msg_type: "", // int 消息类型 1文字，2图片
         content: "", // string 消息内容
-        source_type:"",//1：图片，2：声音，3：视频，4：缩略图（目前只支持1）
-        file:"",  //msg_type为2时非空，上传的图片
-        // picUrl: "", // string 图片地址
-        // picWidth: "", // int 图片宽度(单位px)
-        // picHeight: "", // int 图片高度（单位px）
+        source_type: "", //1：图片，2：声音，3：视频，4：缩略图（目前只支持1）
+        file:""
       },
-      unread: 0,
+      picParams:{
+        weid: "", //微信公众id
+        fans_openid: "", //粉丝openid
+        source_type: 1, //1：图片
+        url:""
+      },
       userData: "", //  用户
       devShow: false, //  显示聊天对话框
       cacheData: {
@@ -295,9 +312,15 @@ export default {
       groupList: [],
       friendList: [],
       weid: "", //公众号的id
-      params: { //好友列表的参数
+      params: {
+        //好友列表的参数
         weid: "",
         groupid: ""
+      },
+      chatParams: {
+        fans_openid: "",
+        page_index: "",
+        page_size: ""
       },
       chatList: [], //  聊天记录
       imageUrl: "", //  复制图片
@@ -305,24 +328,25 @@ export default {
       imageHeight: 0, //  图片高度
       imageShow: false, //  显示图片
       baseURL: process.env.VUE_APP_URL,
-      uploadUrl:'',
+      uploadUrl: "",
+      avatar:"https://cdn-statis.mangguokandian.com/avatar.png",
     };
+  },
+  filters: {
+    formatDate(time) {
+      let date = new Date(time * 1000);
+      return formatDate(date, "MM-dd hh:mm"); // 年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
+    }
   },
   mounted() {
     this.getWechatList(); //获取公众号列表
     this.WebSocketTest();
+    this.uploadUrl = this.baseURL + "/v1/uploads";
   },
   computed: mapState({
     // user: state => state.login, //   用户名
     token: state => state.token, // token
     device: state => state.device, // device
-    unReadNum() {
-      if (this.unread > 99) {
-        return "99+";
-      } else {
-        return this.unread;
-      }
-    }
   }),
   methods: {
     async headClick(val) {
@@ -344,10 +368,10 @@ export default {
         this.wechatList = data.data.wechat;
         this.weid = data.data.wechat[0].id;
         this.params.weid = this.weid;
-        this.formParams.weid=this.weid;
-        this.title = this.weid = data.data.wechat[0].name;
+        this.formParams.weid = this.weid;
+        this.picParams.weid = this.weid;
+        this.title = data.data.wechat[0].name;
         this.getGroup();
-        console.log(this.uploadUrl)
       }
     },
     //获取公众号下面的分组列表
@@ -369,7 +393,7 @@ export default {
             }
           });
         });
-        console.log(this.groupList)
+        // console.log(this.groupList)
       }
     },
     //点击打开公众号列表
@@ -377,15 +401,27 @@ export default {
       this.wechatActive = val.id;
       this.weid = val.id;
       this.params.weid = this.weid;
-      this.formParams.weid=this.weid;
+      this.formParams.weid = this.weid;
+      this.picParams.weid = this.weid;
       this.title = val.name;
       //获取公众号下面的分组列表
       this.getGroup();
     },
+    //聊天记录数据
+    async getChatList() {
+      let data = await chatListGet(this.chatParams);
+      if (data.code === 200) {
+        // console.log(data);
+        this.chatList = data.data.data;
+        console.log(this.chatList);
+      }
+    },
     //点击打开聊天界面
     chatChange(val) {
-      this.formParams.fans_openid=val.fans_openid;
-      this.uploadUrl = this.baseURL + "/v1/wechat/send_msg?token="+this.token+"&device="+this.device+"&weid="+this.formParams.weid+"&fans_openid="+this.formParams.fans_openid;
+      // console.log(val)
+      this.formParams.fans_openid = val.fans_openid;
+      this.picParams.fans_openid = val.fans_openid;
+      this.chatParams.fans_openid = val.fans_openid;
       //将content内容存起来
       this.cacheData.content = this.formParams.content;
       if (this.cacheData.groupid) {
@@ -398,28 +434,37 @@ export default {
             });
           }
         });
+        // console.log(this.groupList)
       }
       this.formParams.content = val.content;
       this.bgActive = val.id;
       this.userData = val;
-      this.devShow = true;
       //将临时储存内容的id和groupid存起来
       this.cacheData.id = val.id;
       this.cacheData.groupid = val.groupid;
+      this.devShow = true;
+      this.getChatList(); //获取聊天记录数据
     },
     OneChange(item) {
-      // console.log(item)
+      // console.log(item);
       item.status = !item.status;
       this.$forceUpdate();
     },
-    async send(){
-    //  发送提交
+    async send() {
+      //  发送提交
       let data = await sendMsg(this.formParams);
-      if(data.code===200){
+      if (data.code === 200) {
         console.log(data);
-        if(this.formParams.msg_type===1){ //文字发送成功后将文本输入框重置
-          this.formParams.content='';
-        }
+        let sendData=data.data;
+        let chatData ={};
+        // if (this.formParams.msg_type === 1) {
+        //文字发送成功后将文本输入框重置
+        this.formParams.content = "";
+        //将发送的文字信息加入到聊天记录中;
+        chatData ={content:sendData.content,msg_type:sendData.msg_type,ctime:sendData.ctime,key:0,send_type:2,msg_type:1,kf_avatar:this.avatar}
+        this.chatList.push(chatData);
+        // console.log(this.chatList)
+      // }
       }
     },
     submit() {
@@ -433,50 +478,72 @@ export default {
       this.formParams.msg_type = 1;
       this.send();
     },
-    beforeUpload(file){
-    },
-    uploadSuccess(res, file, fileList) {
+    uploadSuccess(file) {
       //	上传图片
-      console.log(file)
-      console.log(file.raw)
-      this.formParams.file=file.raw;
-      console.log(this.formParams.file)
-      this.formParams.msg_type = 2;
-      this.formParams.source_type	=1;
-      this.send();
-      // this.imageChange();
-      // if (res.code === 200) {
-      //   this.imageUrl = res.data.url;
-      // }
+      if(file.code==200){
+        console.log(file.data.url);
+        this.imageUrl=file.data.url;
+        this.imageShow=true;
+      }
     },
-    imageChange() {
+    async imageChange() {
       //  发送图片
-      this.formParams.msg_type = 2;
-      this.formParams.source_type	=1;
-      // this.formParams.picUrl = this.imageUrl;
-      this.send();
+      this.picParams.url = this.imageUrl;
+      let data = await sendImage(this.picParams);
+      if(data.code ===200){
+        console.log(data)
+        let receiveData=data.data;
+        let chatData ={picurl:receiveData.picurl,msg_type:receiveData.msg_type,ctime:receiveData.ctime,key:0,send_type:2,kf_avatar:this.avatar}
+        this.chatList.push(chatData);
+        this.imageUrl='';
+        this.imageShow=false;
+      }
+      // this.send();
     },
     //模糊搜索
-    searchChange(){
-      this.userList=[];
+    searchChange() {
+      this.userList = [];
       if (this.keyword === "") {
         this.searchShow = false;
       } else {
-        this.groupList.forEach(items=>{
-          items.userList.forEach(item=>{
-            if(item.nickname.search(this.keyword) != -1){
-              this.userList.push({avatar:item.headimgurl,nickname:item.nickname});
+        this.groupList.forEach(items => {
+          items.userList.forEach(item => {
+            if (item.nickname.search(this.keyword) != -1) {
+              // console.log(item)
+              this.userList.push({
+                avatar: item.headimgurl,
+                nickname: item.nickname,
+                groupid: item.groupid,
+                id: item.id
+              });
             }
-          })
+          });
         });
-        if(this.userList ==''){
+        if (this.userList == "") {
           this.searchShow = true;
           this.isSearchShow = true;
-        }else{
+        } else {
           this.searchShow = true;
           this.isSearchShow = false;
         }
       }
+    },
+    //打开模糊搜索项
+    searchClick(val) {
+      // console.log(val)
+      let searchUser = val;
+      this.groupList.forEach(item => {
+        if (item.groupid === searchUser.groupid) {
+          item.status = true;
+          item.userList.forEach(it => {
+            if (it.id === searchUser.id) {
+              this.chatChange(it);
+              this.searchShow = false;
+              this.isSearchShow = false;
+            }
+          });
+        }
+      });
     },
     scrollChange() {
       //  让聊天窗口处于最底部
@@ -495,19 +562,35 @@ export default {
     //   // this.Info();
     //   this.dialogInfoVisible = true;
     // },
-    
+
     //websocket聊天消息提醒
     WebSocketTest() {
-      let ws = new WebSocket("ws://tdcsgzh.wuhanlst.com:11111?token=" +this.token +"&device=" +this.device);
-      let _this = this;
-      ws.onopen = ()=> {
+      let ws = new WebSocket(
+        "ws://tdcsgzh.wuhanlst.com:11111?token=" +
+          this.token +
+          "&device=" +
+          this.device
+      );
+      
+      ws.onopen = () => {};
+      ws.onmessage = evt => {
+        let received_msg
+        if(evt.data.indexOf('{') !=-1){
+          received_msg = JSON.parse(evt.data);
+        }else{
+          received_msg = evt.data;
+        }
+        if(received_msg.code ===200){
+          let msg =received_msg.data;
+          if(this.formParams.fans_openid===msg.fans_openid){ //当聊天界面的粉丝id等于发送信息的粉丝id时;
+            console.log(this.formParams.fans_openid===msg.fans_openid)
+            this.chatList.push(msg);
+          }else{
+            console.log(222)
+          }
+        }
       };
-      ws.onmessage = (evt)=> {
-        let received_msg = JSON.parse(evt.data);
-        // console.log(received_msg)
-        // }
-      };
-      ws.onclose = ()=> {
+      ws.onclose = () => {
         // 关闭 websocket
       };
     }
@@ -600,13 +683,24 @@ export default {
                 width: 50px;
                 margin-right: 10px;
               }
-              .el-badge {
-                padding: 10px;
+              .text {
+                position: relative;
                 .name {
                   width: 80px;
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
+                }
+                .number {
+                  display: block;
+                  padding: 1px 6px;
+                  background-color: #f56c6c;
+                  color: #fff;
+                  font-size: 12px;
+                  border-radius: 10px;
+                  position: absolute;
+                  top: -8px;
+                  right: -20px;
                 }
               }
             }
@@ -654,7 +748,7 @@ export default {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding:0 10px;
+                padding: 0 10px;
                 cursor: pointer;
                 border-bottom: 1px solid #e2e2e2;
                 .photo {
@@ -662,8 +756,8 @@ export default {
                   height: 35px;
                   margin-right: 10px;
                 }
-                .name{
-                  border-bottom:none;
+                .name {
+                  border-bottom: none;
                   line-height: 50px;
                 }
               }
@@ -758,52 +852,63 @@ export default {
             .list {
               .item {
                 margin-bottom: 15px;
-                .tourist {
-                  display: flex;
-                  .avatar {
-                    margin-right: 10px;
-                    img {
-                      width: 40px;
-                      height: 40px;
-                      border-radius: 50%;
+                .info {
+                  .tourist {
+                    display: flex;
+                    .avatar {
+                      margin-right: 10px;
+                      img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                      }
+                    }
+                    .centens {
+                      .time {
+                        margin-bottom: 10px;
+                      }
+                      .text {
+                        background-color: #fff;
+                        padding: 5px;
+                        border-radius: 5px;
+                      }
                     }
                   }
-                  .centens {
-                    .time {
-                      margin-bottom: 10px;
+                  .hospital-guide {
+                    display: flex;
+                    flex-direction: row-reverse;
+                    .avatar {
+                      margin-left: 10px;
+                      img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                      }
                     }
-                    .text {
-                      background-color: #fff;
-                      padding: 5px;
-                      border-radius: 5px;
+                    .centens {
+                      text-align: right;
+                      .time {
+                        margin-bottom: 10px;
+                      }
+                      .text {
+                        background-color: @color_f8494c;
+                        padding: 5px;
+                        border-radius: 5px;
+                        color: #fff;
+                        max-width: 600px;
+                        word-wrap: break-word;
+                        text-align: left;
+                      }
                     }
                   }
                 }
-                .hospital-guide {
+                .system {
                   display: flex;
-                  flex-direction: row-reverse;
-                  .avatar {
-                    margin-left: 10px;
-                    img {
-                      width: 40px;
-                      height: 40px;
-                      border-radius: 50%;
-                    }
-                  }
-                  .centens {
-                    text-align: right;
-                    .time {
-                      margin-bottom: 10px;
-                    }
-                    .text {
-                      background-color: @color_f8494c;
-                      padding: 5px;
-                      border-radius: 5px;
-                      color: #fff;
-                      max-width: 600px;
-                      word-wrap: break-word;
-                      text-align: left;
-                    }
+                  justify-content: center;
+                  .text {
+                    background-color: #e2e2e2;
+                    padding: 5px 20px;
+                    border-radius: 5px;
                   }
                 }
               }

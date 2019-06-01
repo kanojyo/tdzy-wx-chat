@@ -13,7 +13,7 @@ export function wechatList() {
  */
 export function wechatGroup(params) {
     return fetch({
-        url: 'v1/wechat/index/wechat_group?weid='+params,
+        url: '/v1/wechat/index/wechat_group?weid='+params,
         method: 'GET',
     })
 }
@@ -22,7 +22,7 @@ export function wechatGroup(params) {
  */
 export function friendList(params) {
     return fetch({
-        url: 'v1/wechat/index/my_friend_list?weid='+params.weid+'&groupid='+params.groupid,
+        url: '/v1/wechat/index/my_friend_list?weid='+params.weid+'&groupid='+params.groupid,
         method: 'GET',
     })
 }
@@ -31,7 +31,37 @@ export function friendList(params) {
  */
 export function sendMsg(params) {
     return fetch({
-        url: 'v1/wechat/send_msg',
+        url: '/v1/wechat/send_msg',
+        method: 'POST',
+        data:params
+    })
+}
+/*
+ *   NO:5    聊天记录
+ */
+export function chatListGet(params) {
+    return fetch({
+        url: '/v1/wechat/index/chat_list?fans_openid='+params.fans_openid+'&page_index='+params.page_index+'&page_size='+params.page_size,
+        method: 'GET',
+        data:params
+    })
+}
+/*
+ *   NO:6    上传文件
+ */
+export function uploads(params) {
+    return fetch({
+        url: '/v1/uploads',
+        method: 'POST',
+        data:params
+    })
+}
+/*
+ *   NO:7    客服发送图片
+ */
+export function sendImage(params) {
+    return fetch({
+        url: '/v1/wechat/send_image_wechat',
         method: 'POST',
         data:params
     })
