@@ -76,6 +76,26 @@ export function readMsg(params) {
         data:params
     })
 }
+/*
+ *   NO:9    发送收款码
+ */
+export function sendCode(params) {
+    return fetch({
+        url: '/v1/wechat/send_pay_code',
+        method: 'POST',
+        data:params
+    })
+}
+/*
+ *   NO:10   更改粉丝分组
+ */
+export function changeGroup(params) {
+    return fetch({
+        url: '/v1/wechat/change_group',
+        method: 'POST',
+        data:params
+    })
+}
 
 
 
