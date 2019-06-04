@@ -71,7 +71,7 @@ export function sendImage(params) {
  */
 export function readMsg(params) {
     return fetch({
-        url: '/v1/wechat/index/read_msg?fans_openid='+params.fans_openid+'&msg_id='+params.msg_id,
+        url: '/v1/wechat/index/read_msg?fans_openid='+params.fans_openid+'&msg_id='+params.msg_id+'&weid='+params.weid,
         method: 'GET',
         data:params
     })
@@ -94,6 +94,15 @@ export function changeGroup(params) {
         url: '/v1/wechat/change_group',
         method: 'POST',
         data:params
+    })
+}
+/*
+ *   NO:10   更改粉丝分组
+ */
+export function signOut() {
+    return fetch({
+        url: '/v1/wechat/login_out',
+        method: 'GET',
     })
 }
 
