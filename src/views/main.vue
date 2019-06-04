@@ -127,7 +127,10 @@
                         <div class="avatar" v-else>
                           <img :src="i.headimgurl">
                         </div>
-                        <div class="nickname">{{i.nickname}}</div>
+                        <div class="text">
+                          <p class="nickname">{{i.nickname}}</p>
+                          <p class="txt">{{i.last_msg}}</p>
+                        </div>
                         <div class="tubiao">
                           <div class="tubiao-icon shezhi" @click.stop="shezhiChange(i)">
                             <i class="icon iconfont icon-shezhi"></i>
@@ -394,7 +397,7 @@ export default {
       chatParams: {
         fans_openid: "",
         page_index: "",
-        page_size: 15
+        page_size: 20
       },
       recordsParams: {
         fans_openid: "",
@@ -427,7 +430,10 @@ export default {
         //分组参数
         fans_openid: "",
         group_id: ""
-      }
+      },
+      chating:{
+        groupid:'',
+      },
     };
   },
   filters: {
@@ -502,7 +508,7 @@ export default {
             }
           });
         });
-        // console.log(this.groupList);
+        console.log(this.groupList);
       }
     },
     //点击打开公众号列表
@@ -582,10 +588,12 @@ export default {
       this.devShow = true;
       this.chatList=[];
       this.getChatList(); //获取聊天记录数据
+      this.scrollChange();//  让聊天窗口处于最底部
     },
     OneChange(item) {
       // console.log(item);
       item.status = !item.status;
+      this.chating.groupid=item.groupid;
       this.$forceUpdate();
     },
     async send() {
@@ -610,7 +618,7 @@ export default {
         };
         this.chatList.push(chatData);
         // console.log(this.chatList)
-        this.scrollChange();
+        this.scrollChange();//  让聊天窗口处于最底部
         // }
       }
     },
@@ -652,7 +660,7 @@ export default {
         this.chatList.push(chatData);
         this.imageUrl = "";
         this.imageShow = false;
-        this.scrollChange();
+        this.scrollChange();//  让聊天窗口处于最底部
       }
     },
     //模糊搜索
@@ -730,7 +738,7 @@ export default {
           kf_avatar: this.avatar
         };
         this.chatList.push(chatData);
-        this.scrollChange();
+        this.scrollChange();//  让聊天窗口处于最底部
         // this.codeImageUrl=data.data.picurl;
       }
     },
@@ -808,13 +816,30 @@ export default {
         if (received_msg.code === 200) {
           let msg = received_msg.data;
           console.log(msg);
+
+          //是当前公众号和分组下时，将新来的文字信息渲染到页面
+          if(this.weid === msg.weid && this.chating.groupid===msg.groupid){
+              if(msg.msg_type===1){
+                this.groupList.forEach(item=>{
+                  if (item.groupid === this.chating.groupid) {
+                    item.userList.forEach(it=>{
+                      if(it.fans_openid===msg.fans_openid){
+                        it.last_msg=msg.content;
+                      }
+                    })
+                  }
+                })
+              }
+          };
+
+          //当聊天界面的粉丝id等于发送信息的粉丝id时;
           if (this.formParams.fans_openid == msg.fans_openid) {
-            //当聊天界面的粉丝id等于发送信息的粉丝id时;
             this.readMsgParams.msg_id = msg.msg_id;
             //发来的消息已读
             this.readMsg();
             msg.not_read_num = 0;
             this.chatList.push(msg);
+            this.scrollChange();//  让聊天窗口处于最底部
             // console.log(this.chatList)
           } else {
             //收到的消息是当前聊天公众号下面
@@ -1056,9 +1081,26 @@ export default {
                   .avatar {
                     margin-right: 15px;
                     img {
-                      width: 30px;
-                      height: 30px;
+                      width: 50px;
+                      height: 50px;
                       border-radius: 50%;
+                    }
+                  }
+                  .text{
+                     width:170px;
+                    .nickname{
+                      font-size: 14px;
+                      line-height: 24px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                    }
+                    .txt{
+                      font-size: 12px;
+                      line-height: 20px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
                     }
                   }
                   .tubiao {
@@ -1090,6 +1132,7 @@ export default {
                   .nickname {
                     color: #fff;
                   }
+                  .txt{color: #fff;}
 
                   .status {
                     .icon {
