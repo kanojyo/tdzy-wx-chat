@@ -190,6 +190,7 @@
                       <el-upload
                         list-type="picture-card"
                         :action="uploadUrl"
+                        :before-upload="beforeUpload"
                         :onSuccess="uploadSuccess"
                         :show-file-list="false"
                       >
@@ -632,6 +633,17 @@ export default {
       this.formParams.content = this.formParams.content.replace(/\n/, "");
       this.formParams.msg_type = 1;
       this.send();
+    },
+    beforeUpload(file) {
+      const isGif = file.type === 'image/gif';
+      const isLt4M = file.size / 1024 / 1024 <= 4;
+      if ( isGif ) {
+          this.$message.error('上传图片不能是Gif格式!');
+        }
+      if (!isLt4M) {
+        this.$message.error('上传图片大小不能超过 4MB!');
+      }
+      return !isGif && isLt4M
     },
     uploadSuccess(file) {
       //	上传图片
@@ -1105,7 +1117,7 @@ export default {
                   }
                   .tubiao {
                     position: absolute;
-                    top: 18px;
+                    top: 25px;
                     right: 25px;
                     display: flex;
                     flex-direction: row;

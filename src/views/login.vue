@@ -13,7 +13,7 @@
           <div class="overtime" v-else >
             <p>二维码已过期</p>
           </div>
-          <div class="text">请扫上方二维码进行登录</div>
+          <div class="text" v-show="qrcodeShow">请扫上方二维码进行登录</div>
           <div class="text">@2019
             <a href="http://www.whtdzyy.com/" target="_blank">泰斗中医院</a> 版权所有
           </div>
