@@ -464,7 +464,7 @@ export default {
       if (data.code === 200) {
         let msg = data.data;
         this.wechatList.forEach(item => {
-          if ((item.id = msg.weid)) {
+          if ((item.id == msg.weid)) {
             item.not_read_num = msg.we_not_read_num;
           }
         });
@@ -503,19 +503,22 @@ export default {
             }
           });
         });
-        console.log(this.groupList);
+        // console.log(this.groupList);
       }
     },
     //点击打开公众号列表
     openList(val) {
+      console.log(val)
       this.wechatActive = val.id;
       this.weid = val.id;
-      this.params.weid = this.weid;
-      this.formParams.weid = this.weid;
-      this.picParams.weid = this.weid;
+      this.params.weid = val.id;
+      this.formParams.weid = val.id;
+      this.picParams.weid = val.id;
       this.title = val.name;
       //获取公众号下面的分组列表
       this.getGroup();
+      console.log(this.weid,"公众号id")
+      console.log(this.wechatList)
     },
     //聊天页面的聊天记录数据
     async getChatList() {
@@ -540,6 +543,7 @@ export default {
     //点击打开聊天界面
     chatChange(val) {
       // console.log(val)
+      console.log(this.weid,"聊天公众号id")
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
       this.chatParams.fans_openid = val.fans_openid;
