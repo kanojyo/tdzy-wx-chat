@@ -451,10 +451,9 @@ export default {
       if (val === 3) {
         //退出登录
         let data = await signOut();
-        if (data.code == 200) {
+        if (data.code === 200) {
           this.$router.push("/");
           sessionStorage.clear();
-          window.location.reload();
         }
       }
     },
@@ -581,6 +580,7 @@ export default {
       this.cacheData.id = val.id;
       this.cacheData.groupid = val.groupid;
       this.devShow = true;
+      this.chatList=[];
       this.getChatList(); //获取聊天记录数据
     },
     OneChange(item) {
@@ -627,7 +627,7 @@ export default {
     },
     uploadSuccess(file) {
       //	上传图片
-      if (file.code == 200) {
+      if (file.code === 200) {
         console.log(file.data.url);
         this.imageUrl = file.data.url;
         this.imageShow = true;
@@ -674,7 +674,7 @@ export default {
             }
           });
         });
-        if (this.userList == "") {
+        if (this.userList === "") {
           this.searchShow = true;
           this.isSearchShow = true;
         } else {
@@ -743,6 +743,7 @@ export default {
       this.chatRecordsShow = true;
       this.recordsParams.fans_openid = this.chatParams.fans_openid;
       this.recordsParams.page_index = "";
+      this.chatRecords=[];
       this.chatRecordsGet();
     },
     //获取弹框的聊天记录
@@ -750,7 +751,7 @@ export default {
       let data = await chatListGet(this.recordsParams);
       if (data.code === 200) {
         this.chatRecords.unshift(...data.data.data);
-        if (this.recordsParams.page_index == "") {
+        if (this.recordsParams.page_index === "") {
           this.recordsParams.page_index = data.data.max_page - 1;
           if (data.data.max_page > 1) {
             this.RecordsShow = true;
@@ -817,13 +818,13 @@ export default {
             // console.log(this.chatList)
           } else {
             //收到的消息是当前聊天公众号下面
-            if (this.weid == msg.weid) {
+            if (this.weid === msg.weid) {
               this.groupList.forEach(item => {
                 if (item.groupid === msg.groupid) {
                   let data = 0;
                   item.userList.forEach(it => {
                     console.log(it);
-                    if (it.fans_openid == msg.fans_openid) {
+                    if (it.fans_openid === msg.fans_openid) {
                       it.not_read_num = msg.not_read_num;
                       data += it.not_read_num;
                       // this.$set()

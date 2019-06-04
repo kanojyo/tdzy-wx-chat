@@ -33,12 +33,8 @@ instance.interceptors.response.use(
     response => {
         const res = response.data;
         if(res.code === 401){   //  token过期后跳转到登录页面
-            // router.push('/out');
-            // sessionStorage.clear();
-            // window.location.reload();
-            ElementUI.Message.error(res.message);
-        }
-        else if(res.code === 400){
+            router.push('/out');
+            sessionStorage.clear();
             ElementUI.Message.error(res.message);
         }
         else if(res.code === 500){

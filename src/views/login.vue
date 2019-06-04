@@ -6,9 +6,12 @@
         <h1>泰斗公众号聊天系统</h1>
         <p>Business Management System</p>
         <div class="login-input">
-          <div class="qrcode">
+          <div class="qrcode" v-if="qrcodeShow">
             <div class="code"></div>
             <canvas id="canvas"></canvas>
+          </div>
+          <div class="overtime" v-else >
+            <p>二维码已过期</p>
           </div>
           <div class="text">请扫上方二维码进行登录</div>
           <div class="text">@2019
@@ -32,6 +35,7 @@ export default {
       qrcodeUrl: "",
       login_code: "",
       timeOut: false,
+      qrcodeShow:true,
     };
   },
   mounted() {
@@ -85,9 +89,11 @@ export default {
       let data = await LoginPoll(this.login_code);
       if (data.code === 200) {
         this.getToken(data.data.token);
-        this.timeOut=true;
+        this.timeOut=true; //停止轮询
         this.$router.push("/main");
-      } else if (data.code === 40111) {
+      } else if (data.code === 400) {
+        this.qrcodeShow=false;
+        this.timeOut=true; //停止轮询
       }
     },
     move() {
@@ -155,6 +161,14 @@ export default {
         img {
           margin-left: 10px;
           height: 40px;
+        }
+      }
+      .overtime{
+        padding-bottom: 20px;
+        p{
+          color:#fff;
+          font-size: 24px;
+          line-height: 30px;
         }
       }
     }
