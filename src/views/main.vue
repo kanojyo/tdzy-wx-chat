@@ -147,8 +147,8 @@
             <div class="main-contens" v-if="devShow">
               <div class="nickname centered">{{userData.nickname}}</div>
               <div class="dialogue-k">
-                <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
-                <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div>
+                <!-- <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
+                <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div> -->
                 <ul class="list">
                   <li class="item" v-for="(item, index) in chatList" :key="index">
                     <div class="system" v-if="item.key===1">
@@ -387,7 +387,51 @@ export default {
       wechatList: [], //公众号列表
       wechatActive: "", //  公众号选中样式
       bgActive: "", //  好友选中样式
-      groupList: [],
+      //分组列表
+      groupList: [
+        {
+          group_name:"未分组",
+          not_read_num:0,
+          groupid:1,
+          count:0,
+          userList:[]
+        },
+        {
+          group_name:"已接待",
+          not_read_num:0,
+          groupid:2,
+          count:0,
+          userList:[]
+        },
+        {
+          group_name:"有意向",
+          not_read_num:0,
+          groupid:3,
+          count:0,
+          userList:[]
+        },
+        {
+          group_name:"已成单",
+          not_read_num:0,
+          groupid:4,
+          count:0,
+          userList:[]
+        },
+        {
+          group_name:"已结束",
+          not_read_num:0,
+          groupid:5,
+          count:0,
+          userList:[]
+        },
+        {
+          group_name:"广告粉",
+          not_read_num:0,
+          groupid:6,
+          count:0,
+          userList:[]
+        },
+      ],
       friendList: [],
       weid: "", //公众号的id
       params: {
@@ -637,14 +681,17 @@ export default {
     },
     beforeUpload(file) {
       const isGif = file.type === 'image/gif';
+      const isJPG = file.type === 'image/jpg';
+      const isPNG = file.type === 'image/png';
+      const isJPEG = file.type === 'image/jpeg';
       const isLt4M = file.size / 1024 / 1024 <= 4;
-      if ( isGif ) {
-          this.$message.error('上传图片不能是Gif格式!');
+      if (!isJPG && !isJPEG && !isPNG) {
+          this.$message.error('上传图片只能是 jpg,png,jpeg 格式!');
         }
       if (!isLt4M) {
         this.$message.error('上传图片大小不能超过 4MB!');
       }
-      return !isGif && isLt4M
+      return (isJPG || isJPEG || isPNG) && isLt4M
     },
     uploadSuccess(file) {
       //	上传图片
