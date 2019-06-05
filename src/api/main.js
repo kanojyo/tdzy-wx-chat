@@ -41,7 +41,7 @@ export function sendMsg(params) {
  */
 export function chatListGet(params) {
     return fetch({
-        url: '/v1/wechat/index/chat_list?fans_openid='+params.fans_openid+'&page_index='+params.page_index+'&page_size='+params.page_size,
+        url: 'v1/wechat/chat_list_slide?fans_openid='+params.fans_openid+'&direct='+params.direct+'&min_msg_id='+params.min_msg_id+'&max_msg_id='+params.max_msg_id,
         method: 'GET',
         data:params
     })

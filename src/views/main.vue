@@ -6,7 +6,7 @@
           <div class="head">
             <div class="pull-left">
               <img src="../assets/img/logo.png" alt>
-              <span class="text">泰斗医聊客服系统</span>
+              <span class="text">泰斗公众号聊天系统</span>
             </div>
             <div class="pull-right">
               <div class="avatar">
@@ -18,15 +18,6 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <!-- <el-dropdown-item split-button>
-                    <span @click="baseInfo">基本信息</span>
-                  </el-dropdown-item>
-                  <el-dropdown-item split-button>
-                    <span @click="changePassword">修改密码</span>
-                  </el-dropdown-item>-->
-                  <!-- <el-dropdown-item split-button>
-                    <span @click="WebSocketTest">websocket</span>
-                  </el-dropdown-item>-->
                   <el-dropdown-item divided split-button>
                     <el-tooltip content="退出登录" placement="bottom" effect="light">
                       <div class="iconCenter" @click="headClick(3)" style="text-align:center;">
@@ -163,7 +154,7 @@
                           <div class="time">{{item.ctime|formatDate}}</div>
                           <div class="text" v-if="item.msg_type === 1">{{item.content}}</div>
                           <div v-if="item.msg_type === 2" class="pull-left" style="width: 200px;">
-                            <img :src="item.picurl" alt>
+                            <img :src="item.picurl" @click="largeImage(item.picurl)" alt>
                           </div>
                         </div>
                       </div>
@@ -175,7 +166,7 @@
                           <div class="time">{{item.ctime|formatDate}}</div>
                           <div class="text" v-if="item.msg_type === 1">{{item.content}}</div>
                           <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
-                            <img :src="item.picurl" alt style="width:100%;">
+                            <img :src="item.picurl" @click="largeImage(item.picurl)" alt style="width:100%;">
                           </div>
                         </div>
                       </div>
@@ -268,6 +259,7 @@
         <el-button type="primary" @click="imageChange">确 定</el-button>
       </span>
     </el-dialog>
+     <!-- 聊天记录 -->
     <el-dialog title="聊天记录" :visible.sync="chatRecordsShow" width="50%">
       <div class="chatRecords">
         <div class="centered upload" v-show="RecordsShow" @click="chatRecordsGet">加载更多~</div>
@@ -325,6 +317,12 @@
         <el-button @click="setShow = false">返 回</el-button>
         <el-button type="primary" @click="setChange">确 定</el-button>
       </span>
+    </el-dialog>
+    <!-- 查看大图 -->
+    <el-dialog title="查看大图" :visible.sync="largeImageShow">
+      <div class="image" style="text-align:center;">
+        <img :src="largePicUrl" alt  style="width:100%;" >
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -441,13 +439,17 @@ export default {
       },
       chatParams: {
         fans_openid: "",
-        page_index: "",
-        page_size: 20
+        direct: "",
+        page_size: 20,
+        min_msg_id:'',
+        max_msg_id:''
       },
       recordsParams: {
         fans_openid: "",
-        page_index: "",
+        direct: "",
         page_size: 20,
+        min_msg_id:'',
+        max_msg_id:''
       },
       readMsgParams: {
         //消息上报的参数
@@ -479,6 +481,8 @@ export default {
       chating:{
         groupid:'',
       },
+      largeImageShow:false,
+      largePicUrl:'',//查看大图的地址
     };
   },
   filters: {
@@ -493,7 +497,6 @@ export default {
     this.uploadUrl = this.baseURL + "/v1/uploads";
   },
   computed: mapState({
-    // user: state => state.login, //   用户名
     token: state => state.token, // token
     device: state => state.device // device
   }),
@@ -575,30 +578,16 @@ export default {
     async getChatList() {
       let data = await chatListGet(this.chatParams);
       if (data.code === 200) {
-        this.chatList.unshift(...data.data.data);
-        if (this.chatParams.page_index == "") {
-          this.chatParams.page_index = data.data.max_page - 1;
-          if (data.data.max_page > 1) {
-            this.uploadShow = true;
-          } else {
-            this.uploadShow = false;
-          }
-        } else if (this.chatParams.page_index > 1) {
-          this.chatParams.page_index--;
-          this.uploadShow = true;
-        } else if (this.chatParams.page_index === 1) {
-          this.uploadShow = false;
-        }
+        this.chatList=data.data.list;
+        // console.log(this.chatList);
       }
     },
     //点击打开聊天界面
     chatChange(val) {
       // console.log(val)
-      console.log(this.weid,"聊天公众号id")
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
       this.chatParams.fans_openid = val.fans_openid;
-      this.chatParams.page_index = "";
       this.readMsgParams.fans_openid = val.fans_openid;
       this.readMsgParams.weid = this.weid;
       this.readMsgParams.msg_id = 0;
@@ -810,7 +799,8 @@ export default {
     getRecord() {
       this.chatRecordsShow = true;
       this.recordsParams.fans_openid = this.chatParams.fans_openid;
-      this.recordsParams.page_index = "";
+      this.recordsParams.direct='';
+      this.recordsParams.min_msg_id='';
       this.chatRecords=[];
       this.chatRecordsGet();
     },
@@ -818,20 +808,22 @@ export default {
     async chatRecordsGet() {
       let data = await chatListGet(this.recordsParams);
       if (data.code === 200) {
-        this.chatRecords.unshift(...data.data.data);
-        if (this.recordsParams.page_index === "") {
-          this.recordsParams.page_index = data.data.max_page - 1;
-          if (data.data.max_page > 1) {
-            this.RecordsShow = true;
-          } else {
-            this.RecordsShow = false;
-          }
-        } else if (this.recordsParams.page_index > 1) {
-          this.recordsParams.page_index--;
-          this.RecordsShow = true;
-        } else if (this.recordsParams.page_index === 1) {
-          this.RecordsShow = false;
+        this.chatRecords.unshift(...data.data.list);
+        if(data.data.list.length>0){
+          let minId=data.data.list[0].id;
+          this.recordsParams.direct=1;
+          this.recordsParams.min_msg_id=minId;
+          chatListGet(this.recordsParams).then(item=>{
+            if(item.code===200){
+              if(item.data.list.length>0){
+                this.RecordsShow=true;
+              }else{
+                this.RecordsShow=false;
+              }
+            }
+          })
         }
+        
       }
     },
     //设置分组弹窗
@@ -851,6 +843,11 @@ export default {
         this.getGroup();
         this.setShow = false;
       }
+    },
+    //查看大图
+    largeImage(item){
+      this.largeImageShow=true;
+      this.largePicUrl=item;
     },
     //基本信息
     // baseInfo() {
