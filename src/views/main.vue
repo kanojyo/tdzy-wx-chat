@@ -143,7 +143,7 @@
                 <ul class="list">
                   <li class="item" v-for="(item, index) in chatList" :key="index">
                     <div class="system" v-if="item.key===1">
-                      <div class="text">{{item.content}}</div>
+                      <div class="text">{{item.ctime|formatDate}}-{{item.content}}</div>
                     </div>
                     <div class="info" v-if="item.key===0">
                       <div class="tourist" v-if="item.send_type === 1">
