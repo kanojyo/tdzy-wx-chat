@@ -459,8 +459,9 @@ export default {
         //退出登录
         let data = await signOut();
         if (data.code === 200) {
-          this.$router.push("/");
+          this.$router.push('/out');
           sessionStorage.clear();
+          window.location.reload();
         }
       }
     },

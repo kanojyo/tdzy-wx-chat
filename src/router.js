@@ -9,6 +9,12 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '*',
+      name: '',
+      meta: { title: '泰斗医聊客服系统-登录页面', keepAlive: true },
+      component: login
+    },
+    {
       path: '/',
       name: 'login',
       meta: {
