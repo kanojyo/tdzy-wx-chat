@@ -38,6 +38,9 @@ instance.interceptors.response.use(
             window.location.reload();
             ElementUI.Message.error(res.message);
         }
+        else if(res.code === 400){
+            ElementUI.Message.error(res.message);
+        }
         else if(res.code === 500){
             ElementUI.Message.error(res.message);
         }
