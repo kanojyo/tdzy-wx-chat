@@ -235,18 +235,47 @@
                   <!-- <li class="item" :class="{active: rightActive === 3}" @click="rightActive = 3">聊天记录</li> -->
                   <li
                     class="item"
-                    :class="{active: rightActive === 4}"
-                    @click="rightActive = 4"
+                    :class="{active: rightActive === 3}"
+                    @click="rightActive = 3"
                   >病症信息</li>
                 </ul>
               </div>
               <div class="right-middle-contens">
-                <div class="reply" v-show="rightActive === 1">快捷回复</div>
+                <div class="reply" v-show="rightActive === 1">
+                  <!-- <div class="reply-add">
+                    <el-button size="mini" type="primary" @click="replyChange">添 加</el-button>
+                  </div>
+                  <div class="reply-list">
+                    <ul class="list">
+                      <li class="item" v-for="(item, index) in phraseList" :key="index">
+                        <el-card class="box-card">
+                          <div slot="header" class="clearfix">
+                            <span>{{item.title}}</span>
+                            <el-button
+                              size="mini"
+                              style="float: right; padding: 3px 0"
+                              type="text"
+                              @click="compileChange(item)"
+                            >编辑</el-button>
+                            <el-button size="mini" style="float: right; padding: 3px 0" type="text"></el-button>
+                            <el-button
+                              size="mini"
+                              style="float: right; padding: 3px 0"
+                              type="text"
+                              @click="delChange(item)"
+                            >删除</el-button>
+                          </div>
+                          <div
+                            class="text cursor"
+                            @click="contenChange(item.content)"
+                          >{{item.content}}</div>
+                        </el-card>
+                      </li>
+                    </ul>
+                  </div>-->
+                </div>
                 <div class="remark" v-show="rightActive === 2">用户信息</div>
-                <!-- <div class="record" v-show="rightActive === 3">
-                  聊天记录
-                </div>-->
-                <div class="disease" v-show="rightActive === 4">病症信息</div>
+                <div class="disease" v-show="rightActive === 3">病症信息</div>
               </div>
             </div>
           </el-aside>
@@ -656,7 +685,7 @@ export default {
           key: 0,
           send_type: 2,
           msg_type: 1,
-          kf_avatar: this.avatar,
+          kf_avatar: this.avatar
         };
         this.chatList.push(chatData);
         // console.log(this.chatList)
@@ -782,6 +811,12 @@ export default {
         weid: this.formParams.weid,
         fans_openid: this.formParams.fans_openid
       });
+      const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       if (data.code === 200) {
         // console.log(data.data);
         let receiveData = data.data;
@@ -796,7 +831,10 @@ export default {
         this.chatList.push(chatData);
         this.scrollChange(); //  让聊天窗口处于最底部
         // this.codeImageUrl=data.data.picurl;
+      }else{
+        loading.close();
       }
+      loading.close();
     },
     //弹出收款二维码图片的弹框
     sendQrcode() {
@@ -815,11 +853,6 @@ export default {
         var recordsList = document.querySelector(".chatRecords>.list");
         records.scrollTop = records.scrollHeight;
       }, 500);
-
-      // console.log(recordsList.scrollHeight)
-      // setTimeout(() => {
-      //     recordsList.scrollTop = records.scrollHeight;
-      //   }, 50);
     },
     //获取弹框的聊天记录
     async chatRecordsGet() {
@@ -887,44 +920,62 @@ export default {
           //当聊天界面公众号为新消息所属公众号时，
           if (this.weid === msg.weid) {
             //当聊天界面分组为新消息所属分组时，
-            if (this.chating.groupid === msg.groupid) {
-              //将新来的文字信息渲染到页面
-              if (msg.msg_type === 1) {
-                this.groupList.forEach(item => {
-                  if (item.groupid === this.chating.groupid) {
-                    item.userList.forEach(it => {
-                      if (it.fans_openid === msg.fans_openid) {
-                        it.last_msg = msg.content;
-                      }
-                    });
-                  }
-                });
-              }else{}
-              //当聊天界面的粉丝id等于发送信息的粉丝id时;
-              if (this.formParams.fans_openid == msg.fans_openid) {
-                this.readMsgParams.msg_id = msg.msg_id;
-                //发来的消息已读
-                this.readMsg();
-                msg.not_read_num = 0;
-                this.chatList.push(msg);
-                this.scrollChange(); //  让聊天窗口处于最底部
-                // console.log(this.chatList)
-              } 
-              //当聊天界面的粉丝id不等于发送信息的粉丝id时;
-              else if (this.formParams.fans_openid !== msg.fans_openid) {
-                this.groupList.forEach(item => {
-                  if (item.groupid === msg.groupid) {
-                    item.userList.forEach(it => {
-                      if (it.fans_openid == msg.fans_openid && it.fans_openid !== this.formParams.fans_openid) {
-                        it.not_read_num = msg.not_read_num;
-                      }
-                    });
-                  }
-                });
-                console.log(this.groupList,'发送消息后')
+            if (this.chating.groupid !== "") {
+              if (this.chating.groupid === msg.groupid) {
+                //将新来的文字信息渲染到页面
+                if (msg.msg_type === 1) {
+                  this.groupList.forEach(item => {
+                    if (item.groupid === this.chating.groupid) {
+                      item.userList.forEach(it => {
+                        if (it.fans_openid === msg.fans_openid) {
+                          it.last_msg = msg.content;
+                        }
+                      });
+                    }
+                  });
+                } else {
+                }
+                //当聊天界面的粉丝id等于发送信息的粉丝id时;
+                if (this.formParams.fans_openid == msg.fans_openid) {
+                  this.readMsgParams.msg_id = msg.msg_id;
+                  //发来的消息已读
+                  this.readMsg();
+                  msg.not_read_num = 0;
+                  this.chatList.push(msg);
+                  this.scrollChange(); //  让聊天窗口处于最底部
+                  // console.log(this.chatList)
+                }
+                //当聊天界面的粉丝id不等于发送信息的粉丝id时;
+                else if (this.formParams.fans_openid !== msg.fans_openid) {
+                  this.groupList.forEach(item => {
+                    if (item.groupid === msg.groupid) {
+                      item.userList.forEach(it => {
+                        if (
+                          it.fans_openid == msg.fans_openid &&
+                          it.fans_openid !== this.formParams.fans_openid
+                        ) {
+                          it.not_read_num = msg.not_read_num;
+                        }
+                      });
+                    }
+                  });
+                  console.log(this.groupList, "发送消息后");
+                }
               }
+            }else{
+              this.groupList.forEach(item=>{
+                if(item.groupid === msg.groupid){
+                  item.userList.forEach(it=>{
+                    if(it.fans_openid ===msg.fans_openid){
+                      it.not_read_num = msg.not_read_num;
+                    };
+                    item.not_read_num+=it.not_read_num;
+                  })
+                }
+              })
             }
-          }else{}
+          } else {
+          }
           //渲染公众号列表的消息总数
           this.wechatList.forEach(item => {
             if (item.id === msg.weid) {
@@ -962,7 +1013,7 @@ export default {
           //渲染公众号列表分组的消息总数
           this.groupList.forEach(item => {
             if (item.groupid === msg.groupid) {
-              item.not_read_num=0;
+              item.not_read_num = 0;
               item.userList.forEach(it => {
                 item.not_read_num += it.not_read_num;
               });
@@ -1397,6 +1448,21 @@ export default {
           .right-middle-contens {
             .reply {
               padding-top: 5px;
+              .reply-add {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-top: 5px;
+              }
+              .reply-list {
+                .list {
+                  margin-top: 10px;
+                  .item {
+                    // padding: 0 8px;
+                    margin-bottom: 8px;
+                  }
+                }
+              }
             }
             .remark {
               padding-top: 5px;
