@@ -10,7 +10,7 @@
             </div>
             <div class="pull-right">
               <div class="avatar">
-                <img src="../assets/img/kefu.jpg" alt>
+                <img src="https://cdn-statis.mangguokandian.com/avatar.png" alt>
               </div>
               <el-dropdown>
                 <span class="el-dropdown-link">
@@ -110,8 +110,8 @@
                       >
                         <el-badge
                           class="avatar"
-                          :value="item.not_read_num>99?'99+':item.not_read_num"
-                          v-if="item.not_read_num !==0"
+                          :value="i.not_read_num>99?'99+':i.not_read_num"
+                          v-if="i.not_read_num !==0"
                         >
                           <img :src="i.headimgurl">
                         </el-badge>
@@ -139,11 +139,11 @@
               <div class="nickname centered">{{userData.nickname}}</div>
               <div class="dialogue-k">
                 <!-- <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
-                <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div> -->
+                <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div>-->
                 <ul class="list">
                   <li class="item" v-for="(item, index) in chatList" :key="index">
                     <div class="system" v-if="item.key===1">
-                      <div class="text">{{item.ctime|formatDate}}-{{item.content}}</div>
+                      <div class="text">{{item.ctime|formatDate}} {{item.content}}</div>
                     </div>
                     <div class="info" v-if="item.key===0">
                       <div class="tourist" v-if="item.send_type === 1">
@@ -166,8 +166,14 @@
                           <div class="time">{{item.ctime|formatDate}}</div>
                           <div class="text" v-if="item.msg_type === 1">{{item.content}}</div>
                           <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
-                            <img :src="item.picurl" @click="largeImage(item.picurl)" alt style="width:100%;">
+                            <img
+                              :src="item.picurl"
+                              @click="largeImage(item.picurl)"
+                              alt
+                              style="width:100%;"
+                            >
                           </div>
+                          <div class="pull-right">医助账号({{item.kf_nickname}})</div>
                         </div>
                       </div>
                     </div>
@@ -259,7 +265,7 @@
         <el-button type="primary" @click="imageChange">确 定</el-button>
       </span>
     </el-dialog>
-     <!-- 聊天记录 -->
+    <!-- 聊天记录 -->
     <el-dialog title="聊天记录" :visible.sync="chatRecordsShow" width="50%">
       <div class="chatRecords">
         <div class="centered upload" v-show="RecordsShow" @click="chatRecordsGet">加载更多~</div>
@@ -267,7 +273,7 @@
         <ul class="list">
           <li class="item" v-for="(item, index) in chatRecords" :key="index">
             <div class="system" v-if="item.key===1">
-              <div class="text">{{item.content}}</div>
+              <div class="text">{{item.ctime|formatDate}} {{item.content}}</div>
             </div>
             <div class="info" v-if="item.key===0">
               <div class="tourist" v-if="item.send_type === 1">
@@ -292,6 +298,7 @@
                   <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
                     <img :src="item.picurl" alt style="width:100%;">
                   </div>
+                  <div class="pull-right">医助账号({{item.kf_nickname}})</div>
                 </div>
               </div>
             </div>
@@ -321,7 +328,7 @@
     <!-- 查看大图 -->
     <el-dialog title="查看大图" :visible.sync="largeImageShow">
       <div class="image" style="text-align:center;">
-        <img :src="largePicUrl" alt  style="width:100%;" >
+        <img :src="largePicUrl" alt style="width:100%;">
       </div>
     </el-dialog>
   </div>
@@ -343,6 +350,7 @@ import {
   signOut
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
+import { clearTimeout, setInterval } from "timers";
 export default {
   data() {
     return {
@@ -388,47 +396,47 @@ export default {
       //分组列表
       groupList: [
         {
-          group_name:"未分组",
-          not_read_num:0,
-          groupid:1,
-          count:0,
-          userList:[]
+          group_name: "未分组",
+          not_read_num: 0,
+          groupid: 1,
+          count: 0,
+          userList: []
         },
         {
-          group_name:"已接待",
-          not_read_num:0,
-          groupid:2,
-          count:0,
-          userList:[]
+          group_name: "已接待",
+          not_read_num: 0,
+          groupid: 2,
+          count: 0,
+          userList: []
         },
         {
-          group_name:"有意向",
-          not_read_num:0,
-          groupid:3,
-          count:0,
-          userList:[]
+          group_name: "有意向",
+          not_read_num: 0,
+          groupid: 3,
+          count: 0,
+          userList: []
         },
         {
-          group_name:"已成单",
-          not_read_num:0,
-          groupid:4,
-          count:0,
-          userList:[]
+          group_name: "已成单",
+          not_read_num: 0,
+          groupid: 4,
+          count: 0,
+          userList: []
         },
         {
-          group_name:"已结束",
-          not_read_num:0,
-          groupid:5,
-          count:0,
-          userList:[]
+          group_name: "已结束",
+          not_read_num: 0,
+          groupid: 5,
+          count: 0,
+          userList: []
         },
         {
-          group_name:"广告粉",
-          not_read_num:0,
-          groupid:6,
-          count:0,
-          userList:[]
-        },
+          group_name: "广告粉",
+          not_read_num: 0,
+          groupid: 6,
+          count: 0,
+          userList: []
+        }
       ],
       friendList: [],
       weid: "", //公众号的id
@@ -441,15 +449,15 @@ export default {
         fans_openid: "",
         direct: "",
         page_size: 20,
-        min_msg_id:'',
-        max_msg_id:''
+        min_msg_id: "",
+        max_msg_id: ""
       },
       recordsParams: {
         fans_openid: "",
         direct: "",
         page_size: 20,
-        min_msg_id:'',
-        max_msg_id:''
+        min_msg_id: "",
+        max_msg_id: ""
       },
       readMsgParams: {
         //消息上报的参数
@@ -478,11 +486,11 @@ export default {
         fans_openid: "",
         group_id: ""
       },
-      chating:{
-        groupid:'',
+      chating: {
+        groupid: ""
       },
-      largeImageShow:false,
-      largePicUrl:'',//查看大图的地址
+      largeImageShow: false,
+      largePicUrl: "" //查看大图的地址
     };
   },
   filters: {
@@ -506,7 +514,7 @@ export default {
         //退出登录
         let data = await signOut();
         if (data.code === 200) {
-          this.$router.push('/out');
+          this.$router.push("/out");
           sessionStorage.clear();
           window.location.reload();
         }
@@ -518,7 +526,7 @@ export default {
       if (data.code === 200) {
         let msg = data.data;
         this.wechatList.forEach(item => {
-          if ((item.id == msg.weid)) {
+          if (item.id == msg.weid) {
             item.not_read_num = msg.we_not_read_num;
           }
         });
@@ -562,7 +570,7 @@ export default {
     },
     //点击打开公众号列表
     openList(val) {
-      console.log(val)
+      console.log(val);
       this.wechatActive = val.id;
       this.weid = val.id;
       this.params.weid = val.id;
@@ -571,20 +579,20 @@ export default {
       this.title = val.name;
       //获取公众号下面的分组列表
       this.getGroup();
-      console.log(this.weid,"公众号id")
-      console.log(this.wechatList)
+      console.log(this.weid, "公众号id");
+      console.log(this.wechatList);
     },
     //聊天页面的聊天记录数据
     async getChatList() {
       let data = await chatListGet(this.chatParams);
       if (data.code === 200) {
-        this.chatList=data.data.list;
+        this.chatList = data.data.list;
         // console.log(this.chatList);
       }
     },
     //点击打开聊天界面
     chatChange(val) {
-      // console.log(val)
+      console.log(val);
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
       this.chatParams.fans_openid = val.fans_openid;
@@ -593,7 +601,7 @@ export default {
       this.readMsgParams.msg_id = 0;
       this.readMsg();
       val.not_read_num = 0;
-      // console.log(this.groupList)
+      //计算分组的未读消息数
       this.groupList.forEach(item => {
         item.not_read_num = 0;
         item.userList.forEach(it => {
@@ -621,14 +629,14 @@ export default {
       this.cacheData.id = val.id;
       this.cacheData.groupid = val.groupid;
       this.devShow = true;
-      this.chatList=[];
+      this.chatList = [];
       this.getChatList(); //获取聊天记录数据
-      this.scrollChange();//  让聊天窗口处于最底部
+      this.scrollChange(); //  让聊天窗口处于最底部
     },
     OneChange(item) {
       // console.log(item);
       item.status = !item.status;
-      this.chating.groupid=item.groupid;
+      this.chating.groupid = item.groupid;
       this.$forceUpdate();
     },
     async send() {
@@ -638,7 +646,6 @@ export default {
         console.log(data);
         let sendData = data.data;
         let chatData = {};
-        // if (this.formParams.msg_type === 1) {
         //文字发送成功后将文本输入框重置
         this.formParams.content = "";
         //将发送的文字信息加入到聊天记录中;
@@ -649,11 +656,11 @@ export default {
           key: 0,
           send_type: 2,
           msg_type: 1,
-          kf_avatar: this.avatar
+          kf_avatar: this.avatar,
         };
         this.chatList.push(chatData);
         // console.log(this.chatList)
-        this.scrollChange();//  让聊天窗口处于最底部
+        this.scrollChange(); //  让聊天窗口处于最底部
         // }
       }
     },
@@ -669,18 +676,18 @@ export default {
       this.send();
     },
     beforeUpload(file) {
-      const isGif = file.type === 'image/gif';
-      const isJPG = file.type === 'image/jpg';
-      const isPNG = file.type === 'image/png';
-      const isJPEG = file.type === 'image/jpeg';
+      const isGif = file.type === "image/gif";
+      const isJPG = file.type === "image/jpg";
+      const isPNG = file.type === "image/png";
+      const isJPEG = file.type === "image/jpeg";
       const isLt4M = file.size / 1024 / 1024 <= 4;
       if (!isJPG && !isJPEG && !isPNG) {
-          this.$message.error('上传图片只能是 jpg,png,jpeg 格式!');
-        }
-      if (!isLt4M) {
-        this.$message.error('上传图片大小不能超过 4MB!');
+        this.$message.error("上传图片只能是 jpg,png,jpeg 格式!");
       }
-      return (isJPG || isJPEG || isPNG) && isLt4M
+      if (!isLt4M) {
+        this.$message.error("上传图片大小不能超过 4MB!");
+      }
+      return (isJPG || isJPEG || isPNG) && isLt4M;
     },
     uploadSuccess(file) {
       //	上传图片
@@ -709,7 +716,7 @@ export default {
         this.chatList.push(chatData);
         this.imageUrl = "";
         this.imageShow = false;
-        this.scrollChange();//  让聊天窗口处于最底部
+        this.scrollChange(); //  让聊天窗口处于最底部
       }
     },
     //模糊搜索
@@ -787,7 +794,7 @@ export default {
           kf_avatar: this.avatar
         };
         this.chatList.push(chatData);
-        this.scrollChange();//  让聊天窗口处于最底部
+        this.scrollChange(); //  让聊天窗口处于最底部
         // this.codeImageUrl=data.data.picurl;
       }
     },
@@ -799,31 +806,40 @@ export default {
     getRecord() {
       this.chatRecordsShow = true;
       this.recordsParams.fans_openid = this.chatParams.fans_openid;
-      this.recordsParams.direct='';
-      this.recordsParams.min_msg_id='';
-      this.chatRecords=[];
+      this.recordsParams.direct = "";
+      this.recordsParams.min_msg_id = "";
+      this.chatRecords = [];
       this.chatRecordsGet();
+      setTimeout(() => {
+        var records = document.querySelector(".chatRecords");
+        var recordsList = document.querySelector(".chatRecords>.list");
+        records.scrollTop = records.scrollHeight;
+      }, 500);
+
+      // console.log(recordsList.scrollHeight)
+      // setTimeout(() => {
+      //     recordsList.scrollTop = records.scrollHeight;
+      //   }, 50);
     },
     //获取弹框的聊天记录
     async chatRecordsGet() {
       let data = await chatListGet(this.recordsParams);
       if (data.code === 200) {
         this.chatRecords.unshift(...data.data.list);
-        if(data.data.list.length>0){
-          let minId=data.data.list[0].id;
-          this.recordsParams.direct=1;
-          this.recordsParams.min_msg_id=minId;
-          chatListGet(this.recordsParams).then(item=>{
-            if(item.code===200){
-              if(item.data.list.length>0){
-                this.RecordsShow=true;
-              }else{
-                this.RecordsShow=false;
+        if (data.data.list.length > 0) {
+          let minId = data.data.list[0].id;
+          this.recordsParams.direct = 1;
+          this.recordsParams.min_msg_id = minId;
+          chatListGet(this.recordsParams).then(item => {
+            if (item.code === 200) {
+              if (item.data.list.length > 0) {
+                this.RecordsShow = true;
+              } else {
+                this.RecordsShow = false;
               }
             }
-          })
+          });
         }
-        
       }
     },
     //设置分组弹窗
@@ -845,15 +861,10 @@ export default {
       }
     },
     //查看大图
-    largeImage(item){
-      this.largeImageShow=true;
-      this.largePicUrl=item;
+    largeImage(item) {
+      this.largeImageShow = true;
+      this.largePicUrl = item;
     },
-    //基本信息
-    // baseInfo() {
-    //   // this.Info();
-    //   this.dialogInfoVisible = true;
-    // },
     //websocket聊天消息提醒
     WebSocketTest() {
       let ws = new WebSocket(
@@ -873,66 +884,90 @@ export default {
         if (received_msg.code === 200) {
           let msg = received_msg.data;
           console.log(msg);
-
-          //是当前公众号和分组下时，将新来的文字信息渲染到页面
-          if(this.weid === msg.weid && this.chating.groupid===msg.groupid){
-              if(msg.msg_type===1){
-                this.groupList.forEach(item=>{
+          //当聊天界面公众号为新消息所属公众号时，
+          if (this.weid === msg.weid) {
+            //当聊天界面分组为新消息所属分组时，
+            if (this.chating.groupid === msg.groupid) {
+              //将新来的文字信息渲染到页面
+              if (msg.msg_type === 1) {
+                this.groupList.forEach(item => {
                   if (item.groupid === this.chating.groupid) {
-                    item.userList.forEach(it=>{
-                      if(it.fans_openid===msg.fans_openid){
-                        it.last_msg=msg.content;
+                    item.userList.forEach(it => {
+                      if (it.fans_openid === msg.fans_openid) {
+                        it.last_msg = msg.content;
                       }
-                    })
+                    });
                   }
-                })
+                });
+              }else{}
+              //当聊天界面的粉丝id等于发送信息的粉丝id时;
+              if (this.formParams.fans_openid == msg.fans_openid) {
+                this.readMsgParams.msg_id = msg.msg_id;
+                //发来的消息已读
+                this.readMsg();
+                msg.not_read_num = 0;
+                this.chatList.push(msg);
+                this.scrollChange(); //  让聊天窗口处于最底部
+                // console.log(this.chatList)
+              } 
+              //当聊天界面的粉丝id不等于发送信息的粉丝id时;
+              else if (this.formParams.fans_openid !== msg.fans_openid) {
+                this.groupList.forEach(item => {
+                  if (item.groupid === msg.groupid) {
+                    item.userList.forEach(it => {
+                      if (it.fans_openid == msg.fans_openid && it.fans_openid !== this.formParams.fans_openid) {
+                        it.not_read_num = msg.not_read_num;
+                      }
+                    });
+                  }
+                });
+                console.log(this.groupList,'发送消息后')
               }
-          };
+            }
+          }else{}
+          //渲染公众号列表的消息总数
+          this.wechatList.forEach(item => {
+            if (item.id === msg.weid) {
+              item.not_read_num = msg.wx_not_read_num;
+            }
+          });
 
-          //当聊天界面的粉丝id等于发送信息的粉丝id时;
-          if (this.formParams.fans_openid == msg.fans_openid) {
-            this.readMsgParams.msg_id = msg.msg_id;
-            //发来的消息已读
-            this.readMsg();
-            msg.not_read_num = 0;
-            this.chatList.push(msg);
-            this.scrollChange();//  让聊天窗口处于最底部
-            // console.log(this.chatList)
-          } else {
-            //收到的消息是当前聊天公众号下面
-            if (this.weid === msg.weid) {
-              this.groupList.forEach(item => {
-                if (item.groupid === msg.groupid) {
-                  let data = 0;
-                  item.userList.forEach(it => {
-                    console.log(it);
-                    if (it.fans_openid === msg.fans_openid) {
-                      it.not_read_num = msg.not_read_num;
-                      data += it.not_read_num;
-                      // this.$set()
-                      console.log(this.groupList);
-                    } else {
-                      data += it.not_read_num;
-                    }
-                    // this.$forceUpdate();
-                  });
-                  item.not_read_num = data;
-                }
-              });
-              this.wechatList.forEach(item => {
-                if (item.id === msg.weid) {
-                  item.not_read_num = msg.wx_not_read_num;
-                }
-              });
-            } else if (this.weid !== msg.weid) {
-              //收到的消息不是当前聊天界面公众号的
-              this.wechatList.forEach(item => {
-                if (item.id === msg.weid) {
-                  item.not_read_num = msg.wx_not_read_num;
-                }
+          // //当聊天界面的粉丝id等于发送信息的粉丝id时;
+          // if (this.formParams.fans_openid == msg.fans_openid) {
+          //   this.readMsgParams.msg_id = msg.msg_id;
+          //   //发来的消息已读
+          //   this.readMsg();
+          //   msg.not_read_num = 0;
+          //   this.chatList.push(msg);
+          //   this.scrollChange(); //  让聊天窗口处于最底部
+          //   // console.log(this.chatList)
+          // } else if (this.formParams.fans_openid !== msg.fans_openid) {
+          //   //收到的消息是当前聊天公众号下面
+          //   if (this.weid === msg.weid) {
+          //     this.groupList.forEach(item => {
+          //       if (item.groupid === msg.groupid) {
+          //         item.userList.forEach(it => {
+          //           if (
+          //             it.fans_openid !== this.formParams.fans_openid &&
+          //             it.fans_openid == msg.fans_openid
+          //           ) {
+          //             it.not_read_num = msg.not_read_num;
+          //           }
+          //         });
+          //       }
+          //     });
+          //   }
+          // }
+
+          //渲染公众号列表分组的消息总数
+          this.groupList.forEach(item => {
+            if (item.groupid === msg.groupid) {
+              item.not_read_num=0;
+              item.userList.forEach(it => {
+                item.not_read_num += it.not_read_num;
               });
             }
-          }
+          });
         }
       };
       ws.onclose = () => {
@@ -1143,16 +1178,16 @@ export default {
                       border-radius: 50%;
                     }
                   }
-                  .text{
-                     width:170px;
-                    .nickname{
+                  .text {
+                    width: 170px;
+                    .nickname {
                       font-size: 14px;
                       line-height: 24px;
                       overflow: hidden;
                       text-overflow: ellipsis;
                       white-space: nowrap;
                     }
-                    .txt{
+                    .txt {
                       font-size: 12px;
                       line-height: 20px;
                       overflow: hidden;
@@ -1189,7 +1224,9 @@ export default {
                   .nickname {
                     color: #fff;
                   }
-                  .txt{color: #fff;}
+                  .txt {
+                    color: #fff;
+                  }
 
                   .status {
                     .icon {
