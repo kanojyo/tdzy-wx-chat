@@ -10,11 +10,11 @@
             </div>
             <div class="pull-right">
               <div class="avatar">
-                <img src="https://cdn-statis.mangguokandian.com/avatar.png" alt>
+                <img :src="kfInfo.avatar" alt>
               </div>
               <el-dropdown>
                 <span class="el-dropdown-link">
-                  {{info.username}}
+                  {{kfInfo.nickname}}
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -173,7 +173,7 @@
                               style="width:100%;"
                             >
                           </div>
-                          <div class="pull-right">医助账号({{item.kf_nickname}})</div>
+                          <div class="pull-right">{{item.username}}({{item.kf_nickname}})</div>
                         </div>
                       </div>
                     </div>
@@ -327,7 +327,7 @@
                   <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
                     <img :src="item.picurl" alt style="width:100%;">
                   </div>
-                  <div class="pull-right">医助账号({{item.kf_nickname}})</div>
+                  <div class="pull-right">{{item.username}}({{item.kf_nickname}})</div>
                 </div>
               </div>
             </div>
@@ -355,7 +355,7 @@
       </span>
     </el-dialog>
     <!-- 查看大图 -->
-    <el-dialog title="查看大图" :visible.sync="largeImageShow">
+    <el-dialog title="查看大图" :visible.sync="largeImageShow" :width="dialogWidth">
       <div class="image" style="text-align:center;">
         <img :src="largePicUrl" alt style="width:100%;">
       </div>
@@ -383,6 +383,10 @@ import { clearTimeout, setInterval } from "timers";
 export default {
   data() {
     return {
+      kfInfo:{
+        avatar:'',
+        nickname:'',
+      },
       info: [],
       dialogWidth: "30%",
       socketData: {
@@ -532,11 +536,15 @@ export default {
     this.getWechatList(); //获取公众号列表
     this.WebSocketTest();
     this.uploadUrl = this.baseURL + "/v1/uploads";
+    this.kfInfo.avatar=this.$route.query.avatar;
+    this.kfInfo.nickname=this.$route.query.nickname;
   },
-  computed: mapState({
+  computed:{
+    ...mapState({
     token: state => state.token, // token
     device: state => state.device // device
-  }),
+  })
+  } ,
   methods: {
     async headClick(val) {
       if (val === 3) {
