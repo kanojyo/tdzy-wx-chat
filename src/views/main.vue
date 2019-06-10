@@ -693,7 +693,9 @@ export default {
           key: 0,
           send_type: 2,
           msg_type: 1,
-          kf_avatar: this.avatar
+          kf_avatar: this.avatar,
+          username:sendData.username,
+          kf_nickname:sendData.kf_nickname,
         };
         this.chatList.push(chatData);
         // console.log(this.chatList)
@@ -748,7 +750,9 @@ export default {
           ctime: receiveData.ctime,
           key: 0,
           send_type: 2,
-          kf_avatar: this.avatar
+          kf_avatar: this.avatar,
+          username:receiveData.username,
+          kf_nickname:receiveData.kf_nickname,
         };
         this.chatList.push(chatData);
         this.imageUrl = "";
