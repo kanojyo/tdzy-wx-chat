@@ -1714,12 +1714,13 @@ export default {
     },
     //草稿箱继续编辑
     edit(item){
-      console.log(item);
+      // console.log(item);
       draftsDetail(item.id).then(data=>{
         if(data.code===200){
           this.draftsStatus=false;
           this.diseaseAddStatus=true;
           this.diseaseData=data.data;
+          this.diseaseData.temp_disease_id=item.id;
         }
       });
       
