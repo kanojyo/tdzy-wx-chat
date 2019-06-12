@@ -252,15 +252,27 @@
                         </tr>
                         <tr>
                           <td>关注时间</td>
-                          <td>{{fansBaseInfo.subscribe_time|formatDate}}</td>
+                          <td>
+                            <div v-if="fansBaseInfo.subscribe_time">
+                              {{fansBaseInfo.subscribe_time|formatDate}}
+                            </div>
+                          </td>
                         </tr>
                         <tr>
                           <td>创建时间</td>
-                          <td>{{fansBaseInfo.ctime|formatDate}}</td>
+                          <td>
+                            <div v-if="fansBaseInfo.ctime">
+                              {{fansBaseInfo.ctime|formatDate}}
+                            </div>
+                          </td>
                         </tr>
                         <tr>
                           <td>最后到访</td>
-                          <td>{{fansBaseInfo.last_time|formatDate}}</td>
+                          <td>
+                            <div v-if="fansBaseInfo.last_time">
+                              {{fansBaseInfo.last_time|formatDate}}
+                            </div>
+                          </td>
                         </tr>
                         <tr>
                           <td>接待医助</td>
@@ -380,15 +392,15 @@
                           </tbody>
                         </table>
                       </div>
-                      <div class="centered" v-else>暂无病症信息</div>
+                      <div class="centered" v-else>暂无用户病症信息</div>
                       <div class="disease-footer">
                         <el-button @click="GoDrafts">草稿箱</el-button>
                         <el-button @click="GoAdd">添加病症</el-button>
                       </div>
                     </div>
                     <div class="drafts disease-main" v-show="draftsStatus">
-                      <h4>病症草稿箱</h4>
-                      <div class="disease-content">
+                      <div class="disease-content" v-if="Object.keys(draftsListData).length !== 0">
+                        <h4>病症草稿箱</h4>
                         <table v-for="(item,index) in draftsListData" :key="index">
                           <tbody>
                             <tr>
@@ -425,6 +437,7 @@
                           </tbody>
                         </table>
                       </div>
+                      <div class="centered" v-else>草稿箱中暂无用户病症信息</div>
                       <div class="disease-footer">
                         <el-button @click="GoInfo">返回</el-button>
                         <el-button @click="GoAdd2">添加病症</el-button>
@@ -478,18 +491,10 @@
                           <el-input v-model="diseaseData.wenzhen_zhusu" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="现病史" class="red_star2">
-                          <el-input
-                            v-model="diseaseData.wenzhen_disease_ing"
-                            type="textarea"
-                            rows="2"
-                          ></el-input>
+                          <el-input v-model="diseaseData.wenzhen_disease_ing" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="既往史" class="red_star2">
-                          <el-input
-                            v-model="diseaseData.wenzhen_disease_ed"
-                            type="textarea"
-                            rows="2"
-                          ></el-input>
+                          <el-input v-model="diseaseData.wenzhen_disease_ed" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="体检信息" class="red_star4">
                           <el-input v-model="diseaseData.tijian" type="textarea" rows="2"></el-input>
@@ -1353,6 +1358,12 @@ export default {
     },
     //提交用户档案信息
     async submitFile() {
+      if(this.filesForm.mobile !=''){
+        if (!(isvalidPhone(this.filesForm.mobile) ||isvalidLandlinePhone(this.filesForm.mobile))) {
+          this.$message.error("请输入正确的联系方式");
+          return;
+       }
+      }
       let data = await modifyInfo(this.filesForm);
       if (data.code === 200) {
         this.$message({ message: "提交成功", type: "success" });
@@ -1448,11 +1459,19 @@ export default {
     },
     //打开添加病症
     GoAdd() {
+      if(this.chatParams.fans_openid ==''){
+        this.$message.error("请先选择一位用户");
+        return
+      }
       this.diseaseInfoStatus = false;
       this.diseaseAddStatus = true;
     },
     //从草稿箱打开添加病症
     GoAdd2() {
+      if(this.chatParams.fans_openid ==''){
+        this.$message.error("请先选择一位用户");
+        return
+      }
       this.draftsStatus = false;
       this.diseaseAddStatus = true;
     },
@@ -1545,12 +1564,7 @@ export default {
         this.$message.error("请输入病症备注");
         return;
       }
-      if (
-        !(
-          isvalidPhone(this.diseaseData.mobile) ||
-          isvalidLandlinePhone(this.diseaseData.mobile)
-        )
-      ) {
+      if (!(isvalidPhone(this.diseaseData.mobile) ||isvalidLandlinePhone(this.diseaseData.mobile))) {
         this.$message.error("请输入正确的联系方式");
         return;
       }
@@ -1765,7 +1779,7 @@ export default {
       };
       ws.onclose = () => {
         // 关闭 websocket
-        clearInterval(timer);
+        // clearInterval(timer);
       };
     }
   }
@@ -2204,6 +2218,11 @@ export default {
                   .item {
                     // padding: 0 8px;
                     margin-bottom: 8px;
+                    .box-card{
+                      .text{
+                        word-wrap: break-word;
+                      }
+                    }
                   }
                 }
               }
@@ -2217,7 +2236,7 @@ export default {
                   line-height: 32px;
                 }
                 table {
-                  width: 360px;
+                  width: 370px;
                   margin: 10px 0;
                   border: 1px solid #e2e2e2;
                   border-color: #e2e2e2;
@@ -2227,7 +2246,8 @@ export default {
                       padding: 6px 10px;
                       border: 1px solid #e2e2e2;
                       input {
-                        border: 0;
+                        // border: 0;
+                        margin-right: 5px;
                         line-height: 28px;
                       }
                     }
@@ -2252,7 +2272,7 @@ export default {
                 }
                 .disease-content {
                   table {
-                    width: 360px;
+                    width: 370px;
                     margin: 10px 0;
                     border: 1px solid #e2e2e2;
                     border-color: #e2e2e2;
