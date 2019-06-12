@@ -63,7 +63,7 @@
               <div class="input-search">
                 <el-input
                   v-model="keyword"
-                  placeholder="昵称/备注"
+                  placeholder="昵称/备注名"
                   prefix-icon="el-icon-search"
                   @change="searchChange"
                 ></el-input>
@@ -1491,6 +1491,11 @@ export default {
       }
       this.diseaseInfoStatus = false;
       this.diseaseAddStatus = true;
+      this.diseaseData.name = this.filesForm.name;
+      this.diseaseData.mobile = this.filesForm.mobile;
+      this.diseaseData.sex = this.filesForm.sex;
+      this.diseaseData.age = this.filesForm.age;
+      this.diseaseData.beizhu = this.filesForm.remark;
     },
     //从草稿箱打开添加病症
     GoAdd2() {
@@ -1500,6 +1505,11 @@ export default {
       }
       this.draftsStatus = false;
       this.diseaseAddStatus = true;
+      this.diseaseData.name = this.filesForm.name;
+      this.diseaseData.mobile = this.filesForm.mobile;
+      this.diseaseData.sex = this.filesForm.sex;
+      this.diseaseData.age = this.filesForm.age;
+      this.diseaseData.beizhu = this.filesForm.remark;
     },
     //从草稿箱返回病症信息
     GoInfo() {
