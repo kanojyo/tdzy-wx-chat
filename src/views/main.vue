@@ -252,7 +252,7 @@
                         </tr>
                         <tr>
                           <td>关注时间</td>
-                          <td>{{fansBaseInfo.subscribe_time}}</td>
+                          <td>{{fansBaseInfo.subscribe_time|formatDate}}</td>
                         </tr>
                         <tr>
                           <td>创建时间</td>
