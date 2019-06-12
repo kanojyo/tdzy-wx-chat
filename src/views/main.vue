@@ -309,11 +309,11 @@
                       </thead>
                       <tbody>
                         <tr v-for="(item,index) in fansAttention" :key="index">
-                          <td>{{item.we_name}}</td>
+                          <td style="width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" :title="item.we_name">{{item.we_name}}</td>
                           <td>
                             <div v-if="item.subscribe_time">关注时间：{{item.subscribe_time|formatDate}}</div>
                             <div v-if="item.ctime">创建时间：{{item.ctime|formatDate}}</div>
-                            <div v-if="item.last_time">最后到访时间：{{item.last_time|formatDate}}</div>
+                            <div v-if="item.last_time">最后到访：{{item.last_time|formatDate}}</div>
                           </td>
                         </tr>
                       </tbody>
@@ -374,7 +374,9 @@
                             </tr>
                             <tr>
                               <td>创建时间</td>
-                              <td>{{item.ctime|formatDate}}</td>
+                              <td>
+                                <div v-if="item.ctime">{{item.ctime|formatDate}}</div>
+                              </td>
                             </tr>
                             <tr>
                               <td>病症状态</td>
@@ -411,10 +413,10 @@
                               <td>问诊科室</td>
                               <td>{{item.office_name}}</td>
                             </tr>
-                            <!-- <tr>
-                            <td>主治医生</td>
-                            <td>{{item.doctor_name}}</td>
-                            </tr>-->
+                            <tr>
+                              <td>主治医生</td>
+                              <td>{{item.doctor_name}}</td>
+                            </tr>
                             <tr>
                               <td>接待医助</td>
                               <td>{{item.kf_name}}</td>
@@ -450,12 +452,22 @@
                         class="demo-Form"
                         style="background:#fff;padding:10px 10px;"
                       >
-                        <el-form-item label="就诊科室" class="red_star3">
+                        <el-form-item label="就诊科室" class="red_star4">
                           <el-select v-model="diseaseData.office_id" placeholder="请选择">
                             <el-option
                               v-for="(item,index) in officeOptions"
                               :key="index"
                               :label="item.name"
+                              :value="item.id"
+                            ></el-option>
+                          </el-select>
+                        </el-form-item>
+                        <el-form-item label="接待医生" class="red_star4">
+                          <el-select v-model="diseaseData.docter_id" placeholder="请选择">
+                            <el-option
+                              v-for="(item,index) in doctorListData"
+                              :key="index"
+                              :label="item.username"
                               :value="item.id"
                             ></el-option>
                           </el-select>
@@ -492,6 +504,9 @@
                         </el-form-item>
                         <el-form-item label="现病史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ing" type="textarea" rows="2"></el-input>
+                        </el-form-item>
+                        <el-form-item label="过敏史" class="red_star2">
+                          <el-input v-model="diseaseData.guomin" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="既往史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ed" type="textarea" rows="2"></el-input>
@@ -749,7 +764,8 @@ import {
   diseaseDetail,
   draftsDetail,
   officeList,
-  giveUpDisease
+  giveUpDisease,
+  doctorList
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import { isvalidPhone, isvalidLandlinePhone } from "@/utils/validate.js";
@@ -917,6 +933,7 @@ export default {
         temp_disease_id: "", //草稿箱病症id
         disease_id: "", //正式病症id
         office_id: "", //科室id
+        docter_id:"", //医生id
         name: "", //姓名
         sex: "", //1男2女
         age: "", //年纪
@@ -927,6 +944,7 @@ export default {
         address: "", //地址
         wenzhen_zhusu: "", //主诉
         wenzhen_disease_ing: "", //现病史
+        guomin:"", //过敏史
         wenzhen_disease_ed: "", //既往史
         tijian: "", //体检信息
         fuzhu_result: "", //辅助信息
@@ -938,8 +956,9 @@ export default {
       diseaseDetailShow: false, //病症详情状态
       diseaseListData: {}, //用戶病症信息
       draftsListData: {}, //草稿箱用戶病症信息
+      doctorListData:[],//医生信息
       officeOptions: [], //科室数组
-      diseaseDetailData: {} //病症详情数据
+      diseaseDetailData: {}, //病症详情数据
     };
   },
   filters: {
@@ -1020,7 +1039,7 @@ export default {
             }
           });
         });
-        console.log(this.groupList);
+        // console.log(this.groupList);
       }
     },
     //点击打开公众号列表
@@ -1047,7 +1066,7 @@ export default {
     },
     //点击打开聊天界面
     chatChange(val) {
-      console.log(val);
+      // console.log(val);
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
       this.chatParams.fans_openid = val.fans_openid;
@@ -1088,7 +1107,8 @@ export default {
       this.getChatList(); //获取聊天记录数据
       this.fansInfo(); //獲取用戶信息
       // setTimeout(() => {
-        this.diseaseList(); //獲取病症信息
+      this.diseaseList(); //獲取病症信息
+      this.doctorListGet(); //获取医生信息
       // }, 200);
       this.scrollChange(); //  让聊天窗口处于最底部
     },
@@ -1494,11 +1514,20 @@ export default {
         this.officeOptions = data.data;
       }
     },
+    //获取医生信息
+    async doctorListGet(){
+      let data = await doctorList(this.chatParams.fans_openid);
+      if(data.code ===200){
+        // console.log(data)
+        this.doctorListData=data.data.doctor_list;
+        this.diseaseData.docter_id=data.data.default_doctor_id;
+      }
+    },
     //獲取用戶病症信息
     async diseaseList() {
       let data = await diseaseList(this.chatParams);
       if (data.code === 200) {
-        // console.log(data)
+        console.log(data)
         this.diseaseListData = data.data;
       }
     },
@@ -1514,10 +1543,10 @@ export default {
     async commit(val) {
       this.diseaseData.fans_openid = this.chatParams.fans_openid;
       //验证必填项
-      // if (this.diseaseData.office_id == "") {
-      //   this.$message.error("请输入就诊科室");
-      //   return;
-      // }
+      if (this.diseaseData.office_id == "") {
+        this.$message.error("请输入就诊科室");
+        return;
+      }
       if (this.diseaseData.name == "") {
         this.$message.error("请输入姓名");
         return;
@@ -1548,6 +1577,10 @@ export default {
       }
       if (this.diseaseData.wenzhen_disease_ing == "") {
         this.$message.error("请输入现病史");
+        return;
+      }
+      if (this.diseaseData.guomin == "") {
+        this.$message.error("请输入过敏史");
         return;
       }
       if (this.diseaseData.wenzhen_disease_ed == "") {

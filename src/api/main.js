@@ -236,6 +236,15 @@ export function giveUpDisease(params) {
         method: 'GET',
     })
 }
+/*
+ *   NO:25   医生下拉框
+ */
+export function doctorList(params) {
+    return fetch({
+        url: '/v1/disease/doctor_list?fans_openid='+params,
+        method: 'GET',
+    })
+}
 
 
 

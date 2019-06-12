@@ -35,3 +35,8 @@ Vue.filter('sex_type', val => {
     if (val == 1) return "男";
     if (val == 2) return "女";
 })
+//在线状态
+Vue.filter('sk_state', val => {
+    if (val == 0) return "在线";
+    if (val == 1) return "离线";
+})
