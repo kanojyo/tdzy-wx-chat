@@ -81,7 +81,7 @@
                     <div class="photo">
                       <img :src="item.avatar" alt>
                     </div>
-                    <div class="name">{{item.nickname}}</div>
+                    <div class="name">{{item.nickname}}<span v-if="item.name">({{item.name}})</span> </div>
                   </li>
                 </ul>
               </div>
@@ -1210,13 +1210,14 @@ export default {
       } else {
         this.groupList.forEach(items => {
           items.userList.forEach(item => {
-            if (item.nickname.search(this.keyword) !== -1) {
+            if (item.nickname.search(this.keyword) !== -1 ||item.name.search(this.keyword) !== -1) {
               // console.log(item)
               this.userList.push({
                 avatar: item.headimgurl,
                 nickname: item.nickname,
                 groupid: item.groupid,
-                id: item.id
+                id: item.id,
+                name:item.name,
               });
             }
           });
