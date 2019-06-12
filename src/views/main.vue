@@ -1339,6 +1339,10 @@ export default {
     },
     //修改备注名
     async modifyName() {
+      if(this.fansBaseInfo.name==''){
+        this.$message.error("请输入备注");
+        return;
+      }
       let params = {};
       params.fans_openid = this.formParams.fans_openid;
       params.name = this.fansBaseInfo.name;
