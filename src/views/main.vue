@@ -309,7 +309,7 @@
                     <h4>用户档案信息</h4>
                     <el-form :model="filesForm" label-width="80px">
                       <el-form-item label="档案编号">
-                        <el-input v-model="filesForm.customer_id" disabled="disabled"></el-input>
+                        <el-input v-model="filesForm.customer_code" disabled="disabled"></el-input>
                       </el-form-item>
                       <el-form-item label="用户姓名">
                         <el-input v-model="filesForm.name"></el-input>
