@@ -1455,7 +1455,9 @@ export default {
     GoDrafts() {
       this.diseaseInfoStatus = false;
       this.draftsStatus = true;
-      this.draftsList();
+      if(this.chatParams.fans_openid){
+        this.draftsList();
+      }
     },
     //打开添加病症
     GoAdd() {
