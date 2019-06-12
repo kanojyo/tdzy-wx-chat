@@ -676,6 +676,11 @@
             <td>{{diseaseDetailData.office_id|office_id}}</td>
           </tr>
           <tr>
+          <tr>
+            <td >接待医生</td>
+            <td>{{diseaseDetailData.doctor_name}}</td>
+          </tr>
+          <tr>
             <td>姓名</td>
             <td>{{diseaseDetailData.name}}</td>
           </tr>
@@ -714,6 +719,10 @@
           <tr>
             <td>现病史</td>
             <td>{{diseaseDetailData.wenzhen_disease_ing}}</td>
+          </tr>
+          <tr>
+            <td>过敏史</td>
+            <td>{{diseaseDetailData.guomin}}</td>
           </tr>
           <tr>
             <td>既往史</td>
