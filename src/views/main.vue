@@ -119,7 +119,7 @@
                           <img :src="i.headimgurl">
                         </div>
                         <div class="text">
-                          <p class="nickname">{{i.nickname}}</p>
+                          <p class="nickname">{{i.nickname}}<span v-if="i.name">({{i.name}})</span> </p>
                           <p class="txt">{{i.last_msg}}</p>
                         </div>
                         <div class="tubiao">
@@ -136,7 +136,7 @@
           </el-aside>
           <el-main>
             <div class="main-contens" v-if="devShow">
-              <div class="nickname centered">{{userData.nickname}}</div>
+              <div class="nickname centered">{{userData.nickname}}<span v-if="userData.name">({{userData.name}})</span>  </div>
               <div class="dialogue-k">
                 <!-- <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
                 <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div>-->
@@ -1280,7 +1280,9 @@ export default {
           ctime: receiveData.ctime,
           key: 0,
           send_type: 2,
-          kf_avatar: this.avatar
+          kf_avatar: this.avatar,
+          username: receiveData.username,
+          kf_nickname: receiveData.kf_nickname
         };
         this.chatList.push(chatData);
         this.scrollChange(); //  让聊天窗口处于最底部
@@ -1374,6 +1376,7 @@ export default {
       let data = await modifyName(params);
       if (data.code === 200) {
         this.$message({ message: "修改成功", type: "success" });
+        this.userData.name=this.fansBaseInfo.name;
       }
     },
     //提交用户档案信息
@@ -1507,14 +1510,14 @@ export default {
       this.diseaseInfoStatus = true;
       this.diseaseAddStatus = false;
     },
-    //获取科室信息
+    //添加病症获取科室信息
     async officeListGet() {
       let data = await officeList();
       if (data.code === 200) {
         this.officeOptions = data.data;
       }
     },
-    //获取医生信息
+    //添加病症获取医生信息
     async doctorListGet(){
       let data = await doctorList(this.chatParams.fans_openid);
       if(data.code ===200){
@@ -1527,7 +1530,7 @@ export default {
     async diseaseList() {
       let data = await diseaseList(this.chatParams);
       if (data.code === 200) {
-        console.log(data)
+        // console.log(data)
         this.diseaseListData = data.data;
       }
     },
