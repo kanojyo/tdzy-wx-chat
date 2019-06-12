@@ -338,10 +338,10 @@
                   <div class="centered" v-else>暂无用户信息</div>
                 </div>
                 <div class="disease" v-show="rightActive === 2">
-                  <div v-if="Object.keys(diseaseListData).length !== 0">
+                  <div >
                     <div class="disease-main" v-show="diseaseInfoStatus">
-                      <h4>用户病症信息</h4>
-                      <div class="disease-content">
+                      <div class="disease-content" v-if="Object.keys(diseaseListData).length !== 0">
+                        <h4>用户病症信息</h4>
                         <table v-for="(item,index) in diseaseListData" :key="index">
                           <tbody>
                             <tr>
@@ -380,6 +380,7 @@
                           </tbody>
                         </table>
                       </div>
+                      <div class="centered" v-else>暂无病症信息</div>
                       <div class="disease-footer">
                         <el-button @click="GoDrafts">草稿箱</el-button>
                         <el-button @click="GoAdd">添加病症</el-button>
@@ -507,7 +508,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="centered" v-else>暂无病症信息</div>
                 </div>
                 <div class="reply" v-show="rightActive === 3">
                   <div class="reply-add">
@@ -748,6 +748,7 @@ import {
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import { isvalidPhone, isvalidLandlinePhone } from "@/utils/validate.js";
+import { clearInterval } from 'timers';
 
 export default {
   data() {
@@ -1658,6 +1659,7 @@ export default {
     },
     //websocket聊天消息提醒
     WebSocketTest() {
+      let timer =null;
       let ws = new WebSocket(
         "ws://tdcsgzh.wuhanlst.com:11111?token=" +
           this.token +
@@ -1666,7 +1668,7 @@ export default {
       );
       ws.onopen = () => {
         ws.send('{"type":"login"}'); //连接上，发送type:login
-        let timer = setInterval(() => {
+        timer = setInterval(() => {
           ws.send('{"type":"pong"}');
         }, 3000);
       };
@@ -1759,6 +1761,7 @@ export default {
       };
       ws.onclose = () => {
         // 关闭 websocket
+        clearInterval(timer);
       };
     }
   }
