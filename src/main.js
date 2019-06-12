@@ -15,6 +15,8 @@ import '@/assets/font/iconfont.css';	//  图标
 // 控制路由白名单
 import '@/permission';
 
+//  过滤器
+import '@/filter';
 
 //	解决在IE es6 编译问题
 require('es6-promise').polyfill();
