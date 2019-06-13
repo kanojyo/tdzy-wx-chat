@@ -100,6 +100,12 @@ export function validNonnegativeNumber(str){
   return reg.test(str)
 }
 
+/* 验证字母数字中文*/
+export function validAge(str){
+  const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/
+  return reg.test(str)
+}
+
 
 
 

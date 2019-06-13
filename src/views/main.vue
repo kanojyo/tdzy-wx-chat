@@ -484,10 +484,10 @@
                         <el-form-item label="年龄" class="red_star1">
                           <el-input v-model="diseaseData.age"></el-input>
                         </el-form-item>
-                        <el-form-item label="职业" class="red_star1">
+                        <el-form-item label="职业" >
                           <el-input v-model="diseaseData.job"></el-input>
                         </el-form-item>
-                        <el-form-item label="联系方式" class="red_star4">
+                        <el-form-item label="联系方式">
                           <el-input v-model="diseaseData.mobile"></el-input>
                         </el-form-item>
                         <el-form-item label="昵称">
@@ -496,7 +496,7 @@
                         <el-form-item label="微信号">
                           <el-input v-model="diseaseData.wechat"></el-input>
                         </el-form-item>
-                        <el-form-item label="地址" class="red_star1">
+                        <el-form-item label="地址" >
                           <el-input v-model="diseaseData.address"></el-input>
                         </el-form-item>
                         <el-form-item label="主诉" class="red_star1">
@@ -505,11 +505,11 @@
                         <el-form-item label="现病史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ing" type="textarea" rows="2"></el-input>
                         </el-form-item>
-                        <el-form-item label="过敏史" class="red_star2">
-                          <el-input v-model="diseaseData.guomin" type="textarea" rows="2"></el-input>
-                        </el-form-item>
                         <el-form-item label="既往史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ed" type="textarea" rows="2"></el-input>
+                        </el-form-item>
+                        <el-form-item label="过敏史" class="red_star2">
+                          <el-input v-model="diseaseData.guomin" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="体检信息" class="red_star4">
                           <el-input v-model="diseaseData.tijian" type="textarea" rows="2"></el-input>
@@ -517,7 +517,7 @@
                         <el-form-item label="辅助信息" class="red_star4">
                           <el-input v-model="diseaseData.fuzhu_result" type="textarea" rows="2"></el-input>
                         </el-form-item>
-                        <el-form-item label="病症备注" class="red_star4">
+                        <el-form-item label="病症备注" >
                           <el-input v-model="diseaseData.beizhu" type="textarea" rows="2"></el-input>
                         </el-form-item>
                       </el-form>
@@ -777,7 +777,7 @@ import {
   doctorList
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
-import { isvalidPhone, isvalidLandlinePhone } from "@/utils/validate.js";
+import { isvalidPhone, isvalidLandlinePhone,validAge } from "@/utils/validate.js";
 import { clearInterval } from 'timers';
 
 export default {
@@ -1397,6 +1397,12 @@ export default {
           return;
        }
       }
+      if(this.filesForm.age !==""){
+        if(!validAge(this.filesForm.age) || this.filesForm.age.length>5){
+          this.$message.error("年龄只能输入数字，字母，中文且不超过5个字");
+          return;
+        }
+      }
       let data = await modifyInfo(this.filesForm);
       if (data.code === 200) {
         this.$message({ message: "提交成功", type: "success" });
@@ -1582,18 +1588,6 @@ export default {
           this.$message.error("请输入年龄");
           return;
         }
-        if (this.diseaseData.job == "") {
-          this.$message.error("请输入职业");
-          return;
-        }
-        if (this.diseaseData.address == "") {
-          this.$message.error("请输入地址");
-          return;
-        }
-        if (this.diseaseData.mobile == "") {
-          this.$message.error("请输入联系方式");
-          return;
-        }
         if (this.diseaseData.wenzhen_zhusu == "") {
           this.$message.error("请输入主诉");
           return;
@@ -1618,15 +1612,17 @@ export default {
           this.$message.error("请输入辅助信息");
           return;
         }
-        if (this.diseaseData.beizhu == "") {
-          this.$message.error("请输入病症备注");
-          return;
-        }
       }
       //当输入了联系方式时,验证联系方式
       if(this.diseaseData.mobile !== ""){
         if (!(isvalidPhone(this.diseaseData.mobile) ||isvalidLandlinePhone(this.diseaseData.mobile))) {
           this.$message.error("请输入正确的联系方式");
+          return;
+        }
+      }
+      if(this.filesForm.age !==""){
+        if(!validAge(this.filesForm.age) || this.filesForm.age.length>5){
+          this.$message.error("年龄只能输入数字，字母，中文且不超过5个字");
           return;
         }
       }
