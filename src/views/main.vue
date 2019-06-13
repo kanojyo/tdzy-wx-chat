@@ -448,7 +448,7 @@
                     <div class="disease-add" v-show="diseaseAddStatus">
                       <el-form
                         :model="diseaseData"
-                        label-width="80px"
+                        label-width="85px"
                         class="demo-Form"
                         style="background:#fff;padding:10px 10px;"
                       >
@@ -1443,6 +1443,7 @@ export default {
           return;
         }
       }
+      this.filesForm.fans_openid=this.chatParams.fans_openid;
       let data = await modifyInfo(this.filesForm);
       if (data.code === 200) {
         this.$message({ message: "提交成功", type: "success" });
