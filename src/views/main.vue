@@ -499,11 +499,17 @@
                         <el-form-item label="地址" >
                           <el-input v-model="diseaseData.address"></el-input>
                         </el-form-item>
+                        <el-form-item label="常见主诉">
+                          <el-tag :key="tag" v-for="tag in zhusuTags" @click="addZhuSu(tag)">{{tag}}</el-tag>
+                        </el-form-item>
                         <el-form-item label="主诉" class="red_star1">
                           <el-input v-model="diseaseData.wenzhen_zhusu" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="现病史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ing" type="textarea" rows="2"></el-input>
+                        </el-form-item>
+                        <el-form-item label="常见既往史">
+                          <el-tag :key="tag" v-for="tag in historyTags" @click="addhistory(tag)">{{tag}}</el-tag>
                         </el-form-item>
                         <el-form-item label="既往史" class="red_star2">
                           <el-input v-model="diseaseData.wenzhen_disease_ed" type="textarea" rows="2"></el-input>
@@ -778,7 +784,7 @@ import {
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import { isvalidPhone, isvalidLandlinePhone,validAge,validBlank } from "@/utils/validate.js";
-import { clearInterval } from 'timers';
+import axios from 'axios';
 
 export default {
   data() {
@@ -968,6 +974,12 @@ export default {
       doctorListData:[],//医生信息
       officeOptions: [], //科室数组
       diseaseDetailData: {}, //病症详情数据
+      zhusuTags: [], //主诉标签
+      zhusuData: {}, //主诉数据
+      historyTags: [], //常见既往史标签
+      historyData: {}, //常见既往史数据
+      zhusuString: "",
+      historyString: "",
     };
   },
   filters: {
@@ -990,6 +1002,33 @@ export default {
       token: state => state.token, // token
       device: state => state.device // device
     })
+  },
+  watch: {
+    //监听右侧添加病症中的科室
+    'diseaseData.office_id': function(val) {
+      this.$nextTick(function() {
+        if (val == 1) {
+          //补肾科
+          this.zhusuTags = this.zhusuData.bushen;
+          this.historyTags = this.historyData.bushen;
+        }
+        if (val == 2) {
+          //肛肠科
+          this.zhusuTags = this.zhusuData.zhichuang;
+          this.historyTags = this.historyData.zhichuang;
+        }
+        if (val == 3) {
+          //鼻炎科
+          this.zhusuTags = this.zhusuData.biyan;
+          this.historyTags = this.historyData.biyan;
+        }
+        if (val == 4) {
+          //乳腺科
+          this.zhusuTags = this.zhusuData.ruxian;
+          this.historyTags = this.historyData.ruxian;
+        }
+      });
+    }
   },
   methods: {
     async headClick(val) {
@@ -1118,6 +1157,7 @@ export default {
       // setTimeout(() => {
       this.diseaseList(); //獲取病症信息
       this.doctorListGet(); //获取医生信息
+      this.TagsGet();
       // }, 200);
       this.scrollChange(); //  让聊天窗口处于最底部
     },
@@ -1567,6 +1607,35 @@ export default {
         // console.log(data)
         this.draftsListData = data.data;
       }
+    },
+    //获取主诉tags和既往史tags的数据
+    TagsGet() {
+      axios.get("/mocks/zhusu.json").then(response => {
+        this.zhusuData = response.data;
+      });
+      axios.get("/mocks/jiwangshi.json").then(response => {
+        this.historyData = response.data;
+      });
+    },
+    //主诉的快捷输入;
+    addZhuSu(tag) {
+      if (this.diseaseData.wenzhen_zhusu !== undefined) {
+        this.zhusuString = this.diseaseData.wenzhen_zhusu;
+      } else {
+        this.zhusuString = "";
+      }
+      this.zhusuString += tag;
+      this.diseaseData.wenzhen_zhusu = this.zhusuString;
+    },
+    //既往史的快捷输入；
+    addhistory(tag) {
+      if (this.diseaseData.wenzhen_disease_ed !== undefined) {
+        this.historyString = this.diseaseData.wenzhen_disease_ed;
+      } else {
+        this.historyString = "";
+      }
+      this.historyString += tag;
+      this.diseaseData.wenzhen_disease_ed = this.historyString;
     },
     //提交病症信息
     async commit(val) {
