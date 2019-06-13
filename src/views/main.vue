@@ -777,7 +777,7 @@ import {
   doctorList
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
-import { isvalidPhone, isvalidLandlinePhone,validAge } from "@/utils/validate.js";
+import { isvalidPhone, isvalidLandlinePhone,validAge,validBlank } from "@/utils/validate.js";
 import { clearInterval } from 'timers';
 
 export default {
@@ -1376,8 +1376,8 @@ export default {
     },
     //修改备注名
     async modifyName() {
-      if(this.fansBaseInfo.name==''){
-        this.$message.error("请输入备注");
+      if(this.fansBaseInfo.name=='' ||validBlank(this.fansBaseInfo.name)){
+        this.$message.error("请输入备注名");
         return;
       }
       let params = {};
@@ -1620,8 +1620,8 @@ export default {
           return;
         }
       }
-      if(this.filesForm.age !==""){
-        if(!validAge(this.filesForm.age) || this.filesForm.age.length>5){
+      if(this.diseaseData.age !==""){
+        if(!validAge(this.diseaseData.age) || this.diseaseData.age.length>5){
           this.$message.error("年龄只能输入数字，字母，中文且不超过5个字");
           return;
         }

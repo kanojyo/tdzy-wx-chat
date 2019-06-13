@@ -105,6 +105,11 @@ export function validAge(str){
   const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/
   return reg.test(str)
 }
+/* 验证全部为空格*/
+export function validBlank(str){
+  const reg =  /^[\s]*$/
+  return reg.test(str)
+}
 
 
 
