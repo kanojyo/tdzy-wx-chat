@@ -1564,69 +1564,73 @@ export default {
     },
     //提交病症信息
     async commit(val) {
+      if(val === 2){
+        //保存正式时验证必填项
+        if (this.diseaseData.office_id == "") {
+          this.$message.error("请输入就诊科室");
+          return;
+        }
+        if (this.diseaseData.name == "") {
+          this.$message.error("请输入姓名");
+          return;
+        }
+        if (this.diseaseData.sex === "") {
+          this.$message.error("请选择性别");
+          return;
+        }
+        if (this.diseaseData.age == "") {
+          this.$message.error("请输入年龄");
+          return;
+        }
+        if (this.diseaseData.job == "") {
+          this.$message.error("请输入职业");
+          return;
+        }
+        if (this.diseaseData.address == "") {
+          this.$message.error("请输入地址");
+          return;
+        }
+        if (this.diseaseData.mobile == "") {
+          this.$message.error("请输入联系方式");
+          return;
+        }
+        if (this.diseaseData.wenzhen_zhusu == "") {
+          this.$message.error("请输入主诉");
+          return;
+        }
+        if (this.diseaseData.wenzhen_disease_ing == "") {
+          this.$message.error("请输入现病史");
+          return;
+        }
+        if (this.diseaseData.guomin == "") {
+          this.$message.error("请输入过敏史");
+          return;
+        }
+        if (this.diseaseData.wenzhen_disease_ed == "") {
+          this.$message.error("请输入既往史");
+          return;
+        }
+        if (this.diseaseData.tijian == "") {
+          this.$message.error("请输入体检信息");
+          return;
+        }
+        if (this.diseaseData.fuzhu_result == "") {
+          this.$message.error("请输入辅助信息");
+          return;
+        }
+        if (this.diseaseData.beizhu == "") {
+          this.$message.error("请输入病症备注");
+          return;
+        }
+      }
+      //当输入了联系方式时,验证联系方式
+      if(this.diseaseData.mobile !== ""){
+        if (!(isvalidPhone(this.diseaseData.mobile) ||isvalidLandlinePhone(this.diseaseData.mobile))) {
+          this.$message.error("请输入正确的联系方式");
+          return;
+        }
+      }
       this.diseaseData.fans_openid = this.chatParams.fans_openid;
-      //验证必填项
-      if (this.diseaseData.office_id == "") {
-        this.$message.error("请输入就诊科室");
-        return;
-      }
-      if (this.diseaseData.name == "") {
-        this.$message.error("请输入姓名");
-        return;
-      }
-      if (this.diseaseData.sex === "") {
-        this.$message.error("请选择性别");
-        return;
-      }
-      if (this.diseaseData.age == "") {
-        this.$message.error("请输入年龄");
-        return;
-      }
-      if (this.diseaseData.job == "") {
-        this.$message.error("请输入职业");
-        return;
-      }
-      if (this.diseaseData.address == "") {
-        this.$message.error("请输入地址");
-        return;
-      }
-      if (this.diseaseData.mobile == "") {
-        this.$message.error("请输入联系方式");
-        return;
-      }
-      if (this.diseaseData.wenzhen_zhusu == "") {
-        this.$message.error("请输入主诉");
-        return;
-      }
-      if (this.diseaseData.wenzhen_disease_ing == "") {
-        this.$message.error("请输入现病史");
-        return;
-      }
-      if (this.diseaseData.guomin == "") {
-        this.$message.error("请输入过敏史");
-        return;
-      }
-      if (this.diseaseData.wenzhen_disease_ed == "") {
-        this.$message.error("请输入既往史");
-        return;
-      }
-      if (this.diseaseData.tijian == "") {
-        this.$message.error("请输入体检信息");
-        return;
-      }
-      if (this.diseaseData.fuzhu_result == "") {
-        this.$message.error("请输入辅助信息");
-        return;
-      }
-      if (this.diseaseData.beizhu == "") {
-        this.$message.error("请输入病症备注");
-        return;
-      }
-      if (!(isvalidPhone(this.diseaseData.mobile) ||isvalidLandlinePhone(this.diseaseData.mobile))) {
-        this.$message.error("请输入正确的联系方式");
-        return;
-      }
-      // this.diseaseData.sex = this.diseaseData.sex.toString();
       this.diseaseData.save_type = val; //1：保存草稿，2保存正式
       let data = await diseaseAdd(this.diseaseData);
       if (data.code == 200) {
@@ -2119,6 +2123,9 @@ export default {
             height: 50px;
             border-bottom: 1px solid #e2e2e2;
             background-color: @bg_eaedf1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .dialogue-k {
             width: 100%;
