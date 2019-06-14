@@ -1627,6 +1627,22 @@ export default {
     GoInfo2() {
       this.diseaseInfoStatus = true;
       this.diseaseAddStatus = false;
+      this.diseaseData.office_id = "";
+      this.diseaseData.name = "";
+      this.diseaseData.sex = "";
+      this.diseaseData.age = "";
+      this.diseaseData.job = "";
+      this.diseaseData.mobile = "";
+      this.diseaseData.nickname = "";
+      this.diseaseData.wechat = "";
+      this.diseaseData.address = "";
+      this.diseaseData.wenzhen_zhusu = "";
+      this.diseaseData.wenzhen_disease_ing = "";
+      this.diseaseData.wenzhen_disease_ed = "";
+      this.diseaseData.tijian = "";
+      this.diseaseData.fuzhu_result = "";
+      this.diseaseData.beizhu = "";
+      this.diseaseData.guomin = "";
     },
     //添加病症获取科室信息
     async officeListGet() {
