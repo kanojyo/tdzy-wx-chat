@@ -1856,13 +1856,14 @@ export default {
           this.diseaseData=data.data;
           this.diseaseInfoStatus=false;
           this.diseaseAddStatus=true;
+          getMobile(this.chatParams.fans_openid).then(data =>{
+            if(data.code===200){
+              this.diseaseData.mobile=data.data.mobile
+            }
+          })
         }
       });
-      getMobile(this.chatParams.fans_openid).then(data =>{
-        if(data.code===200){
-          this.diseaseData.mobile=data.data.mobile
-        }
-      })
+      
     },
     //草稿箱继续编辑
     edit(item){
