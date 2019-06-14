@@ -1128,7 +1128,7 @@ export default {
       this.diseaseData.tijian = "";
       this.diseaseData.fuzhu_result = "";
       this.diseaseData.beizhu = "";
-      // this.diseaseL
+      this.devShow=false;
     },
     //聊天页面的聊天记录数据
     async getChatList() {
