@@ -947,6 +947,7 @@ export default {
         fans_openid: "", //fansopenid 必须
         save_type: "", //1：保存草稿，2保存正式
         temp_disease_id: "", //草稿箱病症id
+        fy_dis_id:"", //复用病症id
         disease_id: "", //正式病症id
         office_id: "", //科室id
         docter_id:"", //医生id
@@ -1856,6 +1857,9 @@ export default {
           this.diseaseData=data.data;
           this.diseaseInfoStatus=false;
           this.diseaseAddStatus=true;
+          if(data.data.fy_dis_id =='0'){
+            this.diseaseData.fy_dis_id=val;
+          }
           getMobile(this.chatParams.fans_openid).then(data =>{
             if(data.code===200){
               this.diseaseData.mobile=data.data.mobile
