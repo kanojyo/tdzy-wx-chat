@@ -1128,6 +1128,7 @@ export default {
       this.diseaseData.tijian = "";
       this.diseaseData.fuzhu_result = "";
       this.diseaseData.beizhu = "";
+      this.diseaseData.guomin = "";
       this.devShow=false;
     },
     //聊天页面的聊天记录数据
@@ -1140,6 +1141,15 @@ export default {
     },
     //点击打开聊天界面
     chatChange(val) {
+      this.fansBaseInfo={};
+      this.fansAttention={};
+      this.filesForm={};
+      this.diseaseListData={};
+      this.draftsListData={};
+      this.rightActive=1;
+      this.diseaseAddStatus=false;
+      this.diseaseInfoStatus=true;
+      this.draftsStatus=false;
       // console.log(val);
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
@@ -1758,6 +1768,7 @@ export default {
         this.diseaseData.tijian = "";
         this.diseaseData.fuzhu_result = "";
         this.diseaseData.beizhu = "";
+        this.diseaseData.guomin = "";
         if(val ===1){
           this.diseaseAddStatus=false;
           this.draftsStatus=true;
