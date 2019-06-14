@@ -245,6 +245,15 @@ export function doctorList(params) {
         method: 'GET',
     })
 }
+/*
+ *   NO:26   查询手机号
+ */
+export function getMobile(params) {
+    return fetch({
+        url: '/v1/wechat/get_customer_mobile?fans_openid='+params,
+        method: 'GET',
+    })
+}
 
 
 

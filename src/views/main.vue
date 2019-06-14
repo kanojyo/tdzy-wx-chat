@@ -780,7 +780,8 @@ import {
   draftsDetail,
   officeList,
   giveUpDisease,
-  doctorList
+  doctorList,
+  getMobile
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import { isvalidPhone, isvalidLandlinePhone,validAge,validBlank } from "@/utils/validate.js";
@@ -1092,7 +1093,7 @@ export default {
     },
     //点击打开公众号列表
     openList(val) {
-      console.log(val);
+      // console.log(val);
       this.wechatActive = val.id;
       this.weid = val.id;
       this.params.weid = val.id;
@@ -1101,8 +1102,33 @@ export default {
       this.title = val.name;
       //获取公众号下面的分组列表
       this.getGroup();
-      console.log(this.weid, "公众号id");
-      console.log(this.wechatList);
+      //重置右侧菜单的内容
+      this.fansBaseInfo={};
+      this.fansAttention={};
+      this.filesForm={};
+      this.diseaseListData={};
+      this.draftsListData={};
+      this.rightActive=1;
+      this.diseaseAddStatus=false;
+      this.diseaseInfoStatus=true;
+      this.draftsStatus=false;
+      this.chatParams.fans_openid="";
+      this.diseaseData.office_id = "";
+      this.diseaseData.name = "";
+      this.diseaseData.sex = "";
+      this.diseaseData.age = "";
+      this.diseaseData.job = "";
+      this.diseaseData.mobile = "";
+      this.diseaseData.nickname = "";
+      this.diseaseData.wechat = "";
+      this.diseaseData.address = "";
+      this.diseaseData.wenzhen_zhusu = "";
+      this.diseaseData.wenzhen_disease_ing = "";
+      this.diseaseData.wenzhen_disease_ed = "";
+      this.diseaseData.tijian = "";
+      this.diseaseData.fuzhu_result = "";
+      this.diseaseData.beizhu = "";
+      // this.diseaseL
     },
     //聊天页面的聊天记录数据
     async getChatList() {
@@ -1431,6 +1457,11 @@ export default {
     },
     //提交用户档案信息
     async submitFile() {
+      // getMobile(this.chatParams.fans_openid).then(data =>{
+      //   if(data.code===200){
+      //     this.filesForm.mobile=data.data.mobile
+      //   }
+      // })
       if(this.filesForm.mobile !=''){
         if (!(isvalidPhone(this.filesForm.mobile) ||isvalidLandlinePhone(this.filesForm.mobile))) {
           this.$message.error("请输入正确的联系方式");
@@ -1548,10 +1579,15 @@ export default {
       this.diseaseInfoStatus = false;
       this.diseaseAddStatus = true;
       this.diseaseData.name = this.filesForm.name;
-      this.diseaseData.mobile = this.filesForm.mobile;
+      // this.diseaseData.mobile = this.filesForm.mobile;
       this.diseaseData.sex = this.filesForm.sex;
       this.diseaseData.age = this.filesForm.age;
       this.diseaseData.beizhu = this.filesForm.remark;
+      getMobile(this.chatParams.fans_openid).then(data =>{
+        if(data.code===200){
+          this.diseaseData.mobile=data.data.mobile
+        }
+      })
     },
     //从草稿箱打开添加病症
     GoAdd2() {
@@ -1562,10 +1598,15 @@ export default {
       this.draftsStatus = false;
       this.diseaseAddStatus = true;
       this.diseaseData.name = this.filesForm.name;
-      this.diseaseData.mobile = this.filesForm.mobile;
+      // this.diseaseData.mobile = this.filesForm.mobile;
       this.diseaseData.sex = this.filesForm.sex;
       this.diseaseData.age = this.filesForm.age;
       this.diseaseData.beizhu = this.filesForm.remark;
+      getMobile(this.chatParams.fans_openid).then(data =>{
+        if(data.code===200){
+          this.diseaseData.mobile=data.data.mobile
+        }
+      })
     },
     //从草稿箱返回病症信息
     GoInfo() {
