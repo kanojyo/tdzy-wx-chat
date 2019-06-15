@@ -2600,6 +2600,7 @@ export default {
                 }
               }
               .disease-add {
+                padding-bottom: 70px;
                 .el-form {
                   .el-form-item {
                     .el-input {
