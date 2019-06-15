@@ -1902,7 +1902,7 @@ export default {
         if(ws.readyState ===1){
           this.websocketState=true;
         }
-        console.log(ws.readyState,'连接状态')
+        // console.log(ws.readyState,'连接状态')
         let received_msg;
         if (evt.data.indexOf("{") != -1) {
           received_msg = JSON.parse(evt.data);
@@ -2030,7 +2030,7 @@ export default {
         if(ws.readyState ===3){
           this.websocketState=false;
         }
-        console.log(ws.readyState,'连接状态');
+        // console.log(ws.readyState,'连接状态');
         clearInterval(timer)
       };
     }

@@ -47,6 +47,7 @@ export default {
     this.device = localStorage.getItem("device");
     //获取二维码图片
     this.GetQrCode();
+    console.log(this.baseURL)
   },
   methods: {
     ...mapActions({
