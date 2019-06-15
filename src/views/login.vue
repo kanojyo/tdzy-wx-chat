@@ -36,6 +36,7 @@ export default {
       login_code: "",
       timeOut: false,
       qrcodeShow:true,
+      baseURL: process.env.VUE_APP_URL,
     };
   },
   mounted() {
@@ -57,7 +58,7 @@ export default {
     GetQrCode() {
       axios.defaults.headers.device = localStorage.getItem("device"); // 添加设备号
       axios
-        .get("https://tdcsgzh.wuhanlst.com/v1/wechat/login/qrcode")
+        .get(this.baseURL+"/v1/wechat/login/qrcode")
         .then(res => {
           if (res.data.code == 200) {
             this.qrcodeUrl = res.data.data.qr_code_url;
