@@ -1909,8 +1909,8 @@ export default {
           console.log(msg);
           //当聊天界面公众号为新消息所属公众号时，
           if (this.weid === msg.weid) {
-            //当聊天界面分组为新消息所属分组时，
             if (this.chating.groupid !== "") {
+              //当聊天界面分组为新消息所属分组时,
               if (this.chating.groupid === msg.groupid) {
                 //将新来的文字信息渲染到页面
                 if (msg.msg_type === 1) {
@@ -1923,8 +1923,7 @@ export default {
                       });
                     }
                   });
-                } else {
-                }
+                } else {}
                 //当聊天界面的粉丝id等于发送信息的粉丝id时;
                 if (this.formParams.fans_openid == msg.fans_openid) {
                   this.readMsgParams.msg_id = msg.msg_id;
@@ -1949,8 +1948,19 @@ export default {
                       });
                     }
                   });
-                  console.log(this.groupList, "发送消息后");
+                  // console.log(this.groupList, "发送消息后");
                 }
+              }else{
+                this.groupList.forEach(item => {
+                if (item.groupid === msg.groupid) {
+                  item.userList.forEach(it => {
+                    if (it.fans_openid === msg.fans_openid) {
+                      it.not_read_num = msg.not_read_num;
+                    }
+                      item.not_read_num += it.not_read_num;
+                    });
+                  }
+                });
               }
             } else {
               this.groupList.forEach(item => {
