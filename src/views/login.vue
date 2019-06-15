@@ -67,7 +67,7 @@ export default {
             QRCode.toCanvas(canvas, this.qrcodeUrl, function(error) {
               if (error) console.error(error);
             });
-            // this.move(); //  调用轮询
+            this.move(); //  调用轮询
           }
         })
         .catch(error => {
