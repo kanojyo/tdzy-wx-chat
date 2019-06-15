@@ -2520,6 +2520,7 @@ export default {
             .userInfo {
               padding-top: 10px;
               padding-left: 10px;
+              padding-bottom: 60px;
               .userInfo-main {
                 h4 {
                   font-size: 20px;
