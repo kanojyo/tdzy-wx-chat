@@ -136,7 +136,9 @@
           </el-aside>
           <el-main>
             <div class="main-contens" v-if="devShow">
-              <div class="nickname centered">{{userData.nickname}}<span v-if="userData.name">({{userData.name}})</span>  </div>
+              <div class="nickname centered">
+                <p>{{userData.nickname}}<span v-if="userData.name">({{userData.name}})</span></p>
+              </div>
               <div class="dialogue-k">
                 <!-- <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
                 <div class="centered isUpload" v-show="!uploadShow">无更多消息~</div>-->
@@ -2265,9 +2267,13 @@ export default {
             height: 50px;
             border-bottom: 1px solid #e2e2e2;
             background-color: @bg_eaedf1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            p{
+              width:150px;
+              margin:0 auto;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
           }
           .dialogue-k {
             width: 100%;
