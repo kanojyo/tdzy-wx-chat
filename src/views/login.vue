@@ -47,7 +47,6 @@ export default {
     this.device = localStorage.getItem("device");
     //获取二维码图片
     this.GetQrCode();
-    console.log(this.baseURL)
   },
   methods: {
     ...mapActions({
@@ -68,7 +67,7 @@ export default {
             QRCode.toCanvas(canvas, this.qrcodeUrl, function(error) {
               if (error) console.error(error);
             });
-            this.move(); //  调用轮询
+            // this.move(); //  调用轮询
           }
         })
         .catch(error => {

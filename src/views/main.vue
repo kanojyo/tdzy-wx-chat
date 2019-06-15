@@ -614,6 +614,7 @@
                   <div v-if="item.msg_type === 2" class="pull-left" style="width: 200px;">
                     <img :src="item.picurl" alt>
                   </div>
+                  <div class="pull-left">{{item.username}}({{item.kf_nickname}})</div>
                 </div>
               </div>
               <div class="hospital-guide" v-if="item.send_type === 2">

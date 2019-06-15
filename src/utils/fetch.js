@@ -27,7 +27,6 @@ instance.interceptors.request.use(config => {
     console.log(error);      // for debug
     Promise.reject(error);
 })
-
 // 添加响应拦截器
 instance.interceptors.response.use(
     response => {
