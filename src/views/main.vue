@@ -1951,6 +1951,18 @@ export default {
                   // console.log(this.groupList, "发送消息后");
                 }
               }else{
+                //将新来的文字信息渲染到页面
+                if (msg.msg_type === 1) {
+                  this.groupList.forEach(item => {
+                    if (item.groupid === this.chating.groupid) {
+                      item.userList.forEach(it => {
+                        if (it.fans_openid === msg.fans_openid) {
+                          it.last_msg = msg.content;
+                        }
+                      });
+                    }
+                  });
+                } else {}
                 this.groupList.forEach(item => {
                 if (item.groupid === msg.groupid) {
                   item.userList.forEach(it => {
