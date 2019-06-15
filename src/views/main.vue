@@ -9,6 +9,10 @@
               <span class="text">泰斗公众号聊天系统</span>
             </div>
             <div class="pull-right">
+              <div class="state">
+                <p v-if="websocketState" class="green">连接</p>
+                <p v-else class="red">断开</p>
+              </div> 
               <div class="avatar">
                 <img :src="kfInfo.avatar" alt>
               </div>
@@ -158,6 +162,7 @@
                           <div v-if="item.msg_type === 2" class="pull-left" style="width: 200px;">
                             <img :src="item.picurl" @click="largeImage(item.picurl)" alt>
                           </div>
+                          <div class="pull-left">{{item.username}}({{item.kf_nickname}})</div>
                         </div>
                       </div>
                       <div class="hospital-guide" v-if="item.send_type === 2">
@@ -590,7 +595,7 @@
     </el-dialog>
     <!-- 聊天记录 -->
     <el-dialog title="聊天记录" :visible.sync="chatRecordsShow" width="50%">
-      <div class="chatRecords">
+      <div class="chatRecords" style="background-color: #eaedf1;">
         <div class="centered upload" v-show="RecordsShow" @click="chatRecordsGet">加载更多~</div>
         <div class="centered isUpload" v-show="!RecordsShow">无更多消息~</div>
         <ul class="list">
@@ -798,11 +803,7 @@ export default {
       },
       info: [],
       dialogWidth: "30%",
-      socketData: {
-        user_type: "yz",
-        query_type: "head_data",
-        user_id: ""
-      },
+      websocketState:true,
       formParams: {
         //  发送消息参数
         weid: "", //微信公众id
@@ -1898,6 +1899,10 @@ export default {
         }, 3000);
       };
       ws.onmessage = evt => {
+        if(ws.readyState ===1){
+          this.websocketState=true;
+        }
+        console.log(ws.readyState,'连接状态')
         let received_msg;
         if (evt.data.indexOf("{") != -1) {
           received_msg = JSON.parse(evt.data);
@@ -1962,7 +1967,7 @@ export default {
                       });
                     }
                   });
-                } else {}
+                }
                 this.groupList.forEach(item => {
                 if (item.groupid === msg.groupid) {
                   item.userList.forEach(it => {
@@ -1975,6 +1980,18 @@ export default {
                 });
               }
             } else {
+              //将新来的文字信息渲染到页面
+              if (msg.msg_type === 1) {
+                this.groupList.forEach(item => {
+                  if (item.groupid === msg.groupid) {
+                    item.userList.forEach(it => {
+                      if (it.fans_openid === msg.fans_openid) {
+                        it.last_msg = msg.content;
+                      }
+                    });
+                  }
+                });
+              }
               this.groupList.forEach(item => {
                 if (item.groupid === msg.groupid) {
                   item.userList.forEach(it => {
@@ -2006,9 +2023,15 @@ export default {
           });
         }
       };
+      
       ws.onclose = () => {
         // 关闭 websocket
         // clearInterval(timer);
+        if(ws.readyState ===3){
+          this.websocketState=false;
+        }
+        console.log(ws.readyState,'连接状态');
+        clearInterval(timer)
       };
     }
   }
@@ -2055,6 +2078,36 @@ export default {
           display: flex;
           align-items: center;
           color: #fff;
+          .state{
+            .green{
+              position: relative;
+              padding-left:20px;
+              &::before{
+                content:'';
+                position:absolute;
+                height: 16px;
+                width:16px;
+                left:0px;
+                top:2px;
+                border-radius: 50%;
+                background:green;
+              }
+            }
+            .red{
+              position: relative;
+              padding-left:20px;
+              &::before{
+                content:'';
+                position:absolute;
+                height: 16px;
+                width:16px;
+                left:0px;
+                top:2px;
+                border-radius: 50%;
+                background:red;
+              }
+            }
+          }
           div {
             margin-right: 15px;
           }
@@ -2411,7 +2464,7 @@ export default {
       }
       .right {
         .right-aside {
-          height: calc(100vh - 60px);
+          height: 100%;
           border-left: 1px solid #e2e2e2;
           // background-color: @bg_eaedf1;
           overflow-y: scroll;
@@ -2439,7 +2492,7 @@ export default {
             }
           }
           .right-middle-contens {
-            padding-bottom: 30px;
+            // padding-bottom: 30px;
             .reply {
               padding-top: 5px;
               .reply-add {
@@ -2501,12 +2554,19 @@ export default {
               padding-top: 10px;
               padding-left: 10px;
               .disease-main {
-                padding-bottom: 30px;
+                min-height:770px;
+                position: relative;
+                padding-bottom: 40px;
+                margin-bottom: 60px;
                 h4 {
                   font-size: 20px;
                   line-height: 32px;
                 }
                 .disease-content {
+                  overflow-y: scroll;
+                  &::-webkit-scrollbar {
+                  display: none;
+                  }
                   table {
                     width: 370px;
                     margin: 10px 0;
@@ -2525,9 +2585,10 @@ export default {
                     }
                   }
                 }
+                
                 .disease-footer {
-                  position: fixed;
-                  bottom: 10px;
+                  position: absolute;
+                  bottom: 0;
                   right: 0;
                   width: 400px;
                   // border-top:1px solid #e2e2e2;
