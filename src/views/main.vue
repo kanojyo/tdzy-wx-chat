@@ -1857,9 +1857,7 @@ export default {
           this.diseaseData=data.data;
           this.diseaseInfoStatus=false;
           this.diseaseAddStatus=true;
-          if(data.data.fy_dis_id =='0'){
-            this.diseaseData.fy_dis_id=val;
-          }
+          this.diseaseData.fy_dis_id=val;
           getMobile(this.chatParams.fans_openid).then(data =>{
             if(data.code===200){
               this.diseaseData.mobile=data.data.mobile
