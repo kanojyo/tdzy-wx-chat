@@ -2029,11 +2029,13 @@ export default {
       ws.onclose = () => {
         // 关闭 websocket
         // clearInterval(timer);
+        clearInterval(timer)
         if(ws.readyState ===3){
           this.websocketState=false;
+          this.WebSocketTest();
         }
         // console.log(ws.readyState,'连接状态');
-        clearInterval(timer)
+        
       };
     }
   }
@@ -2255,6 +2257,7 @@ export default {
               }
               .two-list {
                 background-color: rgb(215, 215, 215);
+                padding-bottom:70px;
                 .two-item {
                   position: relative;
                   display: flex;
