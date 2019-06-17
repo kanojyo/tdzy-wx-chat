@@ -1000,7 +1000,6 @@ export default {
     this.phraseIndex(); //  聊天快捷短语列表
     this.officeListGet() //获取科室列表
     this.uploadUrl = this.baseURL + "/v1/uploads";
-    console.log(this.uploadUrl);
     this.kfInfo.avatar = this.$route.query.avatar;
     this.kfInfo.nickname = this.$route.query.nickname;
   },
@@ -1248,6 +1247,7 @@ export default {
       this.send();
     },
     beforeUpload(file) {
+      console.log(this.uploadUrl);
       const isGif = file.type === "image/gif";
       const isJPG = file.type === "image/jpg";
       const isPNG = file.type === "image/png";
