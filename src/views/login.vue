@@ -91,8 +91,8 @@ export default {
       if (data.code === 200) {
         this.getToken(data.data.token);
         this.timeOut=true; //停止轮询
-        // this.$router.push({path:"/main",query:{avatar:data.data.avatar,nickname:data.data.nickname}});
-        this.$router.push("/main");
+        this.$router.push({path:"/main",query:{avatar:data.data.avatar,nickname:data.data.nickname}});
+        // this.$router.push("/main");
       } else if (data.code === 400) {
         this.qrcodeShow=false;
         this.timeOut=true; //停止轮询

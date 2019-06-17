@@ -1889,7 +1889,7 @@ export default {
     WebSocketTest() {
       let timer =null;
       let ws = new WebSocket(
-        "ws://tdcsgzh.wuhanlst.com:11111?token=" +
+        "ws://wxgzh.whtdzyy.com:11111?token=" +
           this.token +
           "&device=" +
           this.device
