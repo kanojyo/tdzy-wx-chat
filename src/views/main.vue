@@ -986,6 +986,7 @@ export default {
       historyData: {}, //常见既往史数据
       zhusuString: "",
       historyString: "",
+      url:"",//websocket url
     };
   },
   filters: {
@@ -1885,15 +1886,21 @@ export default {
       });
       
     },
+    reconnect(url) {
+    //没连接上会一直重连，设置延迟避免请求过多
+      var timer = setTimeout(function () {
+          if (ws.readyState == 2 || ws.readyState == 3) {
+              ws.onopen();
+          } else if (ws.readyState == 1) {
+              clearTimeout(timer);
+          }
+      }, 500);
+    },
     //websocket聊天消息提醒
     WebSocketTest() {
       let timer =null;
-      let ws = new WebSocket(
-        "ws://wxgzh.whtdzyy.com:11111?token=" +
-          this.token +
-          "&device=" +
-          this.device
-      );
+      this.url="ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device;
+      let ws = new WebSocket(this.url);
       ws.onopen = () => {
         ws.send('{"type":"login"}'); //连接上，发送type:login
         timer = setInterval(() => {
@@ -2032,7 +2039,7 @@ export default {
         clearInterval(timer)
         if(ws.readyState ===3){
           this.websocketState=false;
-          this.WebSocketTest();
+          this.reconnect(this.url);
         }
         // console.log(ws.readyState,'连接状态');
         
@@ -2238,6 +2245,7 @@ export default {
             }
           }
           .one-list {
+            padding-bottom: 60px;
             .one-item {
               .title {
                 width: 100%;
@@ -2257,7 +2265,7 @@ export default {
               }
               .two-list {
                 background-color: rgb(215, 215, 215);
-                padding-bottom:70px;
+                // padding-bottom:70px;
                 .two-item {
                   position: relative;
                   display: flex;
