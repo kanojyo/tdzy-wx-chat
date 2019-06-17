@@ -83,7 +83,8 @@
                     @click="searchClick(item)"
                   >
                     <div class="photo">
-                      <img :src="item.avatar" alt>
+                      <img v-if="item.avatar" :src="item.avatar" alt>
+                      <img v-else :src="NoAvatar" alt>
                     </div>
                     <div class="name">{{item.nickname}}<span v-if="item.name">({{item.name}})</span> </div>
                   </li>
@@ -117,10 +118,12 @@
                           :value="i.not_read_num>99?'99+':i.not_read_num"
                           v-if="i.not_read_num !==0"
                         >
-                          <img :src="i.headimgurl">
+                          <img v-if="i.headimgurl" :src="i.headimgurl">
+                          <img v-else :src="NoAvatar">
                         </el-badge>
                         <div class="avatar" v-else>
-                          <img :src="i.headimgurl">
+                          <img v-if="i.headimgurl" :src="i.headimgurl">
+                          <img v-else :src="NoAvatar">
                         </div>
                         <div class="text">
                           <p class="nickname">{{i.nickname}}<span v-if="i.name">({{i.name}})</span> </p>
@@ -154,7 +157,8 @@
                     <div class="info" v-if="item.key===0">
                       <div class="tourist" v-if="item.send_type === 1">
                         <div class="avatar">
-                          <img :src="item.fans_avatar" alt>
+                          <img v-if="item.fans_avatar" :src="item.fans_avatar" alt>
+                          <img v-else :src="NoAvatar" alt>
                         </div>
                         <div class="centens">
                           <div class="time">{{item.ctime|formatDate}}</div>
@@ -606,7 +610,8 @@
             <div class="info" v-if="item.key===0">
               <div class="tourist" v-if="item.send_type === 1">
                 <div class="avatar">
-                  <img :src="item.fans_avatar" alt>
+                  <img v-if="item.fans_avatar" :src="item.fans_avatar" alt>
+                  <img v-else :src="NoAvatar" alt="">
                 </div>
                 <div class="centens">
                   <div class="time">{{item.ctime|formatDate}}</div>
@@ -798,6 +803,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      NoAvatar:'http://osscdn.whtdzyy.com/avatar/avatar.png',
       kfInfo: {
         avatar: "",
         nickname: ""
