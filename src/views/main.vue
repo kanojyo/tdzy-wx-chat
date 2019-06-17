@@ -1000,8 +1000,8 @@ export default {
     this.phraseIndex(); //  聊天快捷短语列表
     this.officeListGet() //获取科室列表
     this.uploadUrl = this.baseURL + "/v1/uploads";
-    // this.kfInfo.avatar = this.$route.query.avatar;
-    // this.kfInfo.nickname = this.$route.query.nickname;
+    this.kfInfo.avatar = this.$route.query.avatar;
+    this.kfInfo.nickname = this.$route.query.nickname;
   },
   computed: {
     ...mapState({
