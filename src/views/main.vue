@@ -1892,21 +1892,25 @@ export default {
       });
       
     },
-    reconnect(url) {
-    //没连接上会一直重连，设置延迟避免请求过多
-      var timer = setTimeout(function () {
-          if (ws.readyState == 2 || ws.readyState == 3) {
-              ws.onopen();
-          } else if (ws.readyState == 1) {
-              clearTimeout(timer);
-          }
-      }, 500);
-    },
+    // reconnect() {
+    // //没连接上会一直重连，设置延迟避免请求过多
+    //   var timer = setTimeout(function () {
+    //       if (ws.readyState == 2 || ws.readyState == 3) {
+    //           ws.onopen();
+    //       } else if (ws.readyState == 1) {
+    //           clearTimeout(timer);
+    //       }
+    //   }, 3000);
+    // },
     //websocket聊天消息提醒
     WebSocketTest() {
       let timer =null;
-      this.url="ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device;
-      let ws = new WebSocket(this.url);
+      // if (ws == null || typeof ws !== WebSocket) {
+      //     ws = new WebSocket(url);
+      //     this.WebSocketTest();
+      // } else {
+      // }
+      let ws = new WebSocket("ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device);
       ws.onopen = () => {
         ws.send('{"type":"login"}'); //连接上，发送type:login
         timer = setInterval(() => {
@@ -2045,10 +2049,8 @@ export default {
         clearInterval(timer)
         if(ws.readyState ===3){
           this.websocketState=false;
-          this.reconnect(this.url);
+          this.WebSocketTest();
         }
-        // console.log(ws.readyState,'连接状态');
-        
       };
     }
   }
