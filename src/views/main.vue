@@ -200,6 +200,7 @@
                         :action="uploadUrl"
                         :before-upload="beforeUpload"
                         :onSuccess="uploadSuccess"
+                        :onError="uploadError"
                         :show-file-list="false"
                       >
                         <i class="icon iconfont icon-wenjianjia"></i>
@@ -993,6 +994,7 @@ export default {
       zhusuString: "",
       historyString: "",
       url:"",//websocket url
+      loading:'',
     };
   },
   filters: {
@@ -1021,8 +1023,6 @@ export default {
     //监听右侧添加病症中的科室
     'diseaseData.office_id'(val) {
       var name='';
-      console.log(val)
-      console.log(this.officeOptions);
       this.officeOptions.forEach(item=>{
         if(item.id===val){
           name=item.name;
@@ -1050,6 +1050,22 @@ export default {
           this.historyTags = this.historyData.ruxian;
         }
       });
+    },
+    'diseaseData.docter_id'(val){
+      console.log(this.doctorListData);
+      let doctorState=false;
+      //判断传进来的doctorId在下拉框中是否存在;
+      this.doctorListData.forEach(item=>{
+        if(item.id===val){
+          doctorState=true;
+        }
+      });
+      //如果传进来的doctorid在下拉框中不存在就默认为空;
+      this.$nextTick(function() {
+        if(doctorState ==false){
+          this.diseaseData.docter_id='';
+        }
+      })
     }
   },
   methods: {
@@ -1264,6 +1280,12 @@ export default {
     },
     beforeUpload(file) {
       console.log(this.uploadUrl);
+      this.loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       const isGif = file.type === "image/gif";
       const isJPG = file.type === "image/jpg";
       const isPNG = file.type === "image/png";
@@ -1284,7 +1306,11 @@ export default {
         this.imageUrl = file.data.url;
         this.imageShow = true;
         this.title = "发送图片";
+        this.loading.close();
       }
+    },
+    uploadError(){
+      this.loading.close();
     },
     async imageChange() {
       //  发送图片
