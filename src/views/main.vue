@@ -1917,12 +1917,6 @@ export default {
       let timer =null;
       let wsUrl=this.baseURL.split("//")[1];
       var url="ws://"+wsUrl+":11111?token=" +this.token +"&device=" +this.device
-       // 如果websocket不存在的时候 实例化websocket，并且调用websocket的函数
-      // if (ws == null || typeof ws !== WebSocket) {
-      //     initEventHandle();
-      // } else {
-      //     reconnect(url);
-      // }
       let ws = new WebSocket(url);
       ws.onopen = () => {
         if(ws.readyState ===1){
@@ -2540,6 +2534,7 @@ export default {
             // padding-bottom: 30px;
             .reply {
               padding-top: 5px;
+              padding-bottom: 60px;
               .reply-add {
                 display: flex;
                 align-items: center;
