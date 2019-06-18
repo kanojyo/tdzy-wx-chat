@@ -203,11 +203,11 @@
                         :onError="uploadError"
                         :show-file-list="false"
                       >
-                        <i class="icon iconfont icon-wenjianjia"></i>
+                        <i class="el-icon-picture" style="position:absolute;left:2px;top:0;color:#333;"></i>
                       </el-upload>
                     </li>
                     <li class="pull-left cursor">
-                      <i class="el-icon-picture" style="font-size:24px;" @click="sendQrcode"></i>
+                      <i class="el-icon-tickets" style="font-size:24px;" @click="sendQrcode"></i>
                     </li>
                     <li class="pull-left cursor">
                       <i class="icon iconfont icon-liaotian" @click="getRecord"></i>
@@ -2694,15 +2694,10 @@ export default {
   .chatRecords {
     width: 100%;
     flex: 1;
-    // border-bottom: 1px solid #e2e2e2;
-    // background-color: @bg_eaedf1;
     padding: 30px;
     box-sizing: border-box;
     height: 600px;
     overflow-y: scroll;
-    // &::-webkit-scrollbar {
-    //   display: none;
-    // }
     .upload {
       padding: 10px;
       color: @color_f8494c;
