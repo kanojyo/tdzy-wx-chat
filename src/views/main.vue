@@ -2178,6 +2178,7 @@ export default {
         .ul_left {
           width: 200px;
           border-right: 1px solid #e2e2e2;
+          padding-bottom: 60px;
           .wechat-list {
             .item {
               display: flex;
