@@ -1915,7 +1915,8 @@ export default {
     //websocket聊天消息提醒
     WebSocketTest() {
       let timer =null;
-      var url="ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device
+      let wsUrl=this.baseURL.split("//")[1];
+      var url="ws://"+wsUrl+":11111?token=" +this.token +"&device=" +this.device
        // 如果websocket不存在的时候 实例化websocket，并且调用websocket的函数
       // if (ws == null || typeof ws !== WebSocket) {
       //     initEventHandle();

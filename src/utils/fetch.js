@@ -18,7 +18,7 @@ instance.interceptors.request.use(config => {
     if(localStorage.getItem('device')){
         config.headers.device = localStorage.getItem('device');   // 添加设备号
     }
-    // ElementUI.Loading.service({text: '玩命加载中...', background: 'rgba(0, 0, 0, .3)'});    //  全局加载层
+    ElementUI.Loading.service({text: '玩命加载中...', background: 'rgba(0, 0, 0, .3)'});    //  全局加载层
     // console.log(config);
     return config;
     
@@ -58,10 +58,10 @@ instance.interceptors.response.use(
             }
         }
         // console.log(res);
-        // ElementUI.Loading.service().close();
+        ElementUI.Loading.service().close();
         return res;
 }, error => {
-    ElementUI.Message.error('404:网络链接错误');
+    ElementUI.Message.error('网络异常');
     ElementUI.Loading.service().close();
     return Promise.reject(error);
 })
