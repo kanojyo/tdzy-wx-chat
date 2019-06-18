@@ -692,7 +692,7 @@
         <tbody>
           <tr>
             <td style="width:70px;">科室</td>
-            <td>{{diseaseDetailData.office_id|office_id}}</td>
+            <td>{{diseaseDetailData.office_name}}</td>
           </tr>
           <tr>
           <tr>
@@ -1004,6 +1004,7 @@ export default {
   mounted() {
     this.getWechatList(); //获取公众号列表
     this.WebSocketTest();
+    this.move();
     this.phraseIndex(); //  聊天快捷短语列表
     this.officeListGet() //获取科室列表
     this.uploadUrl = this.baseURL + "/v1/uploads";
@@ -1018,24 +1019,32 @@ export default {
   },
   watch: {
     //监听右侧添加病症中的科室
-    'diseaseData.office_id': function(val) {
+    'diseaseData.office_id'(val) {
+      var name='';
+      console.log(val)
+      console.log(this.officeOptions);
+      this.officeOptions.forEach(item=>{
+        if(item.id===val){
+          name=item.name;
+        }
+      })
       this.$nextTick(function() {
-        if (val == 1) {
+        if (name == '男科') {
           //补肾科
           this.zhusuTags = this.zhusuData.bushen;
           this.historyTags = this.historyData.bushen;
         }
-        if (val == 2) {
+        if (name == '肛肠科') {
           //肛肠科
           this.zhusuTags = this.zhusuData.zhichuang;
           this.historyTags = this.historyData.zhichuang;
         }
-        if (val == 3) {
+        if (name == '鼻炎科') {
           //鼻炎科
           this.zhusuTags = this.zhusuData.biyan;
           this.historyTags = this.historyData.biyan;
         }
-        if (val == 4) {
+        if (name == '乳腺科') {
           //乳腺科
           this.zhusuTags = this.zhusuData.ruxian;
           this.historyTags = this.historyData.ruxian;
@@ -1693,6 +1702,7 @@ export default {
     TagsGet() {
       axios.get("/mocks/zhusu.json").then(response => {
         this.zhusuData = response.data;
+        console.log(this.zhusuData)
       });
       axios.get("/mocks/jiwangshi.json").then(response => {
         this.historyData = response.data;
@@ -1905,22 +1915,24 @@ export default {
     //websocket聊天消息提醒
     WebSocketTest() {
       let timer =null;
+      var url="ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device
+       // 如果websocket不存在的时候 实例化websocket，并且调用websocket的函数
       // if (ws == null || typeof ws !== WebSocket) {
-      //     ws = new WebSocket(url);
-      //     this.WebSocketTest();
+      //     initEventHandle();
       // } else {
+      //     reconnect(url);
       // }
-      let ws = new WebSocket("ws://wxgzh.whtdzyy.com:11111?token=" +this.token +"&device=" +this.device);
+      let ws = new WebSocket(url);
       ws.onopen = () => {
+        if(ws.readyState ===1){
+          this.websocketState=true;
+        }
         ws.send('{"type":"login"}'); //连接上，发送type:login
         timer = setInterval(() => {
           ws.send('{"type":"pong"}');
         }, 3000);
       };
       ws.onmessage = evt => {
-        if(ws.readyState ===1){
-          this.websocketState=true;
-        }
         // console.log(ws.readyState,'连接状态')
         let received_msg;
         if (evt.data.indexOf("{") != -1) {
@@ -2052,6 +2064,17 @@ export default {
           this.WebSocketTest();
         }
       };
+    },
+    //监听socket链接状态
+    move(){
+      let fuc = () => {
+          let time = null;
+          if(this.websocketState) return;
+          clearTimeout(time);
+          this.WebSocketTest();
+          time = setTimeout(fuc, 3000);
+      }
+      fuc();
     }
   }
 };

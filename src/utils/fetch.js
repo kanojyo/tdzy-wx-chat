@@ -6,7 +6,7 @@ import ElementUI from 'element-ui';
 // 创建axios实例
 const instance = axios.create({
     baseURL: process.env.VUE_APP_URL,
-    timeout: 3000,
+    timeout: 10000,
 })
 
 // 添加请求拦截器
