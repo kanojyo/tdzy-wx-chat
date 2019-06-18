@@ -203,14 +203,14 @@
                         :onError="uploadError"
                         :show-file-list="false"
                       >
-                        <i class="el-icon-picture" style="position:absolute;left:2px;top:0;color:#333;"></i>
+                        <i class="el-icon-picture" title="发送图片" style="position:absolute;left:2px;top:0;color:#333;"></i>
                       </el-upload>
                     </li>
                     <li class="pull-left cursor">
-                      <i class="el-icon-tickets" style="font-size:24px;" @click="sendQrcode"></i>
+                      <i class="el-icon-tickets" title="发送收款码" style="font-size:24px;" @click="sendQrcode"></i>
                     </li>
                     <li class="pull-left cursor">
-                      <i class="icon iconfont icon-liaotian" @click="getRecord"></i>
+                      <i class="icon iconfont icon-liaotian" title="查看聊天记录" @click="getRecord"></i>
                     </li>
                   </ul>
                 </div>
