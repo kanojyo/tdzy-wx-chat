@@ -1691,6 +1691,7 @@ export default {
       this.diseaseData.fuzhu_result = "";
       this.diseaseData.beizhu = "";
       this.diseaseData.guomin = "";
+      this.diseaseData.temp_disease_id="";
     },
     //添加病症获取科室信息
     async officeListGet() {
