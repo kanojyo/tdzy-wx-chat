@@ -1279,7 +1279,6 @@ export default {
       this.send();
     },
     beforeUpload(file) {
-      console.log(this.uploadUrl);
       this.loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -1293,9 +1292,11 @@ export default {
       const isLt4M = file.size / 1024 / 1024 <= 4;
       if (!isJPG && !isJPEG && !isPNG) {
         this.$message.error("上传图片只能是 jpg,png,jpeg 格式!");
+        this.loading.close();
       }
       if (!isLt4M) {
         this.$message.error("上传图片大小不能超过 4MB!");
+        this.loading.close();
       }
       return (isJPG || isJPEG || isPNG) && isLt4M;
     },
