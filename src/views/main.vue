@@ -12,7 +12,7 @@
               <div class="state">
                 <p v-if="websocketState" class="green">连接</p>
                 <p v-else class="red">断开</p>
-              </div> 
+              </div>
               <div class="avatar">
                 <img :src="kfInfo.avatar" alt>
               </div>
@@ -86,7 +86,10 @@
                       <img v-if="item.avatar" :src="item.avatar" alt>
                       <img v-else :src="NoAvatar" alt>
                     </div>
-                    <div class="name">{{item.nickname}}<span v-if="item.name">({{item.name}})</span> </div>
+                    <div class="name">
+                      {{item.nickname}}
+                      <span v-if="item.name">({{item.name}})</span>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -126,7 +129,10 @@
                           <img v-else :src="NoAvatar">
                         </div>
                         <div class="text">
-                          <p class="nickname">{{i.nickname}}<span v-if="i.name">({{i.name}})</span> </p>
+                          <p class="nickname">
+                            {{i.nickname}}
+                            <span v-if="i.name">({{i.name}})</span>
+                          </p>
                           <p class="txt">{{i.last_msg}}</p>
                         </div>
                         <div class="tubiao">
@@ -144,7 +150,10 @@
           <el-main>
             <div class="main-contens" v-if="devShow">
               <div class="nickname centered">
-                <p>{{userData.nickname}}<span v-if="userData.name">({{userData.name}})</span></p>
+                <p>
+                  {{userData.nickname}}
+                  <span v-if="userData.name">({{userData.name}})</span>
+                </p>
               </div>
               <div class="dialogue-k">
                 <!-- <div class="centered upload" v-show="uploadShow" @click="getChatList">加载更多~</div>
@@ -203,11 +212,20 @@
                         :onError="uploadError"
                         :show-file-list="false"
                       >
-                        <i class="el-icon-picture" title="发送图片" style="position:absolute;left:2px;top:0;color:#333;"></i>
+                        <i
+                          class="el-icon-picture"
+                          title="发送图片"
+                          style="position:absolute;left:2px;top:0;color:#333;"
+                        ></i>
                       </el-upload>
                     </li>
                     <li class="pull-left cursor">
-                      <i class="el-icon-tickets" title="发送收款码" style="font-size:24px;" @click="sendQrcode"></i>
+                      <i
+                        class="el-icon-tickets"
+                        title="发送收款码"
+                        style="font-size:24px;"
+                        @click="sendQrcode"
+                      ></i>
                     </li>
                     <li class="pull-left cursor">
                       <i class="icon iconfont icon-liaotian" title="查看聊天记录" @click="getRecord"></i>
@@ -265,25 +283,21 @@
                         <tr>
                           <td>关注时间</td>
                           <td>
-                            <div v-if="fansBaseInfo.subscribe_time">
-                              {{fansBaseInfo.subscribe_time|formatDate}}
-                            </div>
+                            <div
+                              v-if="fansBaseInfo.subscribe_time"
+                            >{{fansBaseInfo.subscribe_time|formatDate}}</div>
                           </td>
                         </tr>
                         <tr>
                           <td>创建时间</td>
                           <td>
-                            <div v-if="fansBaseInfo.ctime">
-                              {{fansBaseInfo.ctime|formatDate}}
-                            </div>
+                            <div v-if="fansBaseInfo.ctime">{{fansBaseInfo.ctime|formatDate}}</div>
                           </td>
                         </tr>
                         <tr>
                           <td>最后到访</td>
                           <td>
-                            <div v-if="fansBaseInfo.last_time">
-                              {{fansBaseInfo.last_time|formatDate}}
-                            </div>
+                            <div v-if="fansBaseInfo.last_time">{{fansBaseInfo.last_time|formatDate}}</div>
                           </td>
                         </tr>
                         <tr>
@@ -321,7 +335,10 @@
                       </thead>
                       <tbody>
                         <tr v-for="(item,index) in fansAttention" :key="index">
-                          <td style="width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" :title="item.we_name">{{item.we_name}}</td>
+                          <td
+                            style="width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                            :title="item.we_name"
+                          >{{item.we_name}}</td>
                           <td>
                             <div v-if="item.subscribe_time">关注时间：{{item.subscribe_time|formatDate}}</div>
                             <div v-if="item.ctime">创建时间：{{item.ctime|formatDate}}</div>
@@ -362,7 +379,7 @@
                   <div class="centered" v-else>暂无用户信息</div>
                 </div>
                 <div class="disease" v-show="rightActive === 2">
-                  <div >
+                  <div>
                     <div class="disease-main" v-show="diseaseInfoStatus">
                       <div class="disease-content" v-if="Object.keys(diseaseListData).length !== 0">
                         <h4>用户病症信息</h4>
@@ -398,9 +415,18 @@
                               <td>操作</td>
                               <td>
                                 <el-button @click="diseaseDetail(item.id)">详情</el-button>
-                                <el-button v-if="item.state===9 && item.is_new ===2" @click="reason(item.reject_reason)">驳回原因</el-button>
-                                <el-button v-if="item.state===2 && item.is_new ===2" @click="giveUp(item.id)">放弃</el-button>
-                                <el-button v-if="item.state===7 && item.is_new ===2" @click="reuse(item.id)">复用</el-button>
+                                <el-button
+                                  v-if="item.state===9 && item.is_new ===2"
+                                  @click="reason(item.reject_reason)"
+                                >驳回原因</el-button>
+                                <el-button
+                                  v-if="item.state===2 && item.is_new ===2"
+                                  @click="giveUp(item.id)"
+                                >放弃</el-button>
+                                <el-button
+                                  v-if="item.state===7 && item.is_new ===2"
+                                  @click="reuse(item.id)"
+                                >复用</el-button>
                               </td>
                             </tr>
                           </tbody>
@@ -496,7 +522,7 @@
                         <el-form-item label="年龄" class="red_star1">
                           <el-input v-model="diseaseData.age"></el-input>
                         </el-form-item>
-                        <el-form-item label="职业" >
+                        <el-form-item label="职业">
                           <el-input v-model="diseaseData.job"></el-input>
                         </el-form-item>
                         <el-form-item label="联系方式">
@@ -508,7 +534,7 @@
                         <el-form-item label="微信号">
                           <el-input v-model="diseaseData.wechat"></el-input>
                         </el-form-item>
-                        <el-form-item label="地址" >
+                        <el-form-item label="地址">
                           <el-input v-model="diseaseData.address"></el-input>
                         </el-form-item>
                         <el-form-item label="常见主诉">
@@ -518,13 +544,25 @@
                           <el-input v-model="diseaseData.wenzhen_zhusu" type="textarea" rows="2"></el-input>
                         </el-form-item>
                         <el-form-item label="现病史" class="red_star2">
-                          <el-input v-model="diseaseData.wenzhen_disease_ing" type="textarea" rows="2"></el-input>
+                          <el-input
+                            v-model="diseaseData.wenzhen_disease_ing"
+                            type="textarea"
+                            rows="2"
+                          ></el-input>
                         </el-form-item>
                         <el-form-item label="常见既往史">
-                          <el-tag :key="tag" v-for="tag in historyTags" @click="addhistory(tag)">{{tag}}</el-tag>
+                          <el-tag
+                            :key="tag"
+                            v-for="tag in historyTags"
+                            @click="addhistory(tag)"
+                          >{{tag}}</el-tag>
                         </el-form-item>
                         <el-form-item label="既往史" class="red_star2">
-                          <el-input v-model="diseaseData.wenzhen_disease_ed" type="textarea" rows="2"></el-input>
+                          <el-input
+                            v-model="diseaseData.wenzhen_disease_ed"
+                            type="textarea"
+                            rows="2"
+                          ></el-input>
                         </el-form-item>
                         <el-form-item label="过敏史" class="red_star2">
                           <el-input v-model="diseaseData.guomin" type="textarea" rows="2"></el-input>
@@ -535,7 +573,7 @@
                         <el-form-item label="辅助信息" class="red_star4">
                           <el-input v-model="diseaseData.fuzhu_result" type="textarea" rows="2"></el-input>
                         </el-form-item>
-                        <el-form-item label="病症备注" >
+                        <el-form-item label="病症备注">
                           <el-input v-model="diseaseData.beizhu" type="textarea" rows="2"></el-input>
                         </el-form-item>
                       </el-form>
@@ -612,7 +650,7 @@
               <div class="tourist" v-if="item.send_type === 1">
                 <div class="avatar">
                   <img v-if="item.fans_avatar" :src="item.fans_avatar" alt>
-                  <img v-else :src="NoAvatar" alt="">
+                  <img v-else :src="NoAvatar" alt>
                 </div>
                 <div class="centens">
                   <div class="time">{{item.ctime|formatDate}}</div>
@@ -695,9 +733,9 @@
             <td style="width:70px;">科室</td>
             <td>{{diseaseDetailData.office_name}}</td>
           </tr>
+          <tr></tr>
           <tr>
-          <tr>
-            <td >接待医生</td>
+            <td>接待医生</td>
             <td>{{diseaseDetailData.doctor_name}}</td>
           </tr>
           <tr>
@@ -798,20 +836,26 @@ import {
   getMobile
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
-import { isvalidPhone, isvalidLandlinePhone,validAge,validBlank } from "@/utils/validate.js";
-import axios from 'axios';
+import {
+  isvalidPhone,
+  isvalidLandlinePhone,
+  validAge,
+  validBlank
+} from "@/utils/validate.js";
+import axios from "axios";
+import { clearTimeout } from 'timers';
 
 export default {
   data() {
     return {
-      NoAvatar:'http://osscdn.whtdzyy.com/avatar/avatar.png',
+      NoAvatar: "http://osscdn.whtdzyy.com/avatar/avatar.png",
       kfInfo: {
         avatar: "",
         nickname: ""
       },
       info: [],
       dialogWidth: "30%",
-      websocketState:true,
+      websocketState: true,
       formParams: {
         //  发送消息参数
         weid: "", //微信公众id
@@ -958,10 +1002,10 @@ export default {
         fans_openid: "", //fansopenid 必须
         save_type: "", //1：保存草稿，2保存正式
         temp_disease_id: "", //草稿箱病症id
-        fy_dis_id:"", //复用病症id
+        fy_dis_id: "", //复用病症id
         disease_id: "", //正式病症id
         office_id: "", //科室id
-        docter_id:"", //医生id
+        docter_id: "", //医生id
         name: "", //姓名
         sex: "", //1男2女
         age: "", //年纪
@@ -972,7 +1016,7 @@ export default {
         address: "", //地址
         wenzhen_zhusu: "", //主诉
         wenzhen_disease_ing: "", //现病史
-        guomin:"", //过敏史
+        guomin: "", //过敏史
         wenzhen_disease_ed: "", //既往史
         tijian: "", //体检信息
         fuzhu_result: "", //辅助信息
@@ -984,7 +1028,7 @@ export default {
       diseaseDetailShow: false, //病症详情状态
       diseaseListData: {}, //用戶病症信息
       draftsListData: {}, //草稿箱用戶病症信息
-      doctorListData:[],//医生信息
+      doctorListData: [], //医生信息
       officeOptions: [], //科室数组
       diseaseDetailData: {}, //病症详情数据
       zhusuTags: [], //主诉标签
@@ -993,8 +1037,9 @@ export default {
       historyData: {}, //常见既往史数据
       zhusuString: "",
       historyString: "",
-      url:"",//websocket url
-      loading:'',
+      url: "", //websocket url
+      loading: "",
+      lockReconnect: false //避免WS重复连接
     };
   },
   filters: {
@@ -1006,9 +1051,8 @@ export default {
   mounted() {
     this.getWechatList(); //获取公众号列表
     this.WebSocketTest();
-    this.move();
     this.phraseIndex(); //  聊天快捷短语列表
-    this.officeListGet() //获取科室列表
+    this.officeListGet(); //获取科室列表
     this.uploadUrl = this.baseURL + "/v1/uploads";
     this.kfInfo.avatar = this.$route.query.avatar;
     this.kfInfo.nickname = this.$route.query.nickname;
@@ -1021,51 +1065,51 @@ export default {
   },
   watch: {
     //监听右侧添加病症中的科室
-    'diseaseData.office_id'(val) {
-      var name='';
-      this.officeOptions.forEach(item=>{
-        if(item.id===val){
-          name=item.name;
+    "diseaseData.office_id"(val) {
+      var name = "";
+      this.officeOptions.forEach(item => {
+        if (item.id === val) {
+          name = item.name;
         }
-      })
+      });
       this.$nextTick(function() {
-        if (name == '男科') {
+        if (name == "男科") {
           //补肾科
           this.zhusuTags = this.zhusuData.bushen;
           this.historyTags = this.historyData.bushen;
         }
-        if (name == '肛肠科') {
+        if (name == "肛肠科") {
           //肛肠科
           this.zhusuTags = this.zhusuData.zhichuang;
           this.historyTags = this.historyData.zhichuang;
         }
-        if (name == '鼻炎科') {
+        if (name == "鼻炎科") {
           //鼻炎科
           this.zhusuTags = this.zhusuData.biyan;
           this.historyTags = this.historyData.biyan;
         }
-        if (name == '乳腺科') {
+        if (name == "乳腺科") {
           //乳腺科
           this.zhusuTags = this.zhusuData.ruxian;
           this.historyTags = this.historyData.ruxian;
         }
       });
     },
-    'diseaseData.docter_id'(val){
+    "diseaseData.docter_id"(val) {
       console.log(this.doctorListData);
-      let doctorState=false;
+      let doctorState = false;
       //判断传进来的doctorId在下拉框中是否存在;
-      this.doctorListData.forEach(item=>{
-        if(item.id===val){
-          doctorState=true;
+      this.doctorListData.forEach(item => {
+        if (item.id === val) {
+          doctorState = true;
         }
       });
       //如果传进来的doctorid在下拉框中不存在就默认为空;
       this.$nextTick(function() {
-        if(doctorState ==false){
-          this.diseaseData.docter_id='';
+        if (doctorState == false) {
+          this.diseaseData.docter_id = "";
         }
-      })
+      });
     }
   },
   methods: {
@@ -1140,16 +1184,16 @@ export default {
       //获取公众号下面的分组列表
       this.getGroup();
       //重置右侧菜单的内容
-      this.fansBaseInfo={};
-      this.fansAttention={};
-      this.filesForm={};
-      this.diseaseListData={};
-      this.draftsListData={};
-      this.rightActive=1;
-      this.diseaseAddStatus=false;
-      this.diseaseInfoStatus=true;
-      this.draftsStatus=false;
-      this.chatParams.fans_openid="";
+      this.fansBaseInfo = {};
+      this.fansAttention = {};
+      this.filesForm = {};
+      this.diseaseListData = {};
+      this.draftsListData = {};
+      this.rightActive = 1;
+      this.diseaseAddStatus = false;
+      this.diseaseInfoStatus = true;
+      this.draftsStatus = false;
+      this.chatParams.fans_openid = "";
       this.diseaseData.office_id = "";
       this.diseaseData.name = "";
       this.diseaseData.sex = "";
@@ -1166,7 +1210,7 @@ export default {
       this.diseaseData.fuzhu_result = "";
       this.diseaseData.beizhu = "";
       this.diseaseData.guomin = "";
-      this.devShow=false;
+      this.devShow = false;
     },
     //聊天页面的聊天记录数据
     async getChatList() {
@@ -1178,15 +1222,15 @@ export default {
     },
     //点击打开聊天界面
     chatChange(val) {
-      this.fansBaseInfo={};
-      this.fansAttention={};
-      this.filesForm={};
-      this.diseaseListData={};
-      this.draftsListData={};
-      this.rightActive=1;
-      this.diseaseAddStatus=false;
-      this.diseaseInfoStatus=true;
-      this.draftsStatus=false;
+      this.fansBaseInfo = {};
+      this.fansAttention = {};
+      this.filesForm = {};
+      this.diseaseListData = {};
+      this.draftsListData = {};
+      this.rightActive = 1;
+      this.diseaseAddStatus = false;
+      this.diseaseInfoStatus = true;
+      this.draftsStatus = false;
       // console.log(val);
       this.formParams.fans_openid = val.fans_openid;
       this.picParams.fans_openid = val.fans_openid;
@@ -1281,9 +1325,9 @@ export default {
     beforeUpload(file) {
       this.loading = this.$loading({
         lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
       });
       const isGif = file.type === "image/gif";
       const isJPG = file.type === "image/jpg";
@@ -1310,7 +1354,7 @@ export default {
         this.loading.close();
       }
     },
-    uploadError(){
+    uploadError() {
       this.loading.close();
     },
     async imageChange() {
@@ -1344,14 +1388,17 @@ export default {
       } else {
         this.groupList.forEach(items => {
           items.userList.forEach(item => {
-            if (item.nickname.search(this.keyword) !== -1 ||item.name.search(this.keyword) !== -1) {
+            if (
+              item.nickname.search(this.keyword) !== -1 ||
+              item.name.search(this.keyword) !== -1
+            ) {
               // console.log(item)
               this.userList.push({
                 avatar: item.headimgurl,
                 nickname: item.nickname,
                 groupid: item.groupid,
                 id: item.id,
-                name:item.name,
+                name: item.name
               });
             }
           });
@@ -1501,7 +1548,7 @@ export default {
     },
     //修改备注名
     async modifyName() {
-      if(this.fansBaseInfo.name=='' ||validBlank(this.fansBaseInfo.name)){
+      if (this.fansBaseInfo.name == "" || validBlank(this.fansBaseInfo.name)) {
         this.$message.error("请输入备注名");
         return;
       }
@@ -1511,7 +1558,7 @@ export default {
       let data = await modifyName(params);
       if (data.code === 200) {
         this.$message({ message: "修改成功", type: "success" });
-        this.userData.name=this.fansBaseInfo.name;
+        this.userData.name = this.fansBaseInfo.name;
       }
     },
     //提交用户档案信息
@@ -1521,19 +1568,24 @@ export default {
       //     this.filesForm.mobile=data.data.mobile
       //   }
       // })
-      if(this.filesForm.mobile !=''){
-        if (!(isvalidPhone(this.filesForm.mobile) ||isvalidLandlinePhone(this.filesForm.mobile))) {
+      if (this.filesForm.mobile != "") {
+        if (
+          !(
+            isvalidPhone(this.filesForm.mobile) ||
+            isvalidLandlinePhone(this.filesForm.mobile)
+          )
+        ) {
           this.$message.error("请输入正确的联系方式");
           return;
-       }
+        }
       }
-      if(this.filesForm.age !==""){
-        if(!validAge(this.filesForm.age) || this.filesForm.age.length>5){
+      if (this.filesForm.age !== "") {
+        if (!validAge(this.filesForm.age) || this.filesForm.age.length > 5) {
           this.$message.error("年龄只能输入数字，字母，中文且不超过5个字");
           return;
         }
       }
-      this.filesForm.fans_openid=this.chatParams.fans_openid;
+      this.filesForm.fans_openid = this.chatParams.fans_openid;
       let data = await modifyInfo(this.filesForm);
       if (data.code === 200) {
         this.$message({ message: "提交成功", type: "success" });
@@ -1625,15 +1677,15 @@ export default {
     GoDrafts() {
       this.diseaseInfoStatus = false;
       this.draftsStatus = true;
-      if(this.chatParams.fans_openid){
+      if (this.chatParams.fans_openid) {
         this.draftsList();
       }
     },
     //打开添加病症
     GoAdd() {
-      if(this.chatParams.fans_openid ==''){
+      if (this.chatParams.fans_openid == "") {
         this.$message.error("请先选择一位用户");
-        return
+        return;
       }
       this.diseaseInfoStatus = false;
       this.diseaseAddStatus = true;
@@ -1642,17 +1694,17 @@ export default {
       this.diseaseData.sex = this.filesForm.sex;
       this.diseaseData.age = this.filesForm.age;
       this.diseaseData.beizhu = this.filesForm.remark;
-      getMobile(this.chatParams.fans_openid).then(data =>{
-        if(data.code===200){
-          this.diseaseData.mobile=data.data.mobile
+      getMobile(this.chatParams.fans_openid).then(data => {
+        if (data.code === 200) {
+          this.diseaseData.mobile = data.data.mobile;
         }
-      })
+      });
     },
     //从草稿箱打开添加病症
     GoAdd2() {
-      if(this.chatParams.fans_openid ==''){
+      if (this.chatParams.fans_openid == "") {
         this.$message.error("请先选择一位用户");
-        return
+        return;
       }
       this.draftsStatus = false;
       this.diseaseAddStatus = true;
@@ -1661,11 +1713,11 @@ export default {
       this.diseaseData.sex = this.filesForm.sex;
       this.diseaseData.age = this.filesForm.age;
       this.diseaseData.beizhu = this.filesForm.remark;
-      getMobile(this.chatParams.fans_openid).then(data =>{
-        if(data.code===200){
-          this.diseaseData.mobile=data.data.mobile
+      getMobile(this.chatParams.fans_openid).then(data => {
+        if (data.code === 200) {
+          this.diseaseData.mobile = data.data.mobile;
         }
-      })
+      });
     },
     //从草稿箱返回病症信息
     GoInfo() {
@@ -1692,7 +1744,7 @@ export default {
       this.diseaseData.fuzhu_result = "";
       this.diseaseData.beizhu = "";
       this.diseaseData.guomin = "";
-      this.diseaseData.temp_disease_id="";
+      this.diseaseData.temp_disease_id = "";
     },
     //添加病症获取科室信息
     async officeListGet() {
@@ -1702,12 +1754,12 @@ export default {
       }
     },
     //添加病症获取医生信息
-    async doctorListGet(){
+    async doctorListGet() {
       let data = await doctorList(this.chatParams.fans_openid);
-      if(data.code ===200){
+      if (data.code === 200) {
         // console.log(data)
-        this.doctorListData=data.data.doctor_list;
-        this.diseaseData.docter_id=data.data.default_doctor_id;
+        this.doctorListData = data.data.doctor_list;
+        this.diseaseData.docter_id = data.data.default_doctor_id;
       }
     },
     //獲取用戶病症信息
@@ -1730,7 +1782,7 @@ export default {
     TagsGet() {
       axios.get("/mocks/zhusu.json").then(response => {
         this.zhusuData = response.data;
-        console.log(this.zhusuData)
+        console.log(this.zhusuData);
       });
       axios.get("/mocks/jiwangshi.json").then(response => {
         this.historyData = response.data;
@@ -1758,7 +1810,7 @@ export default {
     },
     //提交病症信息
     async commit(val) {
-      if(val === 2){
+      if (val === 2) {
         //保存正式时验证必填项
         if (this.diseaseData.office_id == "") {
           this.$message.error("请输入就诊科室");
@@ -1802,14 +1854,22 @@ export default {
         }
       }
       //当输入了联系方式时,验证联系方式
-      if(this.diseaseData.mobile !== ""){
-        if (!(isvalidPhone(this.diseaseData.mobile) ||isvalidLandlinePhone(this.diseaseData.mobile))) {
+      if (this.diseaseData.mobile !== "") {
+        if (
+          !(
+            isvalidPhone(this.diseaseData.mobile) ||
+            isvalidLandlinePhone(this.diseaseData.mobile)
+          )
+        ) {
           this.$message.error("请输入正确的联系方式");
           return;
         }
       }
-      if(this.diseaseData.age !==""){
-        if(!validAge(this.diseaseData.age) || this.diseaseData.age.length>5){
+      if (this.diseaseData.age !== "") {
+        if (
+          !validAge(this.diseaseData.age) ||
+          this.diseaseData.age.length > 5
+        ) {
           this.$message.error("年龄只能输入数字，字母，中文且不超过5个字");
           return;
         }
@@ -1836,13 +1896,13 @@ export default {
         this.diseaseData.fuzhu_result = "";
         this.diseaseData.beizhu = "";
         this.diseaseData.guomin = "";
-        if(val ===1){
-          this.diseaseAddStatus=false;
-          this.draftsStatus=true;
-          this.draftsList();//重新获取草稿箱列表
-        }else if(val ===2){
-          this.diseaseAddStatus=false;
-          this.diseaseInfoStatus=true;
+        if (val === 1) {
+          this.diseaseAddStatus = false;
+          this.draftsStatus = true;
+          this.draftsList(); //重新获取草稿箱列表
+        } else if (val === 2) {
+          this.diseaseAddStatus = false;
+          this.diseaseInfoStatus = true;
           this.diseaseList(); //获取病症列表
         }
       }
@@ -1865,8 +1925,8 @@ export default {
       }
     },
     //驳回原因
-    reason(val){
-      let content =val;
+    reason(val) {
+      let content = val;
       this.$alert(content, "驳回原因", {
         confirmButtonText: "确定",
         callback: action => {}
@@ -1900,63 +1960,76 @@ export default {
         this.diseaseList(); //放弃成功刷新用户病症信息
       }
     },
-     //复用
-    reuse(val){
-      diseaseDetail(val).then(data=>{
-        if(data.code===200){
-          this.diseaseData=data.data;
-          this.diseaseInfoStatus=false;
-          this.diseaseAddStatus=true;
-          this.diseaseData.fy_dis_id=val;
-          getMobile(this.chatParams.fans_openid).then(data =>{
-            if(data.code===200){
-              this.diseaseData.mobile=data.data.mobile
+    //复用
+    reuse(val) {
+      diseaseDetail(val).then(data => {
+        if (data.code === 200) {
+          this.diseaseData = data.data;
+          this.diseaseInfoStatus = false;
+          this.diseaseAddStatus = true;
+          this.diseaseData.fy_dis_id = val;
+          getMobile(this.chatParams.fans_openid).then(data => {
+            if (data.code === 200) {
+              this.diseaseData.mobile = data.data.mobile;
             }
-          })
+          });
         }
       });
-      
     },
     //草稿箱继续编辑
-    edit(item){
+    edit(item) {
       // console.log(item);
-      draftsDetail(item.id).then(data=>{
-        if(data.code===200){
-          this.draftsStatus=false;
-          this.diseaseAddStatus=true;
-          this.diseaseData=data.data;
-          this.diseaseData.temp_disease_id=item.id;
+      draftsDetail(item.id).then(data => {
+        if (data.code === 200) {
+          this.draftsStatus = false;
+          this.diseaseAddStatus = true;
+          this.diseaseData = data.data;
+          this.diseaseData.temp_disease_id = item.id;
         }
       });
-      
     },
-    // reconnect() {
-    // //没连接上会一直重连，设置延迟避免请求过多
-    //   var timer = setTimeout(function () {
-    //       if (ws.readyState == 2 || ws.readyState == 3) {
-    //           ws.onopen();
-    //       } else if (ws.readyState == 1) {
-    //           clearTimeout(timer);
-    //       }
-    //   }, 3000);
-    // },
     //websocket聊天消息提醒
     WebSocketTest() {
-      let timer =null;
-      let wsUrl=this.baseURL.split("//")[1];
-      var url="ws://"+wsUrl+":11111?token=" +this.token +"&device=" +this.device
+      let timer = null;
+      let time = null;
+      let wsUrl = this.baseURL.split("//")[1];
+      var url =
+        "ws://" +
+        wsUrl +
+        ":11111?token=" +
+        this.token +
+        "&device=" +
+        this.device;
       let ws = new WebSocket(url);
-      ws.onopen = () => {
-        if(ws.readyState ===1){
-          this.websocketState=true;
+      clearInterval(timer);
+      ws.onclose = () => {
+        clearInterval(timer);
+        // console.log(ws.readyState, "onclose");
+        if (ws.readyState === 3) {
+          this.websocketState = false;
+          this.reconnect(url);
         }
-        ws.send('{"type":"login"}'); //连接上，发送type:login
-        timer = setInterval(() => {
-          ws.send('{"type":"pong"}');
-        }, 3000);
+      };
+      ws.onerror = () => {
+        clearInterval(timer);
+        if (ws.readyState === 3) {
+          this.websocketState = false;
+        }
+        // console.log(ws.readyState, "onerror");
+        this.reconnect(url);
+      };
+      ws.onopen = () => {
+        // console.log(ws.readyState, "open");
+        if (ws.readyState === 1) {
+          this.websocketState = true;
+          ws.send('{"type":"login"}'); //连接上，发送type:login
+          timer = setInterval(() => {
+            ws.send('{"type":"pong"}');
+          }, 3000);
+        }
       };
       ws.onmessage = evt => {
-        // console.log(ws.readyState,'连接状态')
+        // console.log(ws.readyState, "onmessage");
         let received_msg;
         if (evt.data.indexOf("{") != -1) {
           received_msg = JSON.parse(evt.data);
@@ -1982,7 +2055,8 @@ export default {
                       });
                     }
                   });
-                } else {}
+                } else {
+                }
                 //当聊天界面的粉丝id等于发送信息的粉丝id时;
                 if (this.formParams.fans_openid == msg.fans_openid) {
                   this.readMsgParams.msg_id = msg.msg_id;
@@ -2009,7 +2083,7 @@ export default {
                   });
                   // console.log(this.groupList, "发送消息后");
                 }
-              }else {
+              } else {
                 //将新来的文字信息渲染到页面
                 if (msg.msg_type === 1) {
                   this.groupList.forEach(item => {
@@ -2023,11 +2097,11 @@ export default {
                   });
                 }
                 this.groupList.forEach(item => {
-                if (item.groupid === msg.groupid) {
-                  item.userList.forEach(it => {
-                    if (it.fans_openid === msg.fans_openid) {
-                      it.not_read_num = msg.not_read_num;
-                    }
+                  if (item.groupid === msg.groupid) {
+                    item.userList.forEach(it => {
+                      if (it.fans_openid === msg.fans_openid) {
+                        it.not_read_num = msg.not_read_num;
+                      }
                       item.not_read_num += it.not_read_num;
                     });
                   }
@@ -2077,27 +2151,23 @@ export default {
           });
         }
       };
-      
-      ws.onclose = () => {
-        // 关闭 websocket
-        // clearInterval(timer);
-        clearInterval(timer)
-        if(ws.readyState ===3){
-          this.websocketState=false;
-          this.WebSocketTest();
-        }
-      };
     },
-    //监听socket链接状态
-    move(){
-      let fuc = () => {
-          let time = null;
-          if(this.websocketState) return;
-          clearTimeout(time);
+    reconnect(url) {
+      //没连接上会一直重连，设置延迟避免请求过多
+      let ws = new WebSocket(url);
+      if (this.lockReconnect) return;
+      this.lockReconnect = true;
+      var reTimer = null;
+      clearTimeout(reTimer);
+      reTimer = setTimeout(() => {
+        if (ws.readyState == 2 || ws.readyState == 3) {
           this.WebSocketTest();
-          time = setTimeout(fuc, 3000);
-      }
-      fuc();
+          this.lockReconnect = false;
+        } else if (ws.readyState == 1) {
+          clearTimeout(reTimer);
+          this.lockReconnect = false;
+        }
+      }, 8000);
     }
   }
 };
@@ -2143,33 +2213,33 @@ export default {
           display: flex;
           align-items: center;
           color: #fff;
-          .state{
-            .green{
+          .state {
+            .green {
               position: relative;
-              padding-left:20px;
-              &::before{
-                content:'';
-                position:absolute;
+              padding-left: 20px;
+              &::before {
+                content: "";
+                position: absolute;
                 height: 16px;
-                width:16px;
-                left:0px;
-                top:2px;
+                width: 16px;
+                left: 0px;
+                top: 2px;
                 border-radius: 50%;
-                background:green;
+                background: green;
               }
             }
-            .red{
+            .red {
               position: relative;
-              padding-left:20px;
-              &::before{
-                content:'';
-                position:absolute;
+              padding-left: 20px;
+              &::before {
+                content: "";
+                position: absolute;
                 height: 16px;
-                width:16px;
-                left:0px;
-                top:2px;
+                width: 16px;
+                left: 0px;
+                top: 2px;
                 border-radius: 50%;
-                background:red;
+                background: red;
               }
             }
           }
@@ -2410,9 +2480,9 @@ export default {
             height: 50px;
             border-bottom: 1px solid #e2e2e2;
             background-color: @bg_eaedf1;
-            p{
-              width:150px;
-              margin:0 auto;
+            p {
+              width: 150px;
+              margin: 0 auto;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -2576,8 +2646,8 @@ export default {
                   .item {
                     // padding: 0 8px;
                     margin-bottom: 8px;
-                    .box-card{
-                      .text{
+                    .box-card {
+                      .text {
                         word-wrap: break-word;
                       }
                     }
@@ -2624,7 +2694,7 @@ export default {
               padding-top: 10px;
               padding-left: 10px;
               .disease-main {
-                min-height:770px;
+                min-height: 770px;
                 position: relative;
                 padding-bottom: 40px;
                 margin-bottom: 60px;
@@ -2635,7 +2705,7 @@ export default {
                 .disease-content {
                   overflow-y: scroll;
                   &::-webkit-scrollbar {
-                  display: none;
+                    display: none;
                   }
                   table {
                     width: 370px;
@@ -2655,7 +2725,7 @@ export default {
                     }
                   }
                 }
-                
+
                 .disease-footer {
                   position: absolute;
                   bottom: 0;
