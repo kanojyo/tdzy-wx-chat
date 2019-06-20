@@ -843,7 +843,7 @@ import {
   validBlank
 } from "@/utils/validate.js";
 import axios from "axios";
-import { clearTimeout } from 'timers';
+import { clearTimeout, setTimeout } from 'timers';
 
 export default {
   data() {
@@ -1782,7 +1782,7 @@ export default {
     TagsGet() {
       axios.get("/mocks/zhusu.json").then(response => {
         this.zhusuData = response.data;
-        console.log(this.zhusuData);
+        // console.log(this.zhusuData);
       });
       axios.get("/mocks/jiwangshi.json").then(response => {
         this.historyData = response.data;
@@ -2038,7 +2038,25 @@ export default {
         }
         if (received_msg.code === 200) {
           let msg = received_msg.data;
-          console.log(msg);
+          // console.log(msg);
+          if(this.weid === msg.weid){
+            //来新消息后，好友按新消息排序；
+              this.groupList.forEach(item =>{
+                if (item.groupid === msg.groupid) {
+                  item.userList.forEach(it =>{
+                    if(it.fans_openid === msg.fans_openid){
+                      // console.log(item.userList,'before')
+                      var newList = item.userList.filter(it=>it.fans_openid !== msg.fans_openid);
+                      // console.log(newList,'after');
+                      // this.$forceUpdate();
+                      newList.unshift(it);
+                      item.userList=newList;
+                      // console.log(item.userList,'unshift')
+                    }
+                  })
+                }
+            })
+          }
           //当聊天界面公众号为新消息所属公众号时，
           if (this.weid === msg.weid) {
             if (this.chating.groupid !== "") {
