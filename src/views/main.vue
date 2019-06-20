@@ -2010,14 +2010,6 @@ export default {
           this.reconnect(url);
         }
       };
-      ws.onerror = () => {
-        clearInterval(timer);
-        if (ws.readyState === 3) {
-          this.websocketState = false;
-        }
-        // console.log(ws.readyState, "onerror");
-        this.reconnect(url);
-      };
       ws.onopen = () => {
         // console.log(ws.readyState, "open");
         if (ws.readyState === 1) {
@@ -2170,22 +2162,17 @@ export default {
         }
       };
     },
+    //重连
     reconnect(url) {
       //没连接上会一直重连，设置延迟避免请求过多
-      let ws = new WebSocket(url);
-      if (this.lockReconnect) return;
-      this.lockReconnect = true;
+      // if (this.lockReconnect) return;
+      // this.lockReconnect = true;
       var reTimer = null;
       clearTimeout(reTimer);
       reTimer = setTimeout(() => {
-        if (ws.readyState == 2 || ws.readyState == 3) {
           this.WebSocketTest();
-          this.lockReconnect = false;
-        } else if (ws.readyState == 1) {
-          clearTimeout(reTimer);
-          this.lockReconnect = false;
-        }
-      }, 8000);
+          // this.lockReconnect = false;
+      }, 5000);
     }
   }
 };
