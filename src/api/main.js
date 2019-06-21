@@ -255,11 +255,20 @@ export function getMobile(params) {
     })
 }
 /*
- *   NO:27   查询手机号
+ *   NO:27   接受消息
  */
 export function receiveMsg(params) {
     return fetch({
         url: 'v1/wechat/index/receive_msg?msg_id='+params,
+        method: 'GET',
+    })
+}
+/*
+ *   NO:28   批量接受消息
+ */
+export function batchReceiveMsg(params) {
+    return fetch({
+        url: 'v1/wechat/index/batch_receive_msg?msg_ids='+params,
         method: 'GET',
     })
 }
