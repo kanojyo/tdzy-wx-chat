@@ -2019,7 +2019,7 @@ export default {
           ws.send('{"type":"login"}'); //连接上，发送type:login
           timer = setInterval(() => {
             ws.send('{"type":"pong"}');
-          }, 10000);
+          }, 3000);
         }
       };
       ws.onmessage = evt => {
@@ -2032,7 +2032,7 @@ export default {
         }
         if (received_msg.code === 200) {
           let msg = received_msg.data;
-          console.log(msg);
+          // console.log(msg);
           //给后台返回收到推送消息;
           this.receiveMsg(msg.msg_id);
           if(this.weid === msg.weid){
