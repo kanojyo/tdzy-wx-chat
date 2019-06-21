@@ -2019,7 +2019,7 @@ export default {
           ws.send('{"type":"login"}'); //连接上，发送type:login
           timer = setInterval(() => {
             ws.send('{"type":"pong"}');
-          }, 3000);
+          }, 10000);
         }
       };
       ws.onmessage = evt => {
