@@ -2079,7 +2079,18 @@ export default {
                       //发来的消息已读
                       this.readMsg();
                       msg.not_read_num = 0;
-                      this.chatList.push(msg);
+                      var showState=false;
+                      this.chatList.forEach(item=>{
+                        if(item.id === msg.msg_id){
+                          showState = true;
+                        }
+                      })
+                      if(showState){
+                        return
+                      }else{
+                        this.chatList.push(msg);
+                      }
+                      // this.chatList.push(msg);
                       this.scrollChange(); //  让聊天窗口处于最底部
                       // console.log(this.chatList)
                     }
