@@ -2093,7 +2093,7 @@ export default {
           })
           batchReceiveMsg(params).then(data=>{
             if(data.code===200){
-              console.log(data)
+              // console.log(data)
             }
           })
 
@@ -2122,6 +2122,8 @@ export default {
                     this.readMsg();
                     msg.not_read_num = 0;
                     var showState=false;
+                    console.log(this.chatList)
+                    console.log(msg)
                     this.chatList.forEach(item=>{
                       if(item.id === msg.msg_id){
                         showState = true;
