@@ -972,7 +972,7 @@ export default {
       chatRecordsShow: false, //显示聊天记录
       baseURL: process.env.VUE_APP_URL,
       uploadUrl: "",
-      avatar: "https://cdn-statis.mangguokandian.com/avatar.png",
+      avatar: "http://osscdn.whtdzyy.com/rs/doctor/doctor3x.png",
       title: "",
       uploadShow: false, //有无更多聊天记录
       RecordsShow: false, //聊天弹框有无更多聊天记录
