@@ -833,7 +833,8 @@ import {
   officeList,
   giveUpDisease,
   doctorList,
-  getMobile
+  getMobile,
+  receiveMsg
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import {
@@ -1288,7 +1289,7 @@ export default {
       //  发送提交
       let data = await sendMsg(this.formParams);
       if (data.code === 200) {
-        console.log(data);
+        // console.log(data);
         let sendData = data.data;
         let chatData = {};
         //文字发送成功后将文本输入框重置
@@ -2012,6 +2013,7 @@ export default {
       };
       ws.onopen = () => {
         // console.log(ws.readyState, "open");
+        clearInterval(timer);
         if (ws.readyState === 1) {
           this.websocketState = true;
           ws.send('{"type":"login"}'); //连接上，发送type:login
@@ -2030,7 +2032,9 @@ export default {
         }
         if (received_msg.code === 200) {
           let msg = received_msg.data;
-          // console.log(msg);
+          console.log(msg);
+          //给后台返回收到推送消息;
+          this.receiveMsg(msg.msg_id);
           if(this.weid === msg.weid){
             //来新消息后，好友按新消息排序；
               this.groupList.forEach(item =>{
@@ -2173,6 +2177,13 @@ export default {
           this.WebSocketTest();
           // this.lockReconnect = false;
       }, 5000);
+    },
+    //接受消息
+    async receiveMsg(params){
+      let data = await receiveMsg(params);
+      if(data.code ===200){
+        console.log(data)
+      }
     }
   }
 };
