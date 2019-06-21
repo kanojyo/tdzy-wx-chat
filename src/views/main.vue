@@ -2033,10 +2033,8 @@ export default {
         if (received_msg.code === 200) {
           let msg = received_msg.data;
           // console.log(msg);
-          //给后台返回收到推送消息;
-          this.receiveMsg(msg.msg_id);
+          //来新消息后，好友按新消息排序；
           if(this.weid === msg.weid){
-            //来新消息后，好友按新消息排序；
               this.groupList.forEach(item =>{
                 if (item.groupid === msg.groupid) {
                   item.userList.forEach(it =>{
@@ -2053,100 +2051,105 @@ export default {
                 }
             })
           }
-          //当聊天界面公众号为新消息所属公众号时，
-          if (this.weid === msg.weid) {
-            if (this.chating.groupid !== "") {
-              //当聊天界面分组为新消息所属分组时,
-              if (this.chating.groupid === msg.groupid) {
-                //将新来的文字信息渲染到页面
-                if (msg.msg_type === 1) {
-                  this.groupList.forEach(item => {
-                    if (item.groupid === this.chating.groupid) {
-                      item.userList.forEach(it => {
-                        if (it.fans_openid === msg.fans_openid) {
-                          it.last_msg = msg.content;
+          //给后台返回收到推送消息;
+          receiveMsg(msg.msg_id).then(data=>{
+            if(data.code===200){
+              console.log(data);
+              //当聊天界面公众号为新消息所属公众号时，
+              if (this.weid === msg.weid) {
+                if (this.chating.groupid !== "") {
+                  //当聊天界面分组为新消息所属分组时,
+                  if (this.chating.groupid === msg.groupid) {
+                    //将新来的文字信息渲染到页面
+                    if (msg.msg_type === 1) {
+                      this.groupList.forEach(item => {
+                        if (item.groupid === this.chating.groupid) {
+                          item.userList.forEach(it => {
+                            if (it.fans_openid === msg.fans_openid) {
+                              it.last_msg = msg.content;
+                            }
+                          });
+                        }
+                      });
+                    } else {
+                    }
+                    //当聊天界面的粉丝id等于发送信息的粉丝id时;
+                    if (this.formParams.fans_openid == msg.fans_openid) {
+                      this.readMsgParams.msg_id = msg.msg_id;
+                      //发来的消息已读
+                      this.readMsg();
+                      msg.not_read_num = 0;
+                      this.chatList.push(msg);
+                      this.scrollChange(); //  让聊天窗口处于最底部
+                      // console.log(this.chatList)
+                    }
+                    //当聊天界面的粉丝id不等于发送信息的粉丝id时;
+                    else if (this.formParams.fans_openid !== msg.fans_openid) {
+                      this.groupList.forEach(item => {
+                        if (item.groupid === msg.groupid) {
+                          item.userList.forEach(it => {
+                            if (
+                              it.fans_openid == msg.fans_openid &&
+                              it.fans_openid !== this.formParams.fans_openid
+                            ) {
+                              it.not_read_num = msg.not_read_num;
+                            }
+                          });
+                        }
+                      });
+                      // console.log(this.groupList, "发送消息后");
+                    }
+                  } else {
+                    //将新来的文字信息渲染到页面
+                    if (msg.msg_type === 1) {
+                      this.groupList.forEach(item => {
+                        if (item.groupid === msg.groupid) {
+                          item.userList.forEach(it => {
+                            if (it.fans_openid === msg.fans_openid) {
+                              it.last_msg = msg.content;
+                            }
+                          });
                         }
                       });
                     }
-                  });
+                    this.groupList.forEach(item => {
+                      if (item.groupid === msg.groupid) {
+                        item.userList.forEach(it => {
+                          if (it.fans_openid === msg.fans_openid) {
+                            it.not_read_num = msg.not_read_num;
+                          }
+                          item.not_read_num += it.not_read_num;
+                        });
+                      }
+                    });
+                  }
                 } else {
-                }
-                //当聊天界面的粉丝id等于发送信息的粉丝id时;
-                if (this.formParams.fans_openid == msg.fans_openid) {
-                  this.readMsgParams.msg_id = msg.msg_id;
-                  //发来的消息已读
-                  this.readMsg();
-                  msg.not_read_num = 0;
-                  this.chatList.push(msg);
-                  this.scrollChange(); //  让聊天窗口处于最底部
-                  // console.log(this.chatList)
-                }
-                //当聊天界面的粉丝id不等于发送信息的粉丝id时;
-                else if (this.formParams.fans_openid !== msg.fans_openid) {
+                  //将新来的文字信息渲染到页面
+                  if (msg.msg_type === 1) {
+                    this.groupList.forEach(item => {
+                      if (item.groupid === msg.groupid) {
+                        item.userList.forEach(it => {
+                          if (it.fans_openid === msg.fans_openid) {
+                            it.last_msg = msg.content;
+                          }
+                        });
+                      }
+                    });
+                  }
                   this.groupList.forEach(item => {
                     if (item.groupid === msg.groupid) {
                       item.userList.forEach(it => {
-                        if (
-                          it.fans_openid == msg.fans_openid &&
-                          it.fans_openid !== this.formParams.fans_openid
-                        ) {
+                        if (it.fans_openid === msg.fans_openid) {
                           it.not_read_num = msg.not_read_num;
                         }
-                      });
-                    }
-                  });
-                  // console.log(this.groupList, "发送消息后");
-                }
-              } else {
-                //将新来的文字信息渲染到页面
-                if (msg.msg_type === 1) {
-                  this.groupList.forEach(item => {
-                    if (item.groupid === msg.groupid) {
-                      item.userList.forEach(it => {
-                        if (it.fans_openid === msg.fans_openid) {
-                          it.last_msg = msg.content;
-                        }
+                        item.not_read_num += it.not_read_num;
                       });
                     }
                   });
                 }
-                this.groupList.forEach(item => {
-                  if (item.groupid === msg.groupid) {
-                    item.userList.forEach(it => {
-                      if (it.fans_openid === msg.fans_openid) {
-                        it.not_read_num = msg.not_read_num;
-                      }
-                      item.not_read_num += it.not_read_num;
-                    });
-                  }
-                });
-              }
-            } else {
-              //将新来的文字信息渲染到页面
-              if (msg.msg_type === 1) {
-                this.groupList.forEach(item => {
-                  if (item.groupid === msg.groupid) {
-                    item.userList.forEach(it => {
-                      if (it.fans_openid === msg.fans_openid) {
-                        it.last_msg = msg.content;
-                      }
-                    });
-                  }
-                });
-              }
-              this.groupList.forEach(item => {
-                if (item.groupid === msg.groupid) {
-                  item.userList.forEach(it => {
-                    if (it.fans_openid === msg.fans_openid) {
-                      it.not_read_num = msg.not_read_num;
-                    }
-                    item.not_read_num += it.not_read_num;
-                  });
-                }
-              });
+              } else {}
             }
-          } else {
-          }
+          });
           //渲染公众号列表的消息总数
           this.wechatList.forEach(item => {
             if (item.id === msg.weid) {
