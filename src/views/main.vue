@@ -1224,6 +1224,7 @@ export default {
     },
     //点击打开聊天界面
     chatChange(val) {
+      console.log(val)
       this.fansBaseInfo = {};
       this.fansAttention = {};
       this.filesForm = {};
@@ -1240,6 +1241,7 @@ export default {
       this.readMsgParams.fans_openid = val.fans_openid;
       this.readMsgParams.weid = this.weid;
       this.readMsgParams.msg_id = 0;
+      this.chating.groupid=val.groupid;
       this.readMsg();
       val.not_read_num = 0;
       //计算分组的未读消息数
@@ -1468,12 +1470,6 @@ export default {
         weid: this.formParams.weid,
         fans_openid: this.formParams.fans_openid
       });
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: "Loading",
-      //   spinner: "el-icon-loading",
-      //   background: "rgba(0, 0, 0, 0.7)"
-      // });
       if (data.code === 200) {
         // console.log(data.data);
         let receiveData = data.data;
@@ -2102,6 +2098,8 @@ export default {
             if (msg.weid === this.weid) {
               if (this.chating.groupid !== "") {
                 //当聊天界面分组为新消息所属分组时,
+                console.log(this.chating.groupid,'8888')
+                console.log(msg.groupid,'9999')
                 if (msg.groupid === this.chating.groupid) {
                   //将新来的文字信息渲染到页面
                   if (msg.msg_type === 1) {
@@ -2115,8 +2113,10 @@ export default {
                       }
                     });
                   }
+                  console.log(this.formParams.fans_openid ,'6666')
+                  console.log(msg.fans_openid ,'7777')
                   //当聊天界面的粉丝id等于发送信息的粉丝id时;
-                  if (msg.fans_openid == this.formParams.fans_openid) {
+                  if (msg.fans_openid === this.formParams.fans_openid) {
                     this.readMsgParams.msg_id = msg.msg_id;
                     //发来的消息已读
                     this.readMsg();
@@ -2129,12 +2129,9 @@ export default {
                         showState = true;
                       }
                     })
-                    if(showState){
-                      return
-                    }else{
+                    if(!showState){
                       this.chatList.push(msg);
                     }
-                    // this.chatList.push(msg);
                     this.scrollChange(); //  让聊天窗口处于最底部
                   }else if (msg.fans_openid !== this.formParams.fans_openid) { //当聊天界面的粉丝id不等于发送信息的粉丝id时;
                     this.groupList.forEach(item => {
