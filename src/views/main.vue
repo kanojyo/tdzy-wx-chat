@@ -850,7 +850,7 @@ import { clearTimeout, setTimeout } from 'timers';
 export default {
   data() {
     return {
-      NoAvatar: "http://osscdn.whtdzyy.com/avatar/avatar.png",
+      NoAvatar: "https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/Doctor'sHead%403x.png",
       kfInfo: {
         avatar: "",
         nickname: ""
