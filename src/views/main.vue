@@ -84,7 +84,7 @@
                   >
                     <div class="photo">
                       <img v-if="item.avatar" :src="item.avatar" alt>
-                      <img v-else :src="NoAvatar" alt>
+                      <img v-else :src="userNoAvatar" alt>
                     </div>
                     <div class="name">
                       {{item.nickname}}
@@ -122,11 +122,11 @@
                           v-if="i.not_read_num !==0"
                         >
                           <img v-if="i.headimgurl" :src="i.headimgurl">
-                          <img v-else :src="NoAvatar">
+                          <img v-else :src="userNoAvatar">
                         </el-badge>
                         <div class="avatar" v-else>
                           <img v-if="i.headimgurl" :src="i.headimgurl">
-                          <img v-else :src="NoAvatar">
+                          <img v-else :src="userNoAvatar">
                         </div>
                         <div class="text">
                           <p class="nickname">
@@ -167,7 +167,7 @@
                       <div class="tourist" v-if="item.send_type === 1">
                         <div class="avatar">
                           <img v-if="item.fans_avatar" :src="item.fans_avatar" alt>
-                          <img v-else :src="NoAvatar" alt>
+                          <img v-else :src="userNoAvatar" alt>
                         </div>
                         <div class="centens">
                           <div class="time">{{item.ctime|formatDate}}</div>
@@ -650,7 +650,7 @@
               <div class="tourist" v-if="item.send_type === 1">
                 <div class="avatar">
                   <img v-if="item.fans_avatar" :src="item.fans_avatar" alt>
-                  <img v-else :src="NoAvatar" alt>
+                  <img v-else :src="userNoAvatar" alt>
                 </div>
                 <div class="centens">
                   <div class="time">{{item.ctime|formatDate}}</div>
@@ -851,6 +851,7 @@ export default {
   data() {
     return {
       NoAvatar: "https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/Doctor'sHead%403x.png",
+      userNoAvatar:"https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/UserAvatar.png",
       kfInfo: {
         avatar: "",
         nickname: ""
