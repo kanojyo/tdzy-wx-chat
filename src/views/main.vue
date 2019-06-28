@@ -54,8 +54,8 @@
                     <img v-else :src="userNoAvatar" alt>
                   </el-badge>
                   <div class="photo" v-else>
-                    <img v-if="item.img" :src="item.img" alt>
-                    <img v-else :src="userNoAvatar" alt>
+                    <img v-if="item.img" :src="item.img" >
+                    <img v-else :src="userNoAvatar" >
                   </div>
                   <div class="text">
                     <div class="name" :title="item.name">{{item.name}}</div>
@@ -976,7 +976,7 @@ export default {
       chatRecordsShow: false, //显示聊天记录
       baseURL: process.env.VUE_APP_URL,
       uploadUrl: "",
-      avatar: "http://osscdn.whtdzyy.com/rs/doctor/doctor3x.png",
+      avatar: "https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/Doctor.png",
       title: "",
       uploadShow: false, //有无更多聊天记录
       RecordsShow: false, //聊天弹框有无更多聊天记录
