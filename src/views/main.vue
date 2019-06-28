@@ -50,10 +50,12 @@
                     :value="item.not_read_num>99?'99+':item.not_read_num"
                     v-if="item.not_read_num !== 0"
                   >
-                    <img :src="item.img" alt>
+                    <img v-if="item.img" :src="item.img" alt>
+                    <img v-else :src="userNoAvatar" alt>
                   </el-badge>
                   <div class="photo" v-else>
-                    <img :src="item.img" alt>
+                    <img v-if="item.img" :src="item.img" alt>
+                    <img v-else :src="userNoAvatar" alt>
                   </div>
                   <div class="text">
                     <div class="name" :title="item.name">{{item.name}}</div>
@@ -851,7 +853,7 @@ export default {
   data() {
     return {
       NoAvatar: "https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/Doctor'sHead%403x.png",
-      userNoAvatar:"https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/UserAvatar.png",
+      userNoAvatar:"https://taidouapp.oss-cn-hangzhou.aliyuncs.com/avatar/avatar.png",
       kfInfo: {
         avatar: "",
         nickname: ""
