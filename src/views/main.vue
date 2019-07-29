@@ -2199,7 +2199,7 @@ export default {
               });
             })
           }else if(received_msg.send_msg_type == 2){
-            if(received_msg.data.weid == this.weid){
+            if(received_msg.data[0].weid == this.weid){
               //有新粉丝进来时，刷新好友列表
               this.getGroup();
             }
