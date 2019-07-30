@@ -1174,7 +1174,7 @@ export default {
             }
           });
         });
-        console.log(this.groupList);
+        // console.log(this.groupList);
       }
     },
     //点击打开公众号列表
@@ -2201,10 +2201,10 @@ export default {
           }else if(received_msg.send_msg_type == 2){
             if(received_msg.data[0].weid == this.weid){
               //有新粉丝进来时，刷新好友列表
-              // this.getGroup();
               this.groupList.forEach(item=>{
                 if(item.groupid === received_msg.data[0].groupid){
-                  item.userList.unshift({
+                  item.count++;
+                  item.userList.push({
                     content:"",
                     fans_openid:received_msg.data[0].fans_openid,
                     groupid:received_msg.data[0].groupid,
