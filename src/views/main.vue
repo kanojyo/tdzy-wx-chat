@@ -1174,7 +1174,7 @@ export default {
             }
           });
         });
-        // console.log(this.groupList);
+        console.log(this.groupList);
       }
     },
     //点击打开公众号列表
@@ -2201,7 +2201,23 @@ export default {
           }else if(received_msg.send_msg_type == 2){
             if(received_msg.data[0].weid == this.weid){
               //有新粉丝进来时，刷新好友列表
-              this.getGroup();
+              // this.getGroup();
+              this.groupList.forEach(item=>{
+                if(item.groupid === received_msg.data[0].groupid){
+                  item.userList.unshift({
+                    content:"",
+                    fans_openid:received_msg.data[0].fans_openid,
+                    groupid:received_msg.data[0].groupid,
+                    headimgurl:received_msg.data[0].headimgurl,
+                    id:received_msg.data[0].id,
+                    last_msg:received_msg.data[0].last_msg,
+                    name:received_msg.data[0].name,
+                    nickname:received_msg.data[0].nickname,
+                    not_read_num:received_msg.data[0].not_read_num,
+                    weid:received_msg.data[0].weid
+                    })
+                }
+              })
             }
           }
           
