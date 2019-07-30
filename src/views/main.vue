@@ -2204,7 +2204,7 @@ export default {
               this.groupList.forEach(item=>{
                 if(item.groupid === received_msg.data[0].groupid){
                   item.count++;
-                  item.userList.push({
+                  item.userList.unshift({
                     content:"",
                     fans_openid:received_msg.data[0].fans_openid,
                     groupid:received_msg.data[0].groupid,
@@ -2216,6 +2216,7 @@ export default {
                     not_read_num:received_msg.data[0].not_read_num,
                     weid:received_msg.data[0].weid
                     })
+                  item.not_read_num = item.not_read_num+received_msg.data[0].not_read_num;
                 }
               })
             }
