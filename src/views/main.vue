@@ -2200,28 +2200,36 @@ export default {
             })
           }else if(received_msg.send_msg_type == 2){
             if(received_msg.data[0].weid == this.weid){
-              //有新粉丝进来时，刷新好友列表
+              //有新粉丝进来时，将改粉丝加入好友列表中;
               this.groupList.forEach(item=>{
                 if(item.groupid === received_msg.data[0].groupid){
-                  item.count++;
-                  item.userList.unshift({
-                    content:"",
-                    fans_openid:received_msg.data[0].fans_openid,
-                    groupid:received_msg.data[0].groupid,
-                    headimgurl:received_msg.data[0].headimgurl,
-                    id:received_msg.data[0].id,
-                    last_msg:received_msg.data[0].last_msg,
-                    name:received_msg.data[0].name,
-                    nickname:received_msg.data[0].nickname,
-                    not_read_num:received_msg.data[0].not_read_num,
-                    weid:received_msg.data[0].weid
-                    })
-                  item.not_read_num = item.not_read_num+received_msg.data[0].not_read_num;
+                  var hasFans = true;
+                  //判断新加的粉丝在好友列表是否存在；
+                  item.userList.forEach(it=>{
+                    if(it.fans_openid == received_msg.data[0].fans_openid){
+                      hasFans = false;
+                    }
+                  })
+                  if(hasFans){
+                    item.count++;
+                    item.userList.unshift({
+                      content:"",
+                      fans_openid:received_msg.data[0].fans_openid,
+                      groupid:received_msg.data[0].groupid,
+                      headimgurl:received_msg.data[0].headimgurl,
+                      id:received_msg.data[0].id,
+                      last_msg:received_msg.data[0].last_msg,
+                      name:received_msg.data[0].name,
+                      nickname:received_msg.data[0].nickname,
+                      not_read_num:received_msg.data[0].not_read_num,
+                      weid:received_msg.data[0].weid
+                      })
+                    item.not_read_num = item.not_read_num+received_msg.data[0].not_read_num;
+                  }
                 }
               })
             }
           }
-          
         }
       };
     },
