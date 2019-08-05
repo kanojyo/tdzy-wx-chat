@@ -1619,6 +1619,7 @@ export default {
         this.phraseList = data.data.phraseList;
       }
     },
+    
     replyChange() {
       //  新增快捷短语显示
       this.replyShow = true;
