@@ -2188,6 +2188,16 @@ export default {
                     });
                   }
                 });
+              }else{
+                var newWechat = false; //判断是否有新的公众号加进来
+                this.wechatList.forEach(item =>{
+                  if(item.id !== msg.weid){
+                    newWechat = true;
+                  }
+                });
+                if(newWechat){
+                  this.wechatList.push({id:msg.weid,name:msg.we_name,img:msg.img,not_read_num:msg.wx_not_read_num})
+                }
               }
             })
             
