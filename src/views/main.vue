@@ -2189,10 +2189,10 @@ export default {
                   }
                 });
               }else{
-                var newWechat = false; //判断是否有新的公众号加进来
+                var newWechat = true; //判断是否有新的公众号加进来
                 this.wechatList.forEach(item =>{
-                  if(item.id !== msg.weid){
-                    newWechat = true;
+                  if(item.id == msg.weid){
+                    newWechat = false;
                   }
                 });
                 if(newWechat){
