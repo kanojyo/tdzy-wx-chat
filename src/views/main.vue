@@ -1101,7 +1101,7 @@ export default {
       });
     },
     "diseaseData.docter_id"(val) {
-      console.log(this.doctorListData);
+      // console.log(this.doctorListData);
       let doctorState = false;
       //判断传进来的doctorId在下拉框中是否存在;
       this.doctorListData.forEach(item => {
@@ -2053,13 +2053,14 @@ export default {
         if (received_msg.code === 200) {
           if(received_msg.send_msg_type == 1){
             let msgList = received_msg.data;
+            console.log(received_msg.data)
             //来新消息后，好友按新消息排序；
             msgList.forEach(msg=>{
-              if(msg.weid === this.weid){
+              if(msg.weid == this.weid){
                 this.groupList.forEach(item =>{
-                  if (item.groupid === msg.groupid) {
+                  if (item.groupid == msg.groupid) {
                     item.userList.forEach(it =>{
-                      if(it.fans_openid === msg.fans_openid){
+                      if(it.fans_openid == msg.fans_openid){
                         var newList = item.userList.filter(it=>it.fans_openid !== msg.fans_openid);
                         newList.unshift(it);
                         item.userList=newList;
@@ -2084,16 +2085,16 @@ export default {
 
             msgList.forEach(msg=>{
               //当聊天界面公众号为新消息所属公众号时，
-              if (msg.weid === this.weid) {
+              if (msg.weid == this.weid) {
                 if (this.chating.groupid !== "") {
                   //当聊天界面分组为新消息所属分组时,
-                  if (msg.groupid === this.chating.groupid) {
+                  if (msg.groupid == this.chating.groupid) {
                     //将新来的文字信息渲染到页面
-                    if (msg.msg_type === 1) {
+                    if (msg.msg_type == 1) {
                       this.groupList.forEach(item => {
-                        if (item.groupid === this.chating.groupid) {
+                        if (item.groupid == this.chating.groupid) {
                           item.userList.forEach(it => {
-                            if (it.fans_openid === msg.fans_openid) {
+                            if (it.fans_openid == msg.fans_openid) {
                               it.last_msg = msg.content;
                             }
                           });
@@ -2101,14 +2102,14 @@ export default {
                       });
                     }
                     //当聊天界面的粉丝id等于发送信息的粉丝id时;
-                    if (msg.fans_openid === this.formParams.fans_openid) {
+                    if (msg.fans_openid == this.formParams.fans_openid) {
                       this.readMsgParams.msg_id = msg.msg_id;
                       //发来的消息已读
                       this.readMsg();
                       msg.not_read_num = 0;
                       var showState=false;
                       this.chatList.forEach(item=>{
-                        if(item.id === msg.msg_id){
+                        if(item.id == msg.msg_id){
                           showState = true;
                         }
                       })
@@ -2118,7 +2119,7 @@ export default {
                       this.scrollChange(); //  让聊天窗口处于最底部
                     }else if (msg.fans_openid !== this.formParams.fans_openid) { //当聊天界面的粉丝id不等于发送信息的粉丝id时;
                       this.groupList.forEach(item => {
-                        if (item.groupid === msg.groupid) {
+                        if (item.groupid == msg.groupid) {
                           item.userList.forEach(it => {
                             if (
                               it.fans_openid == msg.fans_openid &&
@@ -2133,11 +2134,11 @@ export default {
                     }
                   } else {
                     //将新来的文字信息渲染到页面
-                    if (msg.msg_type === 1) {
+                    if (msg.msg_type == 1) {
                       this.groupList.forEach(item => {
-                        if (item.groupid === msg.groupid) {
+                        if (item.groupid == msg.groupid) {
                           item.userList.forEach(it => {
-                            if (it.fans_openid === msg.fans_openid) {
+                            if (it.fans_openid == msg.fans_openid) {
                               it.last_msg = msg.content;
                             }
                           });
@@ -2145,9 +2146,9 @@ export default {
                       });
                     }
                     this.groupList.forEach(item => {
-                      if (item.groupid === msg.groupid) {
+                      if (item.groupid == msg.groupid) {
                         item.userList.forEach(it => {
-                          if (it.fans_openid === msg.fans_openid) {
+                          if (it.fans_openid == msg.fans_openid) {
                             it.not_read_num = msg.not_read_num;
                           }
                           item.not_read_num += it.not_read_num;
@@ -2157,11 +2158,11 @@ export default {
                   }
                 } else {
                   //将新来的文字信息渲染到页面
-                  if (msg.msg_type === 1) {
+                  if (msg.msg_type == 1) {
                     this.groupList.forEach(item => {
-                      if (item.groupid === msg.groupid) {
+                      if (item.groupid == msg.groupid) {
                         item.userList.forEach(it => {
-                          if (it.fans_openid === msg.fans_openid) {
+                          if (it.fans_openid == msg.fans_openid) {
                             it.last_msg = msg.content;
                           }
                         });
@@ -2169,9 +2170,9 @@ export default {
                     });
                   }
                   this.groupList.forEach(item => {
-                    if (item.groupid === msg.groupid) {
+                    if (item.groupid == msg.groupid) {
                       item.userList.forEach(it => {
-                        if (it.fans_openid === msg.fans_openid) {
+                        if (it.fans_openid == msg.fans_openid) {
                           it.not_read_num = msg.not_read_num;
                         }
                         item.not_read_num += it.not_read_num;
@@ -2181,7 +2182,7 @@ export default {
                 }
                 //渲染公众号列表分组的消息总数
                 this.groupList.forEach(item => {
-                  if (msg.groupid  === item.groupid) {
+                  if (msg.groupid  == item.groupid) {
                     item.not_read_num = 0;
                     item.userList.forEach(it => {
                       item.not_read_num += it.not_read_num;
@@ -2204,16 +2205,17 @@ export default {
             //渲染公众号列表的消息总数
             msgList.forEach(msg=>{
               this.wechatList.forEach(item => {
-                if (item.id === msg.weid) {
+                if (item.id == msg.weid) {
                   item.not_read_num = msg.wx_not_read_num;
                 }
               });
             })
           }else if(received_msg.send_msg_type == 2){
+            // console.log(received_msg.data);
             if(received_msg.data[0].weid == this.weid){
               //有新粉丝进来时，将改粉丝加入好友列表中;
               this.groupList.forEach(item=>{
-                if(item.groupid === received_msg.data[0].groupid){
+                if(item.groupid == received_msg.data[0].groupid){
                   var hasFans = true;
                   //判断新加的粉丝在好友列表是否存在；
                   item.userList.forEach(it=>{
@@ -2238,8 +2240,20 @@ export default {
                     item.not_read_num = item.not_read_num+received_msg.data[0].not_read_num;
                   }
                 }
-              })
-            }
+              });
+              // console.log(this.groupList)
+            };
+            this.wechatList.forEach(item => {
+              // console.log(this.wechatList,111);
+              console.log(item.id)
+              console.log(typeof(item.id))
+              console.log(received_msg.data[0].weid)
+              console.log(typeof(received_msg.data[0].weid))
+              if (item.id == received_msg.data[0].weid) {
+                item.not_read_num = received_msg.data[0].gzh_not_read_num;
+              }
+            });
+            // console.log(this.wechatList,222)
           }
         }
       };
