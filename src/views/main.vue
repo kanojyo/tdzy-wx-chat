@@ -865,10 +865,7 @@ export default {
         //  发送消息参数
         weid: "", //微信公众id
         fans_openid: "", //粉丝openid
-        msg_type: "", // int 消息类型 1文字，2图片
         content: "", // string 消息内容
-        source_type: "", //1：图片，2：声音，3：视频，4：缩略图（目前只支持1）
-        file: ""
       },
       picParams: {
         weid: "", //微信公众id
@@ -1147,7 +1144,11 @@ export default {
       if (data.code === 200) {
         // console.log(data);
         this.wechatList = data.data.wechat;
-        this.weid = data.data.wechat[0].id;
+        if(this.wechatList.length>0){
+          this.weid = data.data.wechat[0].id;
+        }else{
+          this.weid='';
+        }
         this.params.weid = this.weid;
         this.formParams.weid = this.weid;
         this.picParams.weid = this.weid;
@@ -1334,7 +1335,6 @@ export default {
       }
       //把按enter发送的回车\n给替换掉
       this.formParams.content = this.formParams.content.replace(/\n/, "");
-      this.formParams.msg_type = 1;
       this.send();
     },
     beforeUpload(file) {

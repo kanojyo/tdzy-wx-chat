@@ -31,7 +31,7 @@ export function friendList(params) {
  */
 export function sendMsg(params) {
     return fetch({
-        url: '/v1/wechat/send_msg',
+        url: '/v2/wechat/send_msg',
         method: 'POST',
         data:params
     })
@@ -61,7 +61,7 @@ export function uploads(params) {
  */
 export function sendImage(params) {
     return fetch({
-        url: '/v1/wechat/send_image_wechat',
+        url: '/v2/wechat/send_image',
         method: 'POST',
         data:params
     })
@@ -81,7 +81,7 @@ export function readMsg(params) {
  */
 export function sendCode(params) {
     return fetch({
-        url: '/v1/wechat/send_pay_code',
+        url: '/v2/wechat/send_pay_code',
         method: 'POST',
         data:params
     })
