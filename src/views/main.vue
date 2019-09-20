@@ -2015,9 +2015,9 @@ export default {
       let time = null;
       let wsUrl = this.baseURL.split("//")[1];
       var url =
-        "ws://" +
+        "wss://" +
         wsUrl +
-        ":11111?token=" +
+        "/wss?token=" +
         this.token +
         "&device=" +
         this.device;
@@ -2261,13 +2261,10 @@ export default {
     //重连
     reconnect(url) {
       //没连接上会一直重连，设置延迟避免请求过多
-      // if (this.lockReconnect) return;
-      // this.lockReconnect = true;
       var reTimer = null;
       clearTimeout(reTimer);
       reTimer = setTimeout(() => {
           this.WebSocketTest();
-          // this.lockReconnect = false;
       }, 5000);
     },
     //接受消息
