@@ -195,8 +195,13 @@
                               style="width:100%;"
                             >
                           </div>
-                          <div class="auth" v-if="item.msg_type === 3" style="width:300px;">
-                            <img :src="item.picurl" alt="" style="width:100%;">
+                          <div class="pull-right" v-if="item.msg_type === 3" style="width:300px;">
+                            <img
+                              :src="item.picurl"
+                              @click="largeImage(item.picurl)"
+                              alt
+                              style="width:100%;"
+                            >
                           </div>
                           <div class="pull-right">{{item.username}}({{item.kf_nickname}})</div>
                         </div>
@@ -1152,6 +1157,7 @@ export default {
       if (data.code === 200) {
         // console.log(data);
         this.wechatList = data.data.wechat;
+        console.log(this.wechatList)
         if(this.wechatList.length>0){
           this.weid = data.data.wechat[0].id;
         }else{
@@ -1184,6 +1190,15 @@ export default {
           });
         });
         // console.log(this.groupList);
+        // this.wechatList.forEach(item =>{
+        //   if(item.id == this.formParams.weid){
+        //     let num = 0;
+        //     this.groupList.forEach(it =>{
+        //       num+=it.not_read_num;
+        //     });
+        //     item.not_read_num =num;
+        //   }
+        // })
       }
     },
     //点击打开公众号列表
@@ -1565,9 +1580,12 @@ export default {
           send_type: 2,
           kf_avatar: this.avatar,
           username: receiveData.username,
-          kf_nickname: receiveData.kf_nickname
+          kf_nickname: receiveData.kf_nickname,
+          key: 0,
         };
+        console.log(chatData)
         this.chatList.push(chatData);
+        console.log(this.chatList)
         this.scrollChange(); //  让聊天窗口处于最底部
         this.loading.close();
       }else{
@@ -1576,9 +1594,6 @@ export default {
     },
     //设置分组弹窗
     shezhiChange(item) {
-      // console.log(item)
-      console.log(this.groupList,111);
-      console.log(this.chating.groupid)
       this.setItem = '';
       this.setItem = item;
       this.setShow = true;
@@ -1627,7 +1642,6 @@ export default {
           }
         })
         // this.getGroup();
-        console.log(this.groupList,222);
         this.setShow = false;
       }
     },
