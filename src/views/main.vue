@@ -1592,7 +1592,7 @@ export default {
       }
       let data = await changeGroup(this.userGroup);
       if (data.code === 200) {
-        //手动去改变分组的粉丝的数量
+        //手动去改变粉丝的分组
         let newItem ={
           content:this.setItem.content,
           fans_openid:this.setItem.fans_openid,
@@ -1610,9 +1610,9 @@ export default {
           if(item.groupid == this.setItem.groupid){
             item.userList.forEach(it =>{
                item.userList = item.userList.filter(it => it.fans_openid !== this.setItem.fans_openid)
-               item.count =item.userList.length;
-               item.not_read_num = item.not_read_num - this.setItem.not_read_num;
             })
+            item.count =item.userList.length;
+            item.not_read_num = item.not_read_num - this.setItem.not_read_num;
           };
           //加入新的分组
           if(item.groupid == this.userGroup.group_id){
