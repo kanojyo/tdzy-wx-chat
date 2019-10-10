@@ -195,6 +195,9 @@
                               style="width:100%;"
                             >
                           </div>
+                          <div class="auth" v-if="item.msg_type === 3" style="width:300px;">
+                            <img :src="item.picurl" alt="" style="width:100%;">
+                          </div>
                           <div class="pull-right">{{item.username}}({{item.kf_nickname}})</div>
                         </div>
                       </div>
@@ -231,6 +234,9 @@
                     </li>
                     <li class="pull-left cursor">
                       <i class="icon iconfont icon-liaotian" title="查看聊天记录" @click="getRecord"></i>
+                    </li>
+                    <li class="pull-left cursor">
+                      <img src="https://taidouapp.oss-cn-hangzhou.aliyuncs.com/xiaochengxu/icon/yaoqing.png" title="发送授权邀请" style="width:24px;" alt="发送授权邀请" @click="sendAuth">
                     </li>
                   </ul>
                 </div>
@@ -837,7 +843,8 @@ import {
   doctorList,
   getMobile,
   receiveMsg,
-  batchReceiveMsg
+  batchReceiveMsg,
+  auth
 } from "@/api/main.js";
 import { formatDate } from "@/utils/index.js";
 import {
@@ -978,6 +985,7 @@ export default {
       uploadShow: false, //有无更多聊天记录
       RecordsShow: false, //聊天弹框有无更多聊天记录
       setShow: false, //分组状态
+      setItem:"",//分组用户数据
       userGroup: {
         //分组参数
         fans_openid: "",
@@ -1228,7 +1236,6 @@ export default {
     },
     //点击打开聊天界面
     chatChange(val) {
-      console.log(val)
       this.fansBaseInfo = {};
       this.fansAttention = {};
       this.filesForm = {};
@@ -1539,8 +1546,40 @@ export default {
         }
       }
     },
+    //点击发送授权信息
+    async sendAuth(){
+      this.loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      let data = await auth({weid:this.formParams.weid,fans_openid:this.formParams.fans_openid});
+      if(data.code == 200){
+        // console.log(data.data)
+        let receiveData = data.data;
+        let chatData = {
+          picurl: receiveData.auth_pic,
+          msg_type: receiveData.msg_type,
+          ctime: receiveData.ctime,
+          send_type: 2,
+          kf_avatar: this.avatar,
+          username: receiveData.username,
+          kf_nickname: receiveData.kf_nickname
+        };
+        this.chatList.push(chatData);
+        this.scrollChange(); //  让聊天窗口处于最底部
+        this.loading.close();
+      }else{
+        this.loading.close();
+      }
+    },
     //设置分组弹窗
     shezhiChange(item) {
+      console.log(item)
+      console.log(this.groupList);
+      this.setItem = '';
+      this.setItem = item;
       this.setShow = true;
       this.userGroup.group_id = "";
       this.userGroup.fans_openid = item.fans_openid;
@@ -1553,7 +1592,37 @@ export default {
       }
       let data = await changeGroup(this.userGroup);
       if (data.code === 200) {
-        this.getGroup();
+        //手动去改变分组的粉丝的数量
+        let newItem ={
+          content:this.setItem.content,
+          fans_openid:this.setItem.fans_openid,
+          groupid:this.userGroup.group_id,
+          headimgurl:this.setItem.headimgurl,
+          id:this.setItem.id,
+          name:this.setItem.name,
+          last_msg:this.setItem.last_msg,
+          nickname:this.setItem.nickname,
+          not_read_num:this.setItem.not_read_num,
+          weid:this.setItem.weid,
+        };
+        this.groupList.forEach(item =>{
+          //删除原来的分组
+          if(item.groupid == this.setItem.groupid){
+            item.userList.forEach(it =>{
+               item.userList = item.userList.filter(it => it.fans_openid !== this.setItem.fans_openid)
+               item.count =item.userList.length;
+               item.not_read_num = item.not_read_num - this.setItem.not_read_num;
+            })
+          };
+          //加入新的分组
+          if(item.groupid == this.userGroup.group_id){
+            item.userList.unshift(newItem);
+            item.count =item.userList.length;
+            item.not_read_num = item.not_read_num + this.setItem.not_read_num;
+          }
+        })
+        // this.getGroup();
+        // console.log(this.groupList);
         this.setShow = false;
       }
     },

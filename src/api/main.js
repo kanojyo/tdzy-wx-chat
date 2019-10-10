@@ -272,6 +272,16 @@ export function batchReceiveMsg(params) {
         method: 'GET',
     })
 }
+/*
+ *   NO:29   小程序发送授权
+ */
+export function auth(params) {
+    return fetch({
+        url: 'v1/wechat/send_mini_app_auth',
+        method: 'POST',
+        data:params,
+    })
+}
 
 
 
