@@ -1576,8 +1576,9 @@ export default {
     },
     //设置分组弹窗
     shezhiChange(item) {
-      console.log(item)
-      console.log(this.groupList);
+      // console.log(item)
+      console.log(this.groupList,111);
+      console.log(this.chating.groupid)
       this.setItem = '';
       this.setItem = item;
       this.setShow = true;
@@ -1592,6 +1593,10 @@ export default {
       }
       let data = await changeGroup(this.userGroup);
       if (data.code === 200) {
+        //如果分配的粉丝处于当前聊天的粉丝时，手动分组后更新chating.groupid
+        if(this.formParams.fans_openid == this.userGroup.fans_openid){
+          this.chating.groupid = this.userGroup.group_id ;
+        }
         //手动去改变粉丝的分组
         let newItem ={
           content:this.setItem.content,
@@ -1622,7 +1627,7 @@ export default {
           }
         })
         // this.getGroup();
-        // console.log(this.groupList);
+        console.log(this.groupList,222);
         this.setShow = false;
       }
     },
@@ -2314,10 +2319,6 @@ export default {
             };
             this.wechatList.forEach(item => {
               // console.log(this.wechatList,111);
-              console.log(item.id)
-              console.log(typeof(item.id))
-              console.log(received_msg.data[0].weid)
-              console.log(typeof(received_msg.data[0].weid))
               if (item.id == received_msg.data[0].weid) {
                 item.not_read_num = received_msg.data[0].gzh_not_read_num;
               }
