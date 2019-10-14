@@ -240,7 +240,7 @@
                     <li class="pull-left cursor">
                       <i class="icon iconfont icon-liaotian" title="查看聊天记录" @click="getRecord"></i>
                     </li>
-                    <li class="pull-left cursor">
+                    <li class="pull-left cursor" v-if="wechatType == 2">
                       <img src="https://taidouapp.oss-cn-hangzhou.aliyuncs.com/xiaochengxu/icon/yaoqing.png" title="发送授权邀请" style="width:24px;" alt="发送授权邀请" @click="sendAuth">
                     </li>
                   </ul>
@@ -892,7 +892,6 @@ export default {
         id: "",
         groupid: ""
       },
-
       rightActive: 1, //  右边tabs切换
       keyword: "", //用户搜索keyword
       userList: [], //  用户搜索数据
@@ -900,6 +899,7 @@ export default {
       isSearchShow: false, //  用户搜索显示数据
       title: "",
       wechatList: [], //公众号列表
+      wechatType:'', //1公众号，2小程序
       wechatActive: "", //  公众号选中样式
       bgActive: "", //  好友选中样式
       //分组列表
@@ -1160,6 +1160,7 @@ export default {
         console.log(this.wechatList)
         if(this.wechatList.length>0){
           this.weid = data.data.wechat[0].id;
+          this.wechatType = data.data.wechat[0].type;
         }else{
           this.weid='';
         }
@@ -1205,6 +1206,7 @@ export default {
     openList(val) {
       // console.log(val);
       this.wechatActive = val.id;
+      this.wechatType = val.type;
       this.weid = val.id;
       this.params.weid = val.id;
       this.formParams.weid = val.id;
