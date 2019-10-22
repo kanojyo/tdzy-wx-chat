@@ -684,6 +684,9 @@
                   <div class="pull-right" v-if="item.msg_type === 2" style="width:300px;">
                     <img :src="item.picurl" alt style="width:100%;">
                   </div>
+                  <div class="pull-right" v-if="item.msg_type === 3" style="width:300px;">
+                    <img :src="item.picurl" alt style="width:100%;">
+                  </div>
                   <div class="pull-right">{{item.username}}({{item.kf_nickname}})</div>
                 </div>
               </div>
