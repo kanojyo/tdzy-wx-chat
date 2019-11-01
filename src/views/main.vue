@@ -2482,7 +2482,8 @@ export default {
               .photo {
                 width: 50px;
                 // margin-right: 10px;
-                margin:0 auto;
+                // margin:0 auto;
+                text-align: center;
               }
               .text {
                 position: relative;
