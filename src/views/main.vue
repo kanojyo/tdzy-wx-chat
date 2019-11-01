@@ -35,7 +35,7 @@
           </div>
         </el-header>
         <el-container>
-          <el-aside class="left" width="500px">
+          <el-aside class="left" width="420px">
             <div class="ul_left">
               <ul class="wechat-list">
                 <li
@@ -286,11 +286,11 @@
               <div class="right-middle-contens">
                 <div class="userInfo" v-show="rightActive === 1">
                   <div class="userInfo-main" v-if="Object.keys(fansBaseInfo).length !== 0">
-                    <h4>公众号用户信息</h4>
+                    <h4>用户信息</h4>
                     <table>
                       <tbody>
                         <tr>
-                          <td>公众号</td>
+                          <td>名称</td>
                           <td>{{fansBaseInfo.we_name}}</td>
                         </tr>
                         <tr>
@@ -342,7 +342,7 @@
                     <table>
                       <thead>
                         <tr>
-                          <td>公众号</td>
+                          <td>名称</td>
                           <td>时间</td>
                         </tr>
                       </thead>
@@ -2468,25 +2468,26 @@ export default {
         background-color: @bg_eaedf1;
         border-right: 1px solid #e2e2e2;
         .ul_left {
-          width: 200px;
+          width: 120px;
           border-right: 1px solid #e2e2e2;
           padding-bottom: 60px;
           .wechat-list {
             .item {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
+              // display: flex;
+              // flex-direction: row;
+              // align-items: center;
               padding: 15px 5px;
               border-bottom: 1px solid #e2e2e2;
               cursor: pointer;
               .photo {
                 width: 50px;
-                margin-right: 10px;
+                // margin-right: 10px;
+                margin:0 auto;
               }
               .text {
                 position: relative;
                 .name {
-                  width: 80px;
+                  width: 110px;
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
