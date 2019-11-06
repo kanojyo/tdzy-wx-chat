@@ -715,11 +715,12 @@
       </span>
     </el-dialog>
     <!-- 查看大图 -->
-    <el-dialog title="查看大图" :visible.sync="largeImageShow" :width="dialogWidth">
+    <!-- <el-dialog title="查看大图" :visible.sync="largeImageShow" :width="dialogWidth">
       <div class="image" style="text-align:center;">
         <img :src="largePicUrl" alt style="width:100%;">
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <LargeImage :url="largePicUrl" :state="largeImageShow" @change="changeState"></LargeImage>
     <!-- 编辑/添加快捷回复 -->
     <el-dialog :title="phraseTltie" :visible.sync="replyShow" width="550px" @close="updateForm()">
       <el-form label-width="100px" :model="phraseFrom">
@@ -741,7 +742,7 @@
         <el-button type="primary" @click="replyAdd">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 查看大图 -->
+    
     <el-dialog title="病症详情" :visible.sync="diseaseDetailShow" :width="dialogWidth">
       <table>
         <tbody>
@@ -863,6 +864,7 @@ import {
 } from "@/utils/validate.js";
 import axios from "axios";
 import { clearTimeout, setTimeout } from 'timers';
+import LargeImage from "@/components/LargeImage.vue"
 
 export default {
   data() {
@@ -1065,6 +1067,9 @@ export default {
       let date = new Date(time * 1000);
       return formatDate(date, "yyyy-MM-dd hh:mm:ss"); // 年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
     }
+  },
+  components:{
+    LargeImage
   },
   mounted() {
     this.getWechatList(); //获取公众号列表
@@ -1329,7 +1334,6 @@ export default {
       });
       let data = await sendMsg(this.formParams);
       if (data.code === 200) {
-        // console.log(data);
         let sendData = data.data;
         let chatData = {};
         //文字发送成功后将文本输入框重置
@@ -1377,10 +1381,12 @@ export default {
       const isJPEG = file.type === "image/jpeg";
       const isLt4M = file.size / 1024 / 1024 <= 4;
       if (!isJPG && !isJPEG && !isPNG) {
+        this.$message.closeAll()
         this.$message.error("上传图片只能是 jpg,png,jpeg 格式!");
         this.loading.close();
       }
       if (!isLt4M) {
+        this.$message.closeAll()
         this.$message.error("上传图片大小不能超过 4MB!");
         this.loading.close();
       }
@@ -1389,7 +1395,6 @@ export default {
     uploadSuccess(file) {
       //	上传图片
       if (file.code === 200) {
-        console.log(file.data.url);
         this.imageUrl = file.data.url;
         this.imageShow = true;
         this.title = "发送图片";
@@ -1467,7 +1472,6 @@ export default {
     },
     //打开模糊搜索项
     searchClick(val) {
-      // console.log(val)
       let searchUser = val;
       this.groupList.forEach(item => {
         if (item.groupid === searchUser.groupid) {
@@ -1588,9 +1592,7 @@ export default {
           kf_nickname: receiveData.kf_nickname,
           key: 0,
         };
-        console.log(chatData)
         this.chatList.push(chatData);
-        console.log(this.chatList)
         this.scrollChange(); //  让聊天窗口处于最底部
         this.loading.close();
       }else{
@@ -1655,6 +1657,9 @@ export default {
       this.largeImageShow = true;
       this.largePicUrl = item;
     },
+    changeState(data){
+      this.largeImageShow=data;
+    },
     //获取用户基本信息
     async fansInfo() {
       let data = await fansInfo(this.formParams);
@@ -1708,7 +1713,6 @@ export default {
       //  聊天快捷短语列表
       let data = await phraseIndex();
       if (data.code === 200) {
-        // console.log(data)
         this.phraseList = data.data.phraseList;
       }
     },
@@ -1871,7 +1875,6 @@ export default {
     async doctorListGet() {
       let data = await doctorList(this.chatParams.fans_openid);
       if (data.code === 200) {
-        // console.log(data)
         this.doctorListData = data.data.doctor_list;
         this.diseaseData.docter_id = data.data.default_doctor_id;
       }
@@ -1880,7 +1883,6 @@ export default {
     async diseaseList() {
       let data = await diseaseList(this.chatParams);
       if (data.code === 200) {
-        // console.log(data)
         this.diseaseListData = data.data;
       }
     },
@@ -1888,7 +1890,6 @@ export default {
     async draftsList() {
       let data = await draftsList(this.chatParams);
       if (data.code === 200) {
-        // console.log(data)
         this.draftsListData = data.data;
       }
     },
@@ -1896,7 +1897,6 @@ export default {
     TagsGet() {
       axios.get("/mocks/zhusu.json").then(response => {
         this.zhusuData = response.data;
-        // console.log(this.zhusuData);
       });
       axios.get("/mocks/jiwangshi.json").then(response => {
         this.historyData = response.data;
@@ -2025,7 +2025,6 @@ export default {
     async diseaseDetail(val) {
       let data = await diseaseDetail(val);
       if (data.code === 200) {
-        // console.log(data);
         this.diseaseDetailData = data.data;
         this.diseaseDetailShow = true;
       }

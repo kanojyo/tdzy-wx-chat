@@ -20,7 +20,7 @@ export function isvalidPassword(str) {
 
 /* 手机号*/
 export function isvalidPhone(str) {
-  const reg = /^1[345789]\d{9}$/
+  const reg = /^1[123456789]\d{9}$/
   return reg.test(str)
 }
 
